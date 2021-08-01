@@ -4,6 +4,7 @@ import inSimInit from './packets/InsimInit';
 import { InSimInitFlag } from './enums/InSimInitFlag';
 import * as SendMessage from './packets/SendMessage';
 import * as InSimTiny from './packets/InSimTiny';
+import * as NewConnection from './packets/NewConnection';
 import { TinyPacketSubType } from './enums/TinyPacketSubType';
 import { PacketType } from './enums/PacketType';
 import messageController from './controllers/messageController';
@@ -27,7 +28,7 @@ async function decodePacket(buffer: Buffer) {
             }
         }
         case PacketType.ISP_NCN:
-            connectionController.handleNewConnection()
+            connectionController.handleNewConnection(NewConnection.fromBuffer(buffer));
             break;
         default:
             break;
@@ -51,7 +52,7 @@ setTimeout(() => {
         console.log('Connected to insim');
         await sendPacket(
             inSimInit({
-                adminPassword: '12345',
+                adminPassword: 'nono123',
                 appName: 'TTG Node',
                 flags: InSimInitFlag.ISF_AXM_EDIT | InSimInitFlag.ISF_AXM_LOAD,
                 inSimVersion: 8,
