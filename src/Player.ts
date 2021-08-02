@@ -1,4 +1,6 @@
 import Connection from './Connection';
+import connectionController from './controllers/connectionController';
+import { NewPlayerProps } from './packets/NewPlayer';
 
 export type PlayerCar =
     | 'UF1'
@@ -23,7 +25,22 @@ export type PlayerCar =
     | 'BF1';
 
 export default class Player {
-    // constructor(npl) {}
+    constructor({
+        car,
+        connectionId,
+        mass,
+        plate,
+        playerId,
+        skin,
+    }: NewPlayerProps) {
+        // @ts-expect-error
+        this.car = car;
+        this.connection = connectionController.connections.get(connectionId);
+        this.massKg = mass;
+        this.id = playerId;
+        this.skinName = skin;
+        this.plate = plate;
+    }
 
     id: number;
 

@@ -1,15 +1,16 @@
 import { NewPlayerProps } from '../packets/NewPlayer';
 import { PlayerLeaveProps } from '../packets/PlayerLeave';
 import log from '../log';
+import Player from '../Player';
 
 class PlayerController {
-    players = new Map<Number, NewPlayerProps>();
+    players = new Map<Number, Player>();
 
     handleNewPlayer(player: NewPlayerProps) {
         console.log(
             `${player.nickname} (${player.connectionId}) Joined race with car ${player.car}.`,
         );
-        this.players.set(player.playerId, player);
+        this.players.set(player.playerId, new Player(player));
     }
 
     handlePlayerLeave({ playerId }: PlayerLeaveProps) {
@@ -17,7 +18,7 @@ class PlayerController {
         if (!player) {
             log.error(`Player ${playerId} not found.`);
         }
-        log.info(`Player Left: ${player.nickname} (${player.playerId}).`);
+        log.info(`Player Left: ${player.connection.nickname} (${player.id}).`);
         this.players.delete(playerId);
     }
 }
