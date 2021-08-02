@@ -2,12 +2,15 @@ import net from 'net';
 import { promisify } from 'util';
 import inSimInit from './packets/InsimInit';
 import { InSimInitFlag } from './enums/InSimInitFlag';
+
 import * as SendMessage from './packets/SendMessage';
 import * as InSimTiny from './packets/InSimTiny';
 import * as NewConnection from './packets/NewConnection';
 import * as NewPlayer from './packets/NewPlayer';
 import * as PlayerLeave from './packets/PlayerLeave';
 import * as ObjectControl from './packets/ObjectControl';
+import * as NewConnectionInfo from './packets/NewConnectionInfo';
+
 import { TinyPacketSubType } from './enums/TinyPacketSubType';
 import { PacketType } from './enums/PacketType';
 import messageController from './controllers/messageController';
@@ -17,7 +20,7 @@ import log from './log';
 import { ObjectControlAction } from './enums/ObjectControlAction';
 
 const client = new net.Socket();
-const sendPacket = promisify(client.write.bind(client));
+export const sendPacket = promisify(client.write.bind(client));
 
 async function decodePacket(buffer: Buffer) {
     const [, type] = buffer;
@@ -47,7 +50,13 @@ async function decodePacket(buffer: Buffer) {
         case PacketType.ISP_PLP:
             playerController.handlePlayerLeave(PlayerLeave.fromBuffer(buffer));
             break;
+        case PacketType.ISP_NCI:
+            connectionController.handleConnectionInfo(
+                NewConnectionInfo.fromBuffer(buffer),
+            );
+            break;
         default:
+            log.silly(`Received packet ${PacketType[buffer[1]]}`);
             break;
     }
 }
@@ -91,6 +100,12 @@ setTimeout(() => {
             InSimTiny.fromProps({
                 requestId: 255,
                 subType: TinyPacketSubType.TINY_NCN,
+            }),
+        );
+        await sendPacket(
+            InSimTiny.fromProps({
+                requestId: 255,
+                subType: TinyPacketSubType.TINY_NCI,
             }),
         );
         await sendPacket(
