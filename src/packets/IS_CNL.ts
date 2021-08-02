@@ -17,10 +17,12 @@ export enum ConnectionLeaveReason {
     LEAVR_NUM,
 }
 
-export function fromBuffer(buffer: Buffer): ConnectionLeaveProps {
-    const [, , , connectionId, reason] = buffer;
-    return {
-        connectionId,
-        reason,
-    };
-}
+export default {
+    fromBuffer(buffer: Buffer): ConnectionLeaveProps {
+        const [, , , connectionId, reason] = buffer;
+        return {
+            connectionId,
+            reason,
+        };
+    },
+};

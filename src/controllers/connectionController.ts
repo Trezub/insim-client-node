@@ -1,12 +1,10 @@
 import Connection from '../Connection';
 import log from '../log';
-import {
-    ConnectionLeaveProps,
-    ConnectionLeaveReason,
-} from '../packets/ConnectionLeave';
-import { NewConnectionProps } from '../packets/NewConnection';
-import { NewConnectionInfoProps } from '../packets/NewConnectionInfo';
-import { PlayerRenameProps } from '../packets/PlayerRename';
+
+import { ConnectionLeaveProps, ConnectionLeaveReason } from '../packets/IS_CNL';
+import { PlayerRenameProps } from '../packets/IS_CPR';
+import { NewConnectionInfoProps } from '../packets/IS_NCI';
+import { NewConnectionProps } from '../packets/IS_NCN';
 
 class ConnectionController {
     connections = new Map<number, Connection>();

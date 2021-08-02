@@ -1,5 +1,5 @@
 import { sendPacket } from '../app';
-import * as ObjectControl from '../packets/ObjectControl';
+import IS_OCO, { ObjectControlLight } from '../packets/IS_OCO';
 import delay from '../utils/delay';
 
 export default class TrafficLightsController {
@@ -7,26 +7,26 @@ export default class TrafficLightsController {
 
     constructor(greenTime: number, ids: number[]) {
         sendPacket(
-            ObjectControl.fromProps({
+            IS_OCO.fromProps({
                 id: ids[0],
                 action: 5,
-                lights: ObjectControl.ObjectControlLight.GREEN,
+                lights: ObjectControlLight.GREEN,
             }),
         );
         setInterval(async () => {
             await sendPacket(
-                ObjectControl.fromProps({
+                IS_OCO.fromProps({
                     id: ids[this.openPhase],
                     action: 5,
-                    lights: ObjectControl.ObjectControlLight.AMBER,
+                    lights: ObjectControlLight.AMBER,
                 }),
             );
             await delay(3000);
             await sendPacket(
-                ObjectControl.fromProps({
+                IS_OCO.fromProps({
                     id: ids[this.openPhase],
                     action: 5,
-                    lights: ObjectControl.ObjectControlLight.RED,
+                    lights: ObjectControlLight.RED,
                 }),
             );
             if (this.openPhase < ids.length) {
@@ -36,10 +36,10 @@ export default class TrafficLightsController {
             }
             await delay(3000);
             await sendPacket(
-                ObjectControl.fromProps({
+                IS_OCO.fromProps({
                     id: ids[this.openPhase],
                     action: 5,
-                    lights: ObjectControl.ObjectControlLight.GREEN,
+                    lights: ObjectControlLight.GREEN,
                 }),
             );
         }, greenTime);

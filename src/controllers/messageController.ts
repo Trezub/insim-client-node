@@ -1,5 +1,5 @@
 import log from '../log';
-import { SendMessageProps, UserType } from '../packets/SendMessage';
+import { SendMessageProps } from '../packets/IS_MST';
 
 class MessageController {
     handleNewMessage({

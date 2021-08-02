@@ -1,28 +1,35 @@
 import net from 'net';
 import { promisify } from 'util';
-import inSimInit from './packets/InsimInit';
 import { InSimInitFlag } from './enums/InSimInitFlag';
 
-import * as SendMessage from './packets/SendMessage';
-import * as InSimTiny from './packets/InSimTiny';
-import * as NewConnection from './packets/NewConnection';
-import * as NewPlayer from './packets/NewPlayer';
-import * as PlayerLeave from './packets/PlayerLeave';
-import * as NewConnectionInfo from './packets/NewConnectionInfo';
-import * as MessageToConnection from './packets/MessageToConnection';
-import * as UserControlObject from './packets/UserControlObject';
-import * as CarStateChanged from './packets/CarStateChanged';
+import log from './log';
 
-import TrafficLightsController from './controllers/TrafficLightsController';
 import { TinyPacketSubType } from './enums/TinyPacketSubType';
 import { PacketType } from './enums/PacketType';
+
+// Controllers
 import messageController from './controllers/messageController';
 import connectionController from './controllers/connectionController';
 import playerController from './controllers/playerController';
-import log from './log';
-import { ObjectControlAction } from './enums/ObjectControlAction';
 import speedTrapController from './controllers/speedTrapController';
 import zoneController from './controllers/zoneController';
+
+// Packets
+import IS_MST from './packets/IS_MST';
+import IS_TINY from './packets/IS_TINY';
+import IS_NPL from './packets/IS_NPL';
+import IS_NCN from './packets/IS_NCN';
+import IS_PLL from './packets/IS_PLL';
+import IS_NCI from './packets/IS_NCI';
+import IS_UCO from './packets/IS_UCO';
+import IS_CSC from './packets/IS_CSC';
+import IS_ISI from './packets/IS_ISI';
+import IS_MTC, { MTCSound } from './packets/IS_MTC';
+import IS_OCO, {
+    ObjectControlIndex,
+    ObjectControlLight,
+} from './packets/IS_OCO';
+import { ObjectControlAction } from './enums/ObjectControlAction';
 
 const client = new net.Socket();
 export const sendPacket = promisify(client.write.bind(client));
@@ -32,45 +39,41 @@ async function decodePacket(buffer: Buffer) {
     // console.log(`Received ${PacketType[type]}`);
     switch (type) {
         case PacketType.ISP_MSO:
-            messageController.handleNewMessage(SendMessage.fromBuffer(buffer));
+            messageController.handleNewMessage(IS_MST.fromBuffer(buffer));
             break;
         case PacketType.ISP_TINY: {
-            const packet = InSimTiny.fromBuffer(buffer);
+            const packet = IS_TINY.fromBuffer(buffer);
             if (packet.subType === TinyPacketSubType.TINY_NONE) {
-                await sendPacket(InSimTiny.fromProps(packet));
+                await sendPacket(IS_TINY.fromProps(packet));
             }
             break;
         }
         case PacketType.ISP_NPL:
-            playerController.handleNewPlayer(NewPlayer.fromBuffer(buffer));
+            playerController.handleNewPlayer(IS_NPL.fromBuffer(buffer));
             break;
         case PacketType.ISP_NCN:
-            connectionController.handleNewConnection(
-                NewConnection.fromBuffer(buffer),
-            );
+            connectionController.handleNewConnection(IS_NCN.fromBuffer(buffer));
             break;
         case PacketType.ISP_PLL:
-            playerController.handlePlayerLeave(PlayerLeave.fromBuffer(buffer));
+            playerController.handlePlayerLeave(IS_PLL.fromBuffer(buffer));
             break;
         case PacketType.ISP_PLP:
-            playerController.handlePlayerLeave(PlayerLeave.fromBuffer(buffer));
+            playerController.handlePlayerLeave(IS_PLL.fromBuffer(buffer));
             break;
         case PacketType.ISP_NCI:
             connectionController.handleConnectionInfo(
-                NewConnectionInfo.fromBuffer(buffer),
+                IS_NCI.fromBuffer(buffer),
             );
             break;
         case PacketType.ISP_UCO:
             {
-                const uco = UserControlObject.fromBuffer(buffer);
+                const uco = IS_UCO.fromBuffer(buffer);
                 speedTrapController.handleUserControl(uco);
                 zoneController.handleUserControl(uco);
             }
             break;
         case PacketType.ISP_CSC:
-            zoneController.handleCarStateChange(
-                CarStateChanged.fromBuffer(buffer),
-            );
+            zoneController.handleCarStateChange(IS_CSC.fromBuffer(buffer));
             break;
         default:
             log.silly(`Received packet ${PacketType[buffer[1]]}`);
@@ -98,9 +101,10 @@ setTimeout(() => {
     client.on('connect', async () => {
         log.info('Connected to InSim.');
         await sendPacket(
-            inSimInit({
-                adminPassword: 'nono123',
-                appName: 'TTG Node',
+            // Send insim init packet.
+            IS_ISI.fromProps({
+                adminPassword: process.env.INSIM_ADMIN_PASSWORD,
+                appName: process.env.INSIM_APP_NAME,
                 flags: InSimInitFlag.ISF_AXM_EDIT | InSimInitFlag.ISF_AXM_LOAD,
                 inSimVersion: 8,
                 interval: 10,
@@ -109,28 +113,41 @@ setTimeout(() => {
             }),
         );
         await sendPacket(
-            MessageToConnection.fromProps({
+            // Motd
+            IS_MTC.fromProps({
                 message: '^6| ^7Bem vindo(a) ao ^2Cruise ^3Brasil',
-                sound: MessageToConnection.MTCSound.SND_SYSMESSAGE,
+                sound: MTCSound.SND_SYSMESSAGE,
                 connectionId: 255,
             }),
         );
         await sendPacket(
-            InSimTiny.fromProps({
+            // Request NCN packets.
+            IS_TINY.fromProps({
                 requestId: 255,
                 subType: TinyPacketSubType.TINY_NCN,
             }),
         );
         await sendPacket(
-            InSimTiny.fromProps({
+            // Request NCI Packets.
+            IS_TINY.fromProps({
                 requestId: 255,
                 subType: TinyPacketSubType.TINY_NCI,
             }),
         );
         await sendPacket(
-            InSimTiny.fromProps({
+            // Request NPL Packets.
+            IS_TINY.fromProps({
                 requestId: 255,
                 subType: TinyPacketSubType.TINY_NPL,
+            }),
+        );
+        await sendPacket(
+            // Set all traffic lights to red.
+            IS_OCO.fromProps({
+                action: ObjectControlAction.OCO_LIGHTS_SET,
+                id: 255,
+                lights: ObjectControlLight.RED,
+                mainLights: ObjectControlIndex.AXO_START_LIGHTS,
             }),
         );
     });

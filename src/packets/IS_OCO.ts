@@ -18,21 +18,17 @@ export interface ObjectControlProps {
     id: number;
     lights: ObjectControlLight;
 }
-
-export function fromProps({
-    action,
-    mainLights,
-    id,
-    lights,
-}: ObjectControlProps) {
-    return Buffer.from([
-        8, // Size
-        PacketType.ISP_OCO, // Type
-        0, // ReqId
-        0, // Zero
-        action, // OCOAction
-        mainLights || 149, // Index
-        id, // Identifier
-        lights, // Data
-    ]);
-}
+export default {
+    fromProps({ action, mainLights, id, lights }: ObjectControlProps) {
+        return Buffer.from([
+            8, // Size
+            PacketType.ISP_OCO, // Type
+            0, // ReqId
+            0, // Zero
+            action, // OCOAction
+            mainLights || 149, // Index
+            id, // Identifier
+            lights, // Data
+        ]);
+    },
+};

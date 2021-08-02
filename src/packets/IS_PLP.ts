@@ -2,10 +2,12 @@ export interface PlayerPitsProps {
     playerId: number;
 }
 
-export function fromBuffer(buffer: Buffer): PlayerPitsProps {
-    const [, , , playerId] = buffer;
+export default {
+    fromBuffer(buffer: Buffer): PlayerPitsProps {
+        const [, , , playerId] = buffer;
 
-    return {
-        playerId,
-    };
-}
+        return {
+            playerId,
+        };
+    },
+};

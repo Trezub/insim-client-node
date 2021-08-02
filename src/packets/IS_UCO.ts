@@ -15,15 +15,17 @@ export interface UserControlObjectsProps {
     object: ObjectInfo.ObjectInfoProps;
 }
 
-export function fromBuffer(buffer: Buffer) {
-    const [, , , playerId, , action] = buffer;
-    const car = CarContact.fromBuffer(buffer.slice(12, 21));
-    const object = ObjectInfo.fromBuffer(buffer.slice(21));
+export default {
+    fromBuffer(buffer: Buffer) {
+        const [, , , playerId, , action] = buffer;
+        const car = CarContact.fromBuffer(buffer.slice(12, 21));
+        const object = ObjectInfo.fromBuffer(buffer.slice(21));
 
-    return {
-        playerId,
-        action,
-        car,
-        object,
-    };
-}
+        return {
+            playerId,
+            action,
+            car,
+            object,
+        };
+    },
+};

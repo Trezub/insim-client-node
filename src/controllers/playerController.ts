@@ -1,6 +1,6 @@
-import { NewPlayerProps } from '../packets/NewPlayer';
-import { PlayerLeaveProps } from '../packets/PlayerLeave';
 import log from '../log';
+import { NewPlayerProps } from '../packets/IS_NPL';
+import { PlayerLeaveProps } from '../packets/IS_PLL';
 import Player from '../Player';
 
 class PlayerController {
@@ -18,7 +18,7 @@ class PlayerController {
         if (!player) {
             log.error(`Player ${playerId} not found.`);
             return;
-            }
+        }
         log.info(`Player Left: ${player.connection.nickname} (${player.id}).`);
         this.players.delete(playerId);
     }

@@ -17,21 +17,23 @@ export interface MessageToConnectionProps {
     playerId?: number;
 }
 
-export function fromProps({
-    message,
-    sound,
-    connectionId,
-    playerId,
-}: MessageToConnectionProps) {
-    return Buffer.from([
-        Math.ceil((message.length + 1) / 4) * 4 + 8,
-        PacketType.ISP_MTC,
-        0,
+export default {
+    fromProps({
+        message,
         sound,
         connectionId,
         playerId,
-        0,
-        0,
-        ...toByteArray(message, Math.ceil((message.length + 1) / 4) * 4),
-    ]);
-}
+    }: MessageToConnectionProps) {
+        return Buffer.from([
+            Math.ceil((message.length + 1) / 4) * 4 + 8,
+            PacketType.ISP_MTC,
+            0,
+            sound,
+            connectionId,
+            playerId,
+            0,
+            0,
+            ...toByteArray(message, Math.ceil((message.length + 1) / 4) * 4),
+        ]);
+    },
+};

@@ -1,12 +1,9 @@
 import { sendPacket } from '../app';
-import {
-    UserControlAction,
-    UserControlObjectsProps,
-} from '../packets/UserControlObject';
-import * as MessageToConnection from '../packets/MessageToConnection';
 import playerController from './playerController';
-import { CarStateChangedProps } from '../packets/CarStateChanged';
 import zones from '../zones';
+import { UserControlAction, UserControlObjectsProps } from '../packets/IS_UCO';
+import { CarStateChangedProps } from '../packets/IS_CSC';
+import IS_MTC, { MTCSound } from '../packets/IS_MTC';
 
 export class ZoneController {
     async handleUserControl(uco: UserControlObjectsProps) {
@@ -41,7 +38,7 @@ export class ZoneController {
             player.zone.handler(player);
         }
         await sendPacket(
-            MessageToConnection.fromProps({
+            IS_MTC.fromProps({
                 playerId: player.id,
                 message: `${player.zone.name}: ${
                     player.zone.texts[
@@ -50,7 +47,7 @@ export class ZoneController {
                         )
                     ]
                 }`,
-                sound: MessageToConnection.MTCSound.SND_SYSMESSAGE,
+                sound: MTCSound.SND_SYSMESSAGE,
             }),
         );
     }

@@ -11,22 +11,24 @@ export interface CarStateChangedProps {
     };
 }
 
-export function fromBuffer(buffer: Buffer): CarStateChangedProps {
-    const [, , , playerId, , action] = buffer;
-    const [direction, heading, speed, z] = buffer.slice(12);
-    const x = buffer.readInt8(16);
-    const y = buffer.readInt8(18);
+export default {
+    fromBuffer(buffer: Buffer): CarStateChangedProps {
+        const [, , , playerId, , action] = buffer;
+        const [direction, heading, speed, z] = buffer.slice(12);
+        const x = buffer.readInt8(16);
+        const y = buffer.readInt8(18);
 
-    return {
-        playerId,
-        stopped: !action,
-        direction,
-        heading,
-        position: {
-            x,
-            y,
-            z,
-        },
-        speedKmh: speed * 3.6,
-    };
-}
+        return {
+            playerId,
+            stopped: !action,
+            direction,
+            heading,
+            position: {
+                x,
+                y,
+                z,
+            },
+            speedKmh: speed * 3.6,
+        };
+    },
+};

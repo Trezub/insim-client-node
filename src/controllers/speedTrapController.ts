@@ -1,8 +1,5 @@
 import log from '../log';
-import {
-    UserControlAction,
-    UserControlObjectsProps,
-} from '../packets/UserControlObject';
+import { UserControlAction, UserControlObjectsProps } from '../packets/IS_UCO';
 
 class SpeedTrapController {
     handleUserControl({
