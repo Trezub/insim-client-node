@@ -5,6 +5,7 @@ import {
     ConnectionLeaveReason,
 } from '../packets/ConnectionLeave';
 import { NewConnectionProps } from '../packets/NewConnection';
+import { NewConnectionInfoProps } from '../packets/NewConnectionInfo';
 import { PlayerRenameProps } from '../packets/PlayerRename';
 
 class ConnectionController {
@@ -35,12 +36,32 @@ class ConnectionController {
         this.connections.delete(connectionId);
     }
 
-    handlePlayerRename({ connectionId }: PlayerRenameProps) {
+    handlePlayerRename({ connectionId, nickname }: PlayerRenameProps) {
+        const connection = this.connections.get(connectionId);
+        if (!connection) {
+            log.error(`Connection ${connectionId} not found.`);
+            return;
+        }
+        log.info(
+            `Connection ${connection.username} (${connectionId}) changed nickname to ${nickname}`,
+        );
+        connection.nickname = nickname;
+    }
+
+    handleConnectionInfo({
+        connectionId,
+        ipAddress,
+        language,
+        requestId,
+        userId,
+    }: NewConnectionInfoProps) {
         const connection = this.connections.get(connectionId);
         if (!connection) {
             log.error(`Connection ${connectionId} not found.`);
         }
-        log.info(`Connection ${connectionId} changed name.`);
+        connection.ipAddress = ipAddress;
+        connection.language = language;
+        connection.userId = userId;
     }
 }
 

@@ -7,6 +7,7 @@ export interface NewPlayerProps {
     car: string;
     skin: string;
     mass: number;
+    intakeRestriction: number;
 }
 
 export function fromBuffer(buffer: Buffer): NewPlayerProps {
@@ -15,7 +16,7 @@ export function fromBuffer(buffer: Buffer): NewPlayerProps {
     const plate = buffer.slice(32, 40).toString('utf-8');
     const car = buffer.slice(40, 44).toString('utf-8');
     const skin = buffer.slice(44, 60).toString('utf-8');
-    const [, mass] = buffer.slice(61);
+    const [, mass, intakeRestriction] = buffer.slice(61);
 
     return {
         requestId,
@@ -26,5 +27,6 @@ export function fromBuffer(buffer: Buffer): NewPlayerProps {
         car: car.slice(0, car.indexOf('\0')),
         skin: skin.slice(0, skin.indexOf('\0')),
         mass,
+        intakeRestriction,
     };
 }

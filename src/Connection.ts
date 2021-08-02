@@ -1,3 +1,4 @@
+import { Language } from './enums/Languages';
 import { NewConnectionProps } from './packets/NewConnection';
 import Player from './Player';
 
@@ -23,4 +24,10 @@ export default class Connection {
     isAdmin: boolean;
 
     player: Player;
+
+    ipAddress: string;
+
+    language: Language;
+
+    userId: number;
 }

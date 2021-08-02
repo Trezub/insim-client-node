@@ -32,6 +32,7 @@ export default class Player {
         plate,
         playerId,
         skin,
+        intakeRestriction,
     }: NewPlayerProps) {
         // @ts-expect-error
         this.car = car;
@@ -40,6 +41,7 @@ export default class Player {
         this.id = playerId;
         this.skinName = skin;
         this.plate = plate;
+        this.intakeRestriction = intakeRestriction;
     }
 
     id: number;
