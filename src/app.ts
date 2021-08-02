@@ -1,10 +1,8 @@
 import net from 'net';
 import { promisify } from 'util';
-import { InSimInitFlag } from './enums/InSimInitFlag';
 
 import log from './log';
 
-import { TinyPacketSubType } from './enums/TinyPacketSubType';
 import { PacketType } from './enums/PacketType';
 
 // Controllers
@@ -16,20 +14,20 @@ import zoneController from './controllers/zoneController';
 
 // Packets
 import IS_MST from './packets/IS_MST';
-import IS_TINY from './packets/IS_TINY';
+import IS_TINY, { TinyPacketSubType } from './packets/IS_TINY';
 import IS_NPL from './packets/IS_NPL';
 import IS_NCN from './packets/IS_NCN';
 import IS_PLL from './packets/IS_PLL';
 import IS_NCI from './packets/IS_NCI';
 import IS_UCO from './packets/IS_UCO';
 import IS_CSC from './packets/IS_CSC';
-import IS_ISI from './packets/IS_ISI';
+import IS_ISI, { InSimInitFlag } from './packets/IS_ISI';
 import IS_MTC, { MTCSound } from './packets/IS_MTC';
 import IS_OCO, {
+    ObjectControlAction,
     ObjectControlIndex,
     ObjectControlLight,
 } from './packets/IS_OCO';
-import { ObjectControlAction } from './enums/ObjectControlAction';
 
 const client = new net.Socket();
 export const sendPacket = promisify(client.write.bind(client));

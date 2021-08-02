@@ -1,5 +1,5 @@
 import { Language } from './enums/Languages';
-import { NewConnectionProps } from './packets/NewConnection';
+import { NewConnectionProps } from './packets/IS_NCN';
 import Player from './Player';
 
 export default class Connection {
