@@ -7,7 +7,7 @@ class PlayerController {
     players = new Map<Number, Player>();
 
     handleNewPlayer(player: NewPlayerProps) {
-        console.log(
+        log.info(
             `${player.nickname} (${player.connectionId}) Joined race with car ${player.car}.`,
         );
         this.players.set(player.playerId, new Player(player));

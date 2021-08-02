@@ -1,3 +1,4 @@
+import log from '../log';
 import { SendMessageProps, UserType } from '../packets/SendMessage';
 
 class MessageController {
@@ -8,10 +9,10 @@ class MessageController {
         playerName,
         userType,
     }: SendMessageProps) {
-        if (userType === UserType.MSO_SYSTEM) {
+        if (connectionId === 0) {
             return;
         }
-        console.log(`${playerName}: ${message}`);
+        log.silly(`${playerName}: ${message}`);
     }
 }
 export default new MessageController();
