@@ -1,5 +1,6 @@
 import Connection from './Connection';
 import connectionController from './controllers/connectionController';
+import { Zone } from './controllers/zoneController';
 import { NewPlayerProps } from './packets/NewPlayer';
 
 export type PlayerCar =
@@ -57,4 +58,6 @@ export default class Player {
     massKg: number;
 
     intakeRestriction: number;
+
+    zone: Zone;
 }

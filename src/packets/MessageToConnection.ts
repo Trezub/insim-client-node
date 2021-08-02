@@ -13,7 +13,7 @@ export enum MTCSound {
 export interface MessageToConnectionProps {
     message: string;
     sound: MTCSound;
-    connectionId: number;
+    connectionId?: number;
     playerId?: number;
 }
 
@@ -24,7 +24,7 @@ export function fromProps({
     playerId,
 }: MessageToConnectionProps) {
     return Buffer.from([
-        Math.ceil(message.length / 4) * 4 + 8,
+        Math.ceil((message.length + 1) / 4) * 4 + 8,
         PacketType.ISP_MTC,
         0,
         sound,
@@ -32,6 +32,6 @@ export function fromProps({
         playerId,
         0,
         0,
-        ...toByteArray(message, Math.ceil(message.length / 4) * 4 ),
+        ...toByteArray(message, Math.ceil((message.length + 1) / 4) * 4),
     ]);
 }

@@ -28,6 +28,8 @@
   "dependencies": {
     "cross-env": "^7.0.3",
     "dotenv": "^8.2.0",
-    "tslog": "^3.2.0"
+    "pg": "^8.7.1",
+    "tslog": "^3.2.0",
+    "typeorm": "^0.2.36"
   }
 }

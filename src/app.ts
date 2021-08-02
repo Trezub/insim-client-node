@@ -11,6 +11,7 @@ import * as PlayerLeave from './packets/PlayerLeave';
 import * as NewConnectionInfo from './packets/NewConnectionInfo';
 import * as MessageToConnection from './packets/MessageToConnection';
 import * as UserControlObject from './packets/UserControlObject';
+import * as CarStateChanged from './packets/CarStateChanged';
 
 import TrafficLightsController from './controllers/TrafficLightsController';
 import { TinyPacketSubType } from './enums/TinyPacketSubType';
@@ -21,6 +22,7 @@ import playerController from './controllers/playerController';
 import log from './log';
 import { ObjectControlAction } from './enums/ObjectControlAction';
 import speedTrapController from './controllers/speedTrapController';
+import zoneController from './controllers/zoneController';
 
 const client = new net.Socket();
 export const sendPacket = promisify(client.write.bind(client));
@@ -59,8 +61,15 @@ async function decodePacket(buffer: Buffer) {
             );
             break;
         case PacketType.ISP_UCO:
-            speedTrapController.handleUserControl(
-                UserControlObject.fromBuffer(buffer),
+            {
+                const uco = UserControlObject.fromBuffer(buffer);
+                speedTrapController.handleUserControl(uco);
+                zoneController.handleUserControl(uco);
+            }
+            break;
+        case PacketType.ISP_CSC:
+            zoneController.handleCarStateChange(
+                CarStateChanged.fromBuffer(buffer),
             );
             break;
         default:
