@@ -35,6 +35,7 @@
         "import/prefer-default-export": "off",
         "no-continue": "off",
         "class-methods-use-this": "off",
+        "import/no-cycle": "off",
         "@typescript-eslint/indent": [
             "error",
             4
