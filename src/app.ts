@@ -12,6 +12,7 @@ import { PacketType } from './enums/PacketType';
 import messageController from './controllers/messageController';
 import connectionController from './controllers/connectionController';
 import playerController from './controllers/playerController';
+import log from './log';
 
 const client = new net.Socket();
 const sendPacket = promisify(client.write.bind(client));
@@ -50,10 +51,14 @@ async function decodePacket(buffer: Buffer) {
 }
 
 setTimeout(() => {
-    client.connect({
-        host: 'staging.trezub.dev',
-        port: 29999,
-    });
+    try {
+        client.connect({
+            host: process.env.SERVER_IP,
+            port: Number(process.env.INSIM_PORT),
+        });
+    } catch (err) {
+        log.error(`Error connecting to InSim server: ${err}`);
+    }
     client.on('data', (originalBuffer) => {
         let buffer = originalBuffer;
         while (buffer.length > 0) {
@@ -63,7 +68,7 @@ setTimeout(() => {
         }
     });
     client.on('connect', async () => {
-        console.log('Connected to insim');
+        log.info('Connected to InSim.');
         await sendPacket(
             inSimInit({
                 adminPassword: 'nono123',
