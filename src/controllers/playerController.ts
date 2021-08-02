@@ -17,7 +17,8 @@ class PlayerController {
         const player = this.players.get(playerId);
         if (!player) {
             log.error(`Player ${playerId} not found.`);
-        }
+            return;
+            }
         log.info(`Player Left: ${player.connection.nickname} (${player.id}).`);
         this.players.delete(playerId);
     }

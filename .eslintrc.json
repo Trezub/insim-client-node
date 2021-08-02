@@ -39,6 +39,7 @@
         "@typescript-eslint/indent": [
             "error",
             4
-        ]
+        ],
+       "no-new":"off"
     }
 }

@@ -1,4 +1,5 @@
 import { PacketType } from '../enums/PacketType';
+import toByteArray from '../utils/toByteArray';
 
 export enum MTCSound {
     SND_SILENT,
@@ -13,10 +14,10 @@ export interface MessageToConnectionProps {
     message: string;
     sound: MTCSound;
     connectionId: number;
-    playerId: number;
+    playerId?: number;
 }
 
-export default function MessageToConnection({
+export function fromProps({
     message,
     sound,
     connectionId,
@@ -31,5 +32,6 @@ export default function MessageToConnection({
         playerId,
         0,
         0,
+        ...toByteArray(message, Math.ceil(message.length / 4) * 4 ),
     ]);
 }

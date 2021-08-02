@@ -8,9 +8,11 @@ import * as InSimTiny from './packets/InSimTiny';
 import * as NewConnection from './packets/NewConnection';
 import * as NewPlayer from './packets/NewPlayer';
 import * as PlayerLeave from './packets/PlayerLeave';
-import * as ObjectControl from './packets/ObjectControl';
 import * as NewConnectionInfo from './packets/NewConnectionInfo';
+import * as MessageToConnection from './packets/MessageToConnection';
+import * as UserControlObject from './packets/UserControlObject';
 
+import TrafficLightsController from './controllers/TrafficLightsController';
 import { TinyPacketSubType } from './enums/TinyPacketSubType';
 import { PacketType } from './enums/PacketType';
 import messageController from './controllers/messageController';
@@ -18,6 +20,7 @@ import connectionController from './controllers/connectionController';
 import playerController from './controllers/playerController';
 import log from './log';
 import { ObjectControlAction } from './enums/ObjectControlAction';
+import speedTrapController from './controllers/speedTrapController';
 
 const client = new net.Socket();
 export const sendPacket = promisify(client.write.bind(client));
@@ -53,6 +56,11 @@ async function decodePacket(buffer: Buffer) {
         case PacketType.ISP_NCI:
             connectionController.handleConnectionInfo(
                 NewConnectionInfo.fromBuffer(buffer),
+            );
+            break;
+        case PacketType.ISP_UCO:
+            speedTrapController.handleUserControl(
+                UserControlObject.fromBuffer(buffer),
             );
             break;
         default:
@@ -92,8 +100,10 @@ setTimeout(() => {
             }),
         );
         await sendPacket(
-            SendMessage.fromProps({
-                message: 'HELLO WORLD!',
+            MessageToConnection.fromProps({
+                message: '^6| ^7Bem vindo(a) ao ^2Cruise ^3Brasil',
+                sound: MessageToConnection.MTCSound.SND_SYSMESSAGE,
+                connectionId: 255,
             }),
         );
         await sendPacket(
@@ -114,16 +124,5 @@ setTimeout(() => {
                 subType: TinyPacketSubType.TINY_NPL,
             }),
         );
-        let on = false;
-        setInterval(async () => {
-            on = !on;
-            await sendPacket(
-                ObjectControl.fromProps({
-                    action: ObjectControlAction.OCO_LIGHTS_SET,
-                    id: 1,
-                    lights: on ? 8 : 1,
-                }),
-            );
-        }, 1000);
     });
 }, 2000);
