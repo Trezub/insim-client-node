@@ -7,12 +7,14 @@ import * as InSimTiny from './packets/InSimTiny';
 import * as NewConnection from './packets/NewConnection';
 import * as NewPlayer from './packets/NewPlayer';
 import * as PlayerLeave from './packets/PlayerLeave';
+import * as ObjectControl from './packets/ObjectControl';
 import { TinyPacketSubType } from './enums/TinyPacketSubType';
 import { PacketType } from './enums/PacketType';
 import messageController from './controllers/messageController';
 import connectionController from './controllers/connectionController';
 import playerController from './controllers/playerController';
 import log from './log';
+import { ObjectControlAction } from './enums/ObjectControlAction';
 
 const client = new net.Socket();
 const sendPacket = promisify(client.write.bind(client));
@@ -97,5 +99,16 @@ setTimeout(() => {
                 subType: TinyPacketSubType.TINY_NPL,
             }),
         );
+        let on = false;
+        setInterval(async () => {
+            on = !on;
+            await sendPacket(
+                ObjectControl.fromProps({
+                    action: ObjectControlAction.OCO_LIGHTS_SET,
+                    id: 1,
+                    lights: on ? 8 : 1,
+                }),
+            );
+        }, 1000);
     });
 }, 2000);
