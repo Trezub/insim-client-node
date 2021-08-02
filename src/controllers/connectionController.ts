@@ -1,3 +1,4 @@
+import Connection from '../Connection';
 import log from '../log';
 import {
     ConnectionLeaveProps,
@@ -6,7 +7,7 @@ import {
 import { NewConnectionProps } from '../packets/NewConnection';
 
 class ConnectionController {
-    connections = new Map<number, NewConnectionProps>();
+    connections = new Map<number, Connection>();
 
     handleNewConnection(connection: NewConnectionProps) {
         if (connection.connectionId === 0) {
@@ -16,7 +17,10 @@ class ConnectionController {
         log.info(
             `${connection.username} connected. (${connection.connectionId})`,
         );
-        this.connections.set(connection.connectionId, connection);
+        this.connections.set(
+            connection.connectionId,
+            new Connection(connection),
+        );
     }
 
     handleConnectionLeave({ connectionId, reason }: ConnectionLeaveProps) {
@@ -25,7 +29,7 @@ class ConnectionController {
             log.error(`Connection ${connectionId} not found.`);
         }
         log.info(
-            `Connection left: ${connection.username} (${connection.connectionId}). Reason: ${ConnectionLeaveReason[reason]}`,
+            `Connection left: ${connection.username} (${connection.id}). Reason: ${ConnectionLeaveReason[reason]}`,
         );
         this.connections.delete(connectionId);
     }
