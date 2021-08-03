@@ -1,19 +1,54 @@
 export interface CarContactProps {
+    playerId: number;
+    info: number;
+    steer: number;
+    throttle: number;
+    brake: number;
+    clutch: number;
+    handbrake: number;
+    gear: number;
+    speed: number;
     direction: number;
     heading: number;
-    speedKmh: number;
-    position: { x: number; y: number; z: number };
+    accelerationF: number;
+    accelerationR: number;
+    position: { x: number; y: number };
 }
 
-export function fromBuffer(buffer: Buffer) {
-    const [direction, heading, speed, z] = buffer;
-    const x = buffer.readInt16LE(3);
-    const y = buffer.readInt16LE(5);
-
-    return {
-        direction,
-        heading,
-        speedKmh: speed * 3.6,
-        position: { x, y, z },
-    };
-}
+export default {
+    fromBuffer(buffer: Buffer): CarContactProps {
+        const [
+            playerId,
+            info,
+            ,
+            steer,
+            throttle,
+            brake,
+            clutch,
+            handbrake,
+            gear,
+            ,
+            speed,
+            direction,
+            heading,
+            accelerationF,
+            accelerationR,
+        ] = buffer;
+        return {
+            playerId,
+            info,
+            steer,
+            throttle,
+            brake,
+            clutch,
+            handbrake,
+            gear,
+            speed,
+            direction,
+            heading,
+            accelerationF,
+            accelerationR,
+            position: { x: buffer.readInt16LE(12), y: buffer.readInt16LE(14) },
+        };
+    },
+};

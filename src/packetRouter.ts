@@ -6,14 +6,19 @@ import zoneController from './controllers/zoneController';
 import { PacketType } from './enums/PacketType';
 import inSimClient from './inSimClient';
 import log from './log';
+import IS_BFN from './packets/IS_BFN';
+import IS_BTC from './packets/IS_BTC';
+import IS_BTT from './packets/IS_BTT';
 
 import IS_CNL from './packets/IS_CNL';
+import IS_CON from './packets/IS_CON';
 import IS_CSC from './packets/IS_CSC';
 import IS_MCI, { MulticarInfoProps } from './packets/IS_MCI';
 import IS_MSO from './packets/IS_MSO';
 import IS_NCI from './packets/IS_NCI';
 import IS_NCN from './packets/IS_NCN';
 import IS_NPL from './packets/IS_NPL';
+import IS_OBH from './packets/IS_OBH';
 import IS_PLL from './packets/IS_PLL';
 import IS_PLP from './packets/IS_PLP';
 import IS_TINY, { TinyPacketSubType } from './packets/IS_TINY';
@@ -34,6 +39,11 @@ const decoders: {
     [PacketType.ISP_MSO]: IS_MSO.fromBuffer,
     [PacketType.ISP_UCO]: IS_UCO.fromBuffer,
     [PacketType.ISP_MCI]: IS_MCI.fromBuffer,
+    [PacketType.ISP_BTC]: IS_BTC.fromBuffer,
+    [PacketType.ISP_BTT]: IS_BTT.fromBuffer,
+    [PacketType.ISP_BFN]: IS_BFN.fromBuffer,
+    [PacketType.ISP_OBH]: IS_OBH.fromBuffer,
+    [PacketType.ISP_CON]: IS_CON.fromBuffer,
 };
 
 const routes: {
@@ -52,6 +62,11 @@ const routes: {
         (p) => speedTrapController.handleUserControl(p),
         (p) => zoneController.handleUserControl(p),
     ],
+    // [PacketType.ISP_BTC]: (p) =>
+    // [PacketType.IS_BTT]: (p) =>
+    // [PacketType.ISP_BFN]: (p) =>
+    // [PacketType.ISP_OBH]: (p) =>
+    // [PacketType.ISP_CON]: (p) =>
 };
 
 export default async function routePacket(buffer: Buffer) {

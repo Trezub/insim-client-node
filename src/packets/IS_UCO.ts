@@ -1,4 +1,4 @@
-import * as CarContact from './helpers/CarContact';
+import * as CarContOBJ from './helpers/CarContOBJ';
 import * as ObjectInfo from './helpers/ObjectInfo';
 
 export enum UserControlAction {
@@ -11,14 +11,14 @@ export enum UserControlAction {
 export interface UserControlObjectsProps {
     playerId: number;
     action: UserControlAction;
-    car: CarContact.CarContactProps;
+    car: CarContOBJ.CarContactProps;
     object: ObjectInfo.ObjectInfoProps;
 }
 
 export default {
     fromBuffer(buffer: Buffer) {
         const [, , , playerId, , action] = buffer;
-        const car = CarContact.fromBuffer(buffer.slice(12, 21));
+        const car = CarContOBJ.fromBuffer(buffer.slice(12, 21));
         const object = ObjectInfo.fromBuffer(buffer.slice(21));
 
         return {
