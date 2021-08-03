@@ -4,11 +4,12 @@ import playerController from './controllers/playerController';
 import speedTrapController from './controllers/speedTrapController';
 import zoneController from './controllers/zoneController';
 import { PacketType } from './enums/PacketType';
-import inSimClient from './InSimClient';
+import inSimClient from './inSimClient';
 import log from './log';
 
 import IS_CNL from './packets/IS_CNL';
 import IS_CSC from './packets/IS_CSC';
+import IS_MCI, { MulticarInfoProps } from './packets/IS_MCI';
 import IS_MSO from './packets/IS_MSO';
 import IS_NCI from './packets/IS_NCI';
 import IS_NCN from './packets/IS_NCN';
@@ -32,6 +33,7 @@ const decoders: {
     [PacketType.ISP_CSC]: IS_CSC.fromBuffer,
     [PacketType.ISP_MSO]: IS_MSO.fromBuffer,
     [PacketType.ISP_UCO]: IS_UCO.fromBuffer,
+    [PacketType.ISP_MCI]: IS_MCI.fromBuffer,
 };
 
 const routes: {
@@ -45,6 +47,7 @@ const routes: {
     [PacketType.ISP_PLP]: (p) => playerController.handlePlayerLeave(p),
     [PacketType.ISP_CSC]: (p) => zoneController.handleCarStateChange(p),
     [PacketType.ISP_MSO]: (p) => messageController.handleNewMessage(p),
+    [PacketType.ISP_MCI]: (p) => playerController.handleCarInfo(p),
     [PacketType.ISP_UCO]: [
         (p) => speedTrapController.handleUserControl(p),
         (p) => zoneController.handleUserControl(p),

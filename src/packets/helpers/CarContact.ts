@@ -7,8 +7,8 @@ export interface CarContactProps {
 
 export function fromBuffer(buffer: Buffer) {
     const [direction, heading, speed, z] = buffer;
-    const x = buffer.readInt16BE(3);
-    const y = buffer.readInt16BE(5);
+    const x = buffer.readInt16LE(3);
+    const y = buffer.readInt16LE(5);
 
     return {
         direction,

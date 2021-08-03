@@ -1,1 +1,1 @@
-import('./InSimClient');
+import('./inSimClient');

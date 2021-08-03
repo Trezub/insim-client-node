@@ -44,9 +44,11 @@ export class InSimClient {
                     adminPassword: process.env.INSIM_ADMIN_PASSWORD,
                     appName: process.env.INSIM_APP_NAME,
                     flags:
-                        InSimInitFlag.ISF_AXM_EDIT | InSimInitFlag.ISF_AXM_LOAD,
+                        InSimInitFlag.ISF_AXM_EDIT |
+                        InSimInitFlag.ISF_AXM_LOAD |
+                        InSimInitFlag.ISF_MCI,
                     inSimVersion: 8,
-                    interval: 500,
+                    interval: 1000,
                     prefixChar: '!',
                     udpPort: 0,
                 }),

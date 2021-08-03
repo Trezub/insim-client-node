@@ -1,7 +1,7 @@
 import Connection from './Connection';
 import connectionController from './controllers/connectionController';
-import { Zone } from './controllers/zoneController';
-import { NewPlayerProps } from './packets/NewPlayer';
+import { NewPlayerProps } from './packets/IS_NPL';
+import { Zone } from './zones';
 
 export type PlayerCar =
     | 'UF1'
@@ -60,4 +60,16 @@ export default class Player {
     intakeRestriction: number;
 
     zone: Zone;
+
+    position: {
+        x: number;
+        y: number;
+        z: number;
+    };
+
+    heading: number;
+
+    speedKmh: number;
+
+    direction: number;
 }

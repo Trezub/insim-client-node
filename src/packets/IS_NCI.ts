@@ -11,7 +11,7 @@ export interface NewConnectionInfoProps {
 export default {
     fromBuffer(buffer: Buffer): NewConnectionInfoProps {
         const [, , requestId, connectionId, language] = buffer;
-        const userId = buffer.readUInt16BE(7);
+        const userId = buffer.readUInt16LE(7);
         const ipAddress = buffer.slice(12, 16).join('.');
 
         return {

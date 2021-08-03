@@ -5,8 +5,8 @@ export interface ObjectInfoProps {
 }
 
 export function fromBuffer(buffer: Buffer): ObjectInfoProps {
-    const x = buffer.readInt16BE();
-    const y = buffer.readInt16BE(1);
+    const x = buffer.readInt16LE();
+    const y = buffer.readInt16LE(1);
     const [z, , id, heading] = buffer.slice(3);
 
     return {
