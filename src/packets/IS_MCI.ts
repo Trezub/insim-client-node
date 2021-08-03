@@ -26,7 +26,7 @@ export default {
             const subBuffer = buffer.slice(4 + 28 * i, 5 + 28 * i + 28);
             cars.push({
                 node: subBuffer.readUInt16LE(0),
-                lagging: subBuffer[6] === 32,
+                lagging: Boolean(subBuffer[6] & 32),
                 playerId: subBuffer[4],
                 position: {
                     x:

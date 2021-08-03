@@ -1,5 +1,7 @@
 import Connection from './Connection';
 import connectionController from './controllers/connectionController';
+import inSimClient from './inSimClient';
+import IS_BTN from './packets/IS_BTN';
 import { NewPlayerProps } from './packets/IS_NPL';
 import { Zone } from './zones';
 
