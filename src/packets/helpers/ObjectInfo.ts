@@ -4,14 +4,16 @@ export interface ObjectInfoProps {
     id: number;
 }
 
-export function fromBuffer(buffer: Buffer): ObjectInfoProps {
-    const x = buffer.readInt16LE();
-    const y = buffer.readInt16LE(1);
-    const [z, , id, heading] = buffer.slice(3);
+export default {
+    fromBuffer(buffer: Buffer): ObjectInfoProps {
+        const x = buffer.readInt16LE();
+        const y = buffer.readInt16LE(1);
+        const [z, , id, heading] = buffer.slice(3);
 
-    return {
-        heading,
-        id,
-        position: { x, y, z },
-    };
-}
+        return {
+            heading,
+            id,
+            position: { x, y, z },
+        };
+    },
+};
