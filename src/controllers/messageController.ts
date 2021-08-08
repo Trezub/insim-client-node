@@ -1,8 +1,10 @@
-import { lightBlue, white, yellow } from '../colors';
+import { lightBlue, lightGreen, red, white, yellow } from '../colors';
+import sendMessageToConnection from '../helpers/sendMessageToConnection';
 import inSimClient from '../inSimClient';
 import log from '../log';
 import { SendMessageProps, UserType } from '../packets/IS_MSO';
 import IS_MTC, { MTCSound } from '../packets/IS_MTC';
+import connectionController from './connectionController';
 import playerController from './playerController';
 
 class MessageController {
@@ -17,7 +19,7 @@ class MessageController {
             return;
         }
         if (userType === UserType.MSO_PREFIX) {
-            switch (message.slice(1)) {
+            switch (message.slice(1).split(' ')[0]) {
                 case 'coords': {
                     const player = playerController.players.get(playerId);
                     await inSimClient.sendPacket(
@@ -27,6 +29,28 @@ class MessageController {
                             connectionId,
                         }),
                     );
+                    break;
+                }
+                case 'cash': {
+                    const [, amount] = message.split(' ');
+                    const connection =
+                        connectionController.connections.get(connectionId);
+                    if (!amount) {
+                        return sendMessageToConnection(
+                            `${red}| ${white}Formato: ${lightGreen}!cash <quantidade>`,
+                            connection,
+                            'error',
+                        );
+                    }
+                    if (connection.isAdmin) {
+                        connection.cash = Number(amount) * 100;
+                    } else {
+                        return sendMessageToConnection(
+                            `${red}| ${white}Você não tem permissão para usar este comando!`,
+                            connection,
+                            'error',
+                        );
+                    }
                     break;
                 }
                 default:
