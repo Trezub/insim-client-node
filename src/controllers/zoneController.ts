@@ -1,4 +1,4 @@
-import * as inSimClient from '../inSimClient';
+import inSimClient from '../inSimClient';
 import playerController from './playerController';
 import zones from '../zones';
 import { UserControlAction, UserControlObjectsProps } from '../packets/IS_UCO';

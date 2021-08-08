@@ -3,6 +3,7 @@ import { MulticarInfoProps } from '../packets/IS_MCI';
 import { NewPlayerProps } from '../packets/IS_NPL';
 import { PlayerLeaveProps } from '../packets/IS_PLL';
 import Player from '../Player';
+import connectionController from './connectionController';
 
 class PlayerController {
     players = new Map<Number, Player>();
@@ -11,7 +12,17 @@ class PlayerController {
         log.info(
             `${player.nickname} (${player.connectionId}) Joined race with car ${player.car}.`,
         );
-        this.players.set(player.playerId, new Player(player));
+        const connection = connectionController.connections.get(
+            player.connectionId,
+        );
+        if (!connection) {
+            return log.error(
+                `Connection ${player.connectionId} not found for player ${player.nickname} (${player.playerId})`,
+            );
+        }
+        const newPlayer = new Player(player);
+        connection.player = newPlayer;
+        this.players.set(player.playerId, newPlayer);
     }
 
     handlePlayerLeave({ playerId }: PlayerLeaveProps) {

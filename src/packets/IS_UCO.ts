@@ -1,5 +1,5 @@
-import CarContOBJ from './helpers/CarContOBJ';
-import * as ObjectInfo from './helpers/ObjectInfo';
+import CarContOBJ, { CarContactProps } from './helpers/CarContOBJ';
+import ObjectInfo, { ObjectInfoProps } from './helpers/ObjectInfo';
 
 export enum UserControlAction {
     UCO_CIRCLE_ENTER, // entered a circle
@@ -11,8 +11,8 @@ export enum UserControlAction {
 export interface UserControlObjectsProps {
     playerId: number;
     action: UserControlAction;
-    car: CarContOBJ.CarContactProps;
-    object: ObjectInfo.ObjectInfoProps;
+    car: CarContactProps;
+    object: ObjectInfoProps;
 }
 
 export default {
