@@ -1,4 +1,4 @@
-import { sendPacket } from '../app';
+import * as inSimClient from '../inSimClient';
 import playerController from './playerController';
 import zones from '../zones';
 import { UserControlAction, UserControlObjectsProps } from '../packets/IS_UCO';
@@ -37,7 +37,7 @@ export class ZoneController {
         if (player.zone.handler) {
             player.zone.handler(player);
         }
-        await sendPacket(
+        await inSimClient.sendPacket(
             IS_MTC.fromProps({
                 playerId: player.id,
                 message: `${player.zone.name}: ${

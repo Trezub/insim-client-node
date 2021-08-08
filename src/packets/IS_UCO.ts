@@ -1,4 +1,4 @@
-import * as CarContOBJ from './helpers/CarContOBJ';
+import CarContOBJ from './helpers/CarContOBJ';
 import * as ObjectInfo from './helpers/ObjectInfo';
 
 export enum UserControlAction {

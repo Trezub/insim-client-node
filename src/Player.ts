@@ -61,8 +61,6 @@ export default class Player {
 
     intakeRestriction: number;
 
-    zone: Zone;
-
     position: {
         x: number;
         y: number;
@@ -74,4 +72,15 @@ export default class Player {
     speedKmh: number;
 
     direction: number;
+
+    private _zone: Zone;
+
+    get zone() {
+        return this._zone;
+    }
+
+    set zone(value: Zone) {
+        this._zone = value;
+        this.connection.gui.handleZoneUpdate();
+    }
 }

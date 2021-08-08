@@ -100,12 +100,12 @@ export default class GuiController {
         );
     }
 
-    async handle() {
+    async handleZoneUpdate() {
         await inSimClient.sendPacket(
             IS_BTN.fromProps({
                 requestId: 1,
-                id: this.buttonIds.get('health'),
-                text: `${white}Saúde: ${lightGreen}${this.connection.health}%`,
+                id: this.buttonIds.get('zone'),
+                text: `${white}${this.connection.player.zone.name}`,
                 connectionId: this.connection.id,
             }),
         );
