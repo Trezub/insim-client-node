@@ -21,6 +21,7 @@ import IS_NPL from './packets/IS_NPL';
 import IS_OBH from './packets/IS_OBH';
 import IS_PLL from './packets/IS_PLL';
 import IS_PLP from './packets/IS_PLP';
+import IS_STA, { StateProps } from './packets/IS_STA';
 import IS_TINY, { TinyPacketSubType } from './packets/IS_TINY';
 import IS_UCO from './packets/IS_UCO';
 
@@ -44,6 +45,7 @@ const decoders: {
     [PacketType.ISP_BFN]: IS_BFN.fromBuffer,
     [PacketType.ISP_OBH]: IS_OBH.fromBuffer,
     [PacketType.ISP_CON]: IS_CON.fromBuffer,
+    [PacketType.ISP_STA]: IS_STA.fromBuffer,
 };
 
 const routes: {
@@ -58,6 +60,9 @@ const routes: {
     [PacketType.ISP_CSC]: (p) => zoneController.handleCarStateChange(p),
     [PacketType.ISP_MSO]: (p) => messageController.handleNewMessage(p),
     [PacketType.ISP_MCI]: (p) => playerController.handleCarInfo(p),
+    [PacketType.ISP_STA]: (p: StateProps) => {
+        inSimClient.track = p.track;
+    },
     [PacketType.ISP_UCO]: [
         (p) => speedTrapController.handleUserControl(p),
         (p) => zoneController.handleUserControl(p),

@@ -67,6 +67,13 @@ export class InSimClient {
             }),
         );
         await this.sendPacket(
+            // Set all traffic lights to red.
+            IS_TINY.fromProps({
+                requestId: 255,
+                subType: TinyPacketSubType.TINY_SST,
+            }),
+        );
+        await this.sendPacket(
             // Request NCN packets.
             IS_TINY.fromProps({
                 requestId: 255,
@@ -99,6 +106,8 @@ export class InSimClient {
     }
 
     client: net.Socket;
+
+    track: string;
 
     sendPacket: (arg1: string | Uint8Array) => Promise<void>;
 }

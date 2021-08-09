@@ -1,12 +1,28 @@
-import { lightGreen, white } from '../colors';
+import { lightGreen, white, yellow } from '../colors';
 import inSimClient from '../inSimClient';
 import IS_BTN, { ButtonStyle } from '../packets/IS_BTN';
 import Connection from '../Connection';
+import { defaultZones, Zone } from '../zones';
+import { isStreet, Street } from '../streets';
 
 export type GuiButtonName = 'cash' | 'health' | 'car' | 'zone';
 
 export interface GuiControllerProps {
     connectionId: number;
+}
+
+function getLocationText(location: Zone | Street): string {
+    if (location != null) {
+        if (isStreet(location)) {
+            return `${location.name}${
+                location.speedLimit
+                    ? ` ${yellow}(${location.speedLimit}KM/H)`
+                    : ''
+            }`;
+        }
+        return `${location.name}`;
+    }
+    return defaultZones[inSimClient.track];
 }
 
 export default class GuiController {
@@ -65,7 +81,7 @@ export default class GuiController {
                     connectionId,
                     id: this.buttonIds.get('zone'),
                     requestId: 1,
-                    text: `${white}West Hills`,
+                    text: `${white}${defaultZones[inSimClient.track]}`,
                     height: 5,
                     width: 46,
                     top: 1,
@@ -100,12 +116,14 @@ export default class GuiController {
         );
     }
 
-    async handleZoneUpdate() {
+    async handleLocationUpdate() {
         await inSimClient.sendPacket(
             IS_BTN.fromProps({
                 requestId: 1,
                 id: this.buttonIds.get('zone'),
-                text: `${white}${this.connection.player.zone.name}`,
+                text: `${white}${getLocationText(
+                    this.connection.player.location,
+                )}`,
                 connectionId: this.connection.id,
             }),
         );

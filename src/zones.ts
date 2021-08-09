@@ -7,6 +7,13 @@ export interface Zone {
     id: number;
 }
 
+export const defaultZones: {
+    [key: string]: string;
+} = {
+    SO1X: 'South City',
+    WE2X: 'West Hills',
+};
+
 const zones: Zone[] = [
     {
         name: 'Valetim Terra',
@@ -34,7 +41,7 @@ const zones: Zone[] = [
     },
     {
         name: 'Correios',
-        handler: () => {},
+        handler: (player: Player) => {},
         texts: [
             'Olá, coloque a encomenda na segunda prateleira á esquerda',
             'Obrigado por fazer essa entrega com excelência, vamos adicionar uma nota positiva ao seu perfil',

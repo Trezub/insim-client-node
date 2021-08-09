@@ -3,6 +3,7 @@ import connectionController from './controllers/connectionController';
 import inSimClient from './inSimClient';
 import IS_BTN from './packets/IS_BTN';
 import { NewPlayerProps } from './packets/IS_NPL';
+import { Street } from './streets';
 import { Zone } from './zones';
 
 export type PlayerCar =
@@ -73,14 +74,17 @@ export default class Player {
 
     direction: number;
 
-    private _zone: Zone;
+    private _location: Zone | Street;
 
-    get zone() {
-        return this._zone;
+    previousLocation: Zone | Street;
+
+    get location() {
+        return this._location;
     }
 
-    set zone(value: Zone) {
-        this._zone = value;
-        this.connection.gui.handleZoneUpdate();
+    set location(value: Zone | Street) {
+        this.previousLocation = this._location;
+        this._location = value;
+        this.connection.gui.handleLocationUpdate();
     }
 }
