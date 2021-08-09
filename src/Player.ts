@@ -1,6 +1,7 @@
 import Connection from './Connection';
 import connectionController from './controllers/connectionController';
 import inSimClient from './inSimClient';
+import { Job } from './jobs';
 import IS_BTN from './packets/IS_BTN';
 import { NewPlayerProps } from './packets/IS_NPL';
 import { Street } from './streets';
@@ -73,6 +74,17 @@ export default class Player {
     speedKmh: number;
 
     direction: number;
+
+    private _job: Job;
+
+    get job() {
+        return this._job;
+    }
+
+    set job(job: Job) {
+        this._job = job;
+        this.connection.gui.handleJobUpdate();
+    }
 
     private _location: Zone | Street;
 

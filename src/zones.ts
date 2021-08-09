@@ -43,8 +43,8 @@ const zones: Zone[] = [
         name: 'Correios',
         handler: (player: Player) => {},
         texts: [
-            'Olá, coloque a encomenda na segunda prateleira á esquerda',
-            'Obrigado por fazer essa entrega com excelência, vamos adicionar uma nota positiva ao seu perfil',
+            'Olá, pegue a encomenda na segunda prateleira á esquerda',
+            'Obrigado por fazer essa entrega com excelência, vamos adicionar uma nota positiva ao seu perfil, agora pegue outra e saia',
         ],
         id: 4,
     },

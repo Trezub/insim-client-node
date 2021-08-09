@@ -2,10 +2,11 @@ import { lightGreen, white, yellow } from '../colors';
 import inSimClient from '../inSimClient';
 import IS_BTN, { ButtonStyle } from '../packets/IS_BTN';
 import Connection from '../Connection';
-import { defaultZones, Zone } from '../zones';
+import zones, { defaultZones, Zone } from '../zones';
 import { isStreet, Street } from '../streets';
+import jobs from '../jobs';
 
-export type GuiButtonName = 'cash' | 'health' | 'car' | 'zone';
+export type GuiButtonName = 'cash' | 'health' | 'car' | 'zone' | 'job';
 
 export interface GuiControllerProps {
     connectionId: number;
@@ -38,7 +39,8 @@ export default class GuiController {
             .set('car', this.buttonIds.size)
             .set('cash', this.buttonIds.size)
             .set('zone', this.buttonIds.size)
-            .set('health', this.buttonIds.size);
+            .set('health', this.buttonIds.size)
+            .set('job', this.buttonIds.size);
 
         await inSimClient.sendPacket(
             Buffer.from([
@@ -88,6 +90,17 @@ export default class GuiController {
                     left: 100 - 23,
                     style: ButtonStyle.ISB_DARK,
                 }),
+                ...IS_BTN.fromProps({
+                    connectionId,
+                    id: this.buttonIds.get('job'),
+                    requestId: 1,
+                    text: '',
+                    height: 5,
+                    width: 15,
+                    top: 14,
+                    left: 93,
+                    style: ButtonStyle.ISB_DARK,
+                }),
             ]),
         );
     }
@@ -124,6 +137,22 @@ export default class GuiController {
                 text: `${white}${getLocationText(
                     this.connection.player.location,
                 )}`,
+                connectionId: this.connection.id,
+            }),
+        );
+    }
+
+    async handleJobUpdate() {
+        await inSimClient.sendPacket(
+            IS_BTN.fromProps({
+                requestId: 1,
+                id: this.buttonIds.get('job'),
+                text: this.connection.player?.job
+                    ? zones.find(
+                          (z) =>
+                              z.id === this.connection.player.job.destination,
+                      ).name
+                    : '',
                 connectionId: this.connection.id,
             }),
         );

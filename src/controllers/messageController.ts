@@ -4,7 +4,9 @@ import inSimClient from '../inSimClient';
 import log from '../log';
 import { SendMessageProps, UserType } from '../packets/IS_MSO';
 import IS_MTC, { MTCSound } from '../packets/IS_MTC';
+import { isStreet } from '../streets';
 import connectionController from './connectionController';
+import correiosController from './correiosController';
 import playerController from './playerController';
 
 class MessageController {
@@ -51,6 +53,23 @@ class MessageController {
                             'error',
                         );
                     }
+                    break;
+                }
+                case 'job': {
+                    const connection =
+                        connectionController.connections.get(connectionId);
+                    if (
+                        !connection.player ||
+                        (!isStreet(connection.player.location) &&
+                            connection.player.location?.id !== 4)
+                    ) {
+                        return sendMessageToConnection(
+                            `${red}| Você precisa estar nos Correios para usar este comando!`,
+                            connection,
+                            'error',
+                        );
+                    }
+                    correiosController.createJob(connection.player);
                     break;
                 }
                 default:
