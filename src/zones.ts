@@ -1,9 +1,10 @@
+import correiosController from './controllers/correiosController';
 import Player from './Player';
 
 export interface Zone {
     name: string;
     texts: string[];
-    handler: (player: Player) => any;
+    handler: (p: Player) => any;
     id: number;
 }
 
@@ -17,13 +18,13 @@ export const defaultZones: {
 const zones: Zone[] = [
     {
         name: 'Valetim Terra',
-        handler: () => {},
+        handler: (p) => correiosController.finishJob(p),
         texts: ['Opa vai com calma ai Toretto Vindisio', 'Eai meu chapa'],
         id: 1,
     },
     {
         name: 'Pablito',
-        handler: () => {},
+        handler: (p) => correiosController.finishJob(p),
         texts: [
             'Fala meu parceirinho, passa pra cá esse bagulho',
             'Você é persistente hein, passa isso antes a polícia embace o nosso trampo',
@@ -32,7 +33,7 @@ const zones: Zone[] = [
     },
     {
         name: 'Osmar Contato',
-        handler: () => {},
+        handler: (p) => correiosController.finishJob(p),
         texts: [
             'Salve quebrada, manda o pacotinho e pega o pagamento na saída',
             'Boa pra nóis, você é o melhor entregador que eu tenho, agora sai fora',
@@ -50,7 +51,7 @@ const zones: Zone[] = [
     },
     {
         name: 'Pastelaria Tekomo Nakama',
-        handler: () => {},
+        handler: (p) => correiosController.finishJob(p),
         texts: [
             'Obrigado moço, estamos precisando dos ingredientes para fazer os pastéis, tenha um bom dia',
             'Hoje está uma correria, não tivemos tempo de ir ao mercado fazer as compras',
@@ -59,7 +60,7 @@ const zones: Zone[] = [
     },
     {
         name: 'Ultragaz',
-        handler: () => {},
+        handler: (p) => correiosController.finishJob(p),
         texts: [
             'Descarrega com cuidado esse botijão aí meu parceiro',
             'Cuidado pra não derrubar esse barato no meu dedo',

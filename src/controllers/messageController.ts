@@ -64,7 +64,7 @@ class MessageController {
                             connection.player.location?.id !== 4)
                     ) {
                         return sendMessageToConnection(
-                            `${red}| Você precisa estar nos Correios para usar este comando!`,
+                            `${red}| ${white}Você precisa estar nos Correios para usar este comando!`,
                             connection,
                             'error',
                         );

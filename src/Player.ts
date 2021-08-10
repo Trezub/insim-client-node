@@ -1,7 +1,8 @@
 import Connection from './Connection';
 import connectionController from './controllers/connectionController';
+import correiosController from './controllers/correiosController';
 import inSimClient from './inSimClient';
-import { Job } from './jobs';
+import jobs, { Job } from './jobs';
 import IS_BTN from './packets/IS_BTN';
 import { NewPlayerProps } from './packets/IS_NPL';
 import { Street } from './streets';
@@ -75,6 +76,8 @@ export default class Player {
 
     direction: number;
 
+    jobTimeout: NodeJS.Timeout;
+
     private _job: Job;
 
     get job() {
@@ -84,6 +87,12 @@ export default class Player {
     set job(job: Job) {
         this._job = job;
         this.connection.gui.handleJobUpdate();
+        if (job) {
+            this.jobTimeout = setTimeout(
+                () => correiosController.handleJobExpired(this),
+                job.timeout,
+            );
+        }
     }
 
     private _location: Zone | Street;
