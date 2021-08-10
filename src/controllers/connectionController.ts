@@ -1,15 +1,18 @@
 import Connection from '../Connection';
+import { PlayerCar } from '../enums/PlayerCar';
+import inSimClient from '../inSimClient';
 import log from '../log';
 
 import { ConnectionLeaveProps, ConnectionLeaveReason } from '../packets/IS_CNL';
 import { PlayerRenameProps } from '../packets/IS_CPR';
 import { NewConnectionInfoProps } from '../packets/IS_NCI';
 import { NewConnectionProps } from '../packets/IS_NCN';
+import IS_PLC from '../packets/IS_PLC';
 
 class ConnectionController {
     connections = new Map<number, Connection>();
 
-    handleNewConnection(connection: NewConnectionProps) {
+    async handleNewConnection(connection: NewConnectionProps) {
         if (connection.connectionId === 0) {
             // 0 is host
             return;
@@ -21,6 +24,12 @@ class ConnectionController {
             connection.connectionId,
             new Connection(connection),
         );
+        // await inSimClient.sendPacket(
+        //     IS_PLC.fromProps({
+        //         connectionId: connection.connectionId,
+        //         cars: PlayerCar.RAC | PlayerCar.FZ5,
+        //     }),
+        // );
     }
 
     handleConnectionLeave({ connectionId, reason }: ConnectionLeaveProps) {
