@@ -3,10 +3,8 @@ import playerController from './playerController';
 import zones from '../zones';
 import { UserControlAction, UserControlObjectsProps } from '../packets/IS_UCO';
 import { CarStateChangedProps } from '../packets/IS_CSC';
-import IS_MTC, { MTCSound } from '../packets/IS_MTC';
 import { lightBlue, lightGreen, white } from '../colors';
 import sendMessageToConnection from '../helpers/sendMessageToConnection';
-import connectionController from './connectionController';
 import streets, { isStreet } from '../streets';
 
 export class ZoneController {
@@ -20,30 +18,31 @@ export class ZoneController {
             }
             if (uco.action === UserControlAction.UCO_CIRCLE_ENTER) {
                 player.location = zone;
-            } else {
+            } else if (uco.action === UserControlAction.UCO_CIRCLE_LEAVE) {
                 player.location = player.previousLocation;
             }
         } else if (uco.object.id === 252) {
             // InSim Checkpoint
-            const street = streets[inSimClient.track].find(
+            const streetCheckpoint = streets[inSimClient.track].find(
                 (s) =>
                     s.x === uco.object.position.x &&
                     s.y === uco.object.position.y &&
                     s.z === uco.object.position.z,
             );
-            player.location = street;
+            if (!streetCheckpoint) {
+                return;
+            }
+            if (uco.action === UserControlAction.UCO_CP_FWD) {
+                player.location = streetCheckpoint.forward;
+            } else if (uco.action === UserControlAction.UCO_CP_REV) {
+                player.location = streetCheckpoint.backwards;
+            }
         }
     }
 
     async handleCarStateChange(csc: CarStateChangedProps) {
         const player = playerController.players.get(csc.playerId);
-        if (!player) {
-            return;
-        }
-        if (!csc.stopped) {
-            return;
-        }
-        if (!player.location) {
+        if (!player || !csc.stopped || !player.location) {
             return;
         }
         if (!isStreet(player.location)) {
