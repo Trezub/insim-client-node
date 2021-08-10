@@ -46,9 +46,10 @@ export class InSimClient {
                     flags:
                         InSimInitFlag.ISF_AXM_EDIT |
                         InSimInitFlag.ISF_AXM_LOAD |
+                        InSimInitFlag.ISF_REQ_JOIN |
                         InSimInitFlag.ISF_MCI,
                     inSimVersion: 8,
-                    interval: 1000,
+                    interval: 100,
                     prefixChar: '!',
                     udpPort: 0,
                 }),

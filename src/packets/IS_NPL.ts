@@ -8,6 +8,7 @@ export interface NewPlayerProps {
     skin: string;
     mass: number;
     intakeRestriction: number;
+    isJoinRequest: boolean;
 }
 
 export default {
@@ -17,7 +18,7 @@ export default {
         const plate = buffer.slice(32, 40).toString('utf-8');
         const car = buffer.slice(40, 44).toString('utf-8');
         const skin = buffer.slice(44, 60).toString('utf-8');
-        const [, mass, intakeRestriction] = buffer.slice(61);
+        const [mass, intakeRestriction] = buffer.slice(64);
 
         return {
             requestId,
@@ -29,6 +30,7 @@ export default {
             skin: skin.slice(0, skin.indexOf('\0')),
             mass,
             intakeRestriction,
+            isJoinRequest: buffer[73] === 0,
         };
     },
 };
