@@ -12,14 +12,14 @@ module.exports = process.env.NODE_ENV === 'production' ? {
     logging: false,
     synchronize: false,
     entities: [
-        'dist/models/**/*.js',
+        'dist/database/models/**/*.js',
     ],
     migrations: [
-        'dist/migrations/**/*.js',
+        'dist/database/migrations/**/*.js',
     ],
     cli: {
-        entitiesDir: 'dist/models',
-        migrationsDir: 'dist/migrations',
+        entitiesDir: 'dist/database/models',
+        migrationsDir: 'dist/database/migrations',
     },
 } : {
     namingStrategy: new SnakeNamingStrategy(),
@@ -32,13 +32,13 @@ module.exports = process.env.NODE_ENV === 'production' ? {
     logging: false,
     synchronize: true,
     entities: [
-        'src/models/**/*.ts',
+        'src/database/models/**/*.ts',
     ],
     migrations: [
         'src/migrations/**/*.ts',
     ],
     cli: {
-        entitiesDir: 'src/models',
-        migrationsDir: 'src/migrations',
+        entitiesDir: 'src/database/models',
+        migrationsDir: 'src/database/migrations',
     },
 };
