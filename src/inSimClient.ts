@@ -60,40 +60,34 @@ export class InSimClient {
 
     async init() {
         await this.sendPacket(
-            // Motd
-            IS_MTC.fromProps({
-                message: '^6| ^7Bem vindo(a) ao ^2Cruise ^3Brasil',
-                sound: MTCSound.SND_SYSMESSAGE,
-                connectionId: 255,
-            }),
-        );
-        await this.sendPacket(
-            // Set all traffic lights to red.
-            IS_TINY.fromProps({
-                requestId: 255,
-                subType: TinyPacketSubType.TINY_SST,
-            }),
-        );
-        await this.sendPacket(
-            // Request NCN packets.
-            IS_TINY.fromProps({
-                requestId: 255,
-                subType: TinyPacketSubType.TINY_NCN,
-            }),
-        );
-        await this.sendPacket(
-            // Request NCI Packets.
-            IS_TINY.fromProps({
-                requestId: 255,
-                subType: TinyPacketSubType.TINY_NCI,
-            }),
-        );
-        await this.sendPacket(
-            // Request NPL Packets.
-            IS_TINY.fromProps({
-                requestId: 255,
-                subType: TinyPacketSubType.TINY_NPL,
-            }),
+            Buffer.from([
+                // Motd
+                ...IS_MTC.fromProps({
+                    message: '^6| ^7Bem vindo(a) ao ^2Cruise ^3Brasil',
+                    sound: MTCSound.SND_SYSMESSAGE,
+                    connectionId: 255,
+                }),
+                // Request track info
+                ...IS_TINY.fromProps({
+                    requestId: 255,
+                    subType: TinyPacketSubType.TINY_SST,
+                }),
+                // Request NCN packets.
+                ...IS_TINY.fromProps({
+                    requestId: 255,
+                    subType: TinyPacketSubType.TINY_NCN,
+                }),
+                // Request NCI Packets.
+                ...IS_TINY.fromProps({
+                    requestId: 255,
+                    subType: TinyPacketSubType.TINY_NCI,
+                }),
+                // Request NPL Packets.
+                ...IS_TINY.fromProps({
+                    requestId: 255,
+                    subType: TinyPacketSubType.TINY_NPL,
+                }),
+            ]),
         );
         await this.sendPacket(
             // Set all traffic lights to red.
