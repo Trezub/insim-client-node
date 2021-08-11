@@ -3,3 +3,5 @@ const trafficLights: {
 } = {
     SO1X: [[1, 2, 3]],
 };
+
+export default trafficLights;

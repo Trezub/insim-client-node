@@ -8,6 +8,7 @@ import { UserControlObjectsProps } from '../packets/IS_UCO';
 import Player from '../Player';
 import semaphoreTraps from '../semaphoreTraps';
 import delay from '../utils/delay';
+import { defaultZones } from '../zones';
 import playerController from './playerController';
 
 export default class TrafficLightsController {
@@ -39,7 +40,7 @@ export default class TrafficLightsController {
         if (!this.ids.includes(trap.id)) {
             return;
         }
-        if (this.ids[this.openPhase] !== trap.id) {
+        if (this.ids[this.openPhase] === trap.id) {
             return;
         }
 
@@ -60,7 +61,9 @@ export default class TrafficLightsController {
                 'error',
             ),
             sendMessageToConnection(
-                `${yellow}| Local: ${white}${player.location.name}`,
+                `${yellow}| Local: ${white}${
+                    player.location?.name || defaultZones[inSimClient.track]
+                }`,
                 player,
                 'error',
             ),
@@ -80,6 +83,7 @@ export default class TrafficLightsController {
     }
 
     constructor(greenTime: number, ids: number[]) {
+        this.ids = ids;
         inSimClient.sendPacket(
             IS_OCO.fromProps({
                 id: ids[0],

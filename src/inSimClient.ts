@@ -1,5 +1,6 @@
 import net from 'net';
 import { promisify } from 'util';
+import trafficLights from './trafficLights';
 import TrafficLightsController from './controllers/TrafficLightsController';
 
 import log from './log';
@@ -112,7 +113,7 @@ export class InSimClient {
         const lights = trafficLights[this.track];
         lights?.forEach((ids) => {
             this.trafficLightControllers.push(
-                new TrafficLightsController(18, ids),
+                new TrafficLightsController(18000, ids),
             );
         });
     }
