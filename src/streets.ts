@@ -22,26 +22,22 @@ const streets: {
 } = {
     SO1X: [
         {
-            forward: {
+            backwards: {
                 name: 'Pits',
                 speedLimit: 80,
             },
-            x: 21517,
-            y: 3668,
-            z: 0,
+            x: 242.625,
+            y: -37.875,
+            z: 3,
         },
         {
             backwards: {
                 name: 'Pits',
                 speedLimit: 80,
             },
-            forward: {
-                name: 'Pits',
-                speedLimit: 80,
-            },
-            x: -24049,
-            y: -606,
-            z: 3,
+            x: 208,
+            y: 229.25,
+            z: 0,
         },
     ],
 };
