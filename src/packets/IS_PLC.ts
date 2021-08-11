@@ -12,7 +12,7 @@ export default {
         buffer.writeUInt8(12, 0);
         buffer.writeUInt8(PacketType.ISP_PLC, 1);
         buffer.writeUInt8(connectionId, 4);
-        buffer.writeUInt16LE(cars, 8);
+        buffer.writeUInt32LE(cars, 8);
         return buffer;
     },
 };
