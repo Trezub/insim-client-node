@@ -7,6 +7,7 @@ import IS_JRR, { JRRAction } from '../packets/IS_JRR';
 import { SendMessageProps, UserType } from '../packets/IS_MSO';
 import IS_MTC, { MTCSound } from '../packets/IS_MTC';
 import { isStreet } from '../streets';
+import getDistanceMeters from '../utils/getDistanceMeters';
 import connectionController from './connectionController';
 import correiosController from './correiosController';
 import playerController from './playerController';
@@ -36,6 +37,25 @@ class MessageController {
                         }),
                     );
                     break;
+                }
+                case 'distance': {
+                    const args = message.slice(1).split(' ').slice(1);
+                    if (args.length !== 2) {
+                        return sendMessageToConnection(
+                            `${red}| ${white}Uso correto: ${lightGreen}!tp <x> <y>`,
+                            connection,
+                            'error',
+                        );
+                    }
+                    const [x, y] = args;
+                    return sendMessageToConnection(
+                        `${lightBlue}| ${yellow}${getDistanceMeters(
+                            player.position,
+                            { x: Number(x), y: Number(y) },
+                        )}m ${white}from ${yellow}x: ${x} y: ${y}`,
+                        connection,
+                        'system',
+                    );
                 }
                 case 'cash': {
                     const [, amount] = message.split(' ');
