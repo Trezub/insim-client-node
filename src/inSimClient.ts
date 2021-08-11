@@ -1,5 +1,6 @@
 import net from 'net';
 import { promisify } from 'util';
+import TrafficLightsController from './controllers/TrafficLightsController';
 
 import log from './log';
 import routePacket from './packetRouter';
@@ -12,6 +13,7 @@ import IS_OCO, {
     ObjectControlIndex,
 } from './packets/IS_OCO';
 import IS_TINY, { TinyPacketSubType } from './packets/IS_TINY';
+import { UserControlObjectsProps } from './packets/IS_UCO';
 
 export class InSimClient {
     constructor() {
@@ -100,9 +102,26 @@ export class InSimClient {
         );
     }
 
+    handleTrafficLightsTrapTrigger(uco: UserControlObjectsProps) {
+        this.trafficLightControllers.forEach((controller) => {
+            controller.handleTrapTrigger(uco);
+        });
+    }
+
+    initTrafficLights() {
+        const lights = trafficLights[this.track];
+        lights?.forEach((ids) => {
+            this.trafficLightControllers.push(
+                new TrafficLightsController(18, ids),
+            );
+        });
+    }
+
     client: net.Socket;
 
     track: string;
+
+    trafficLightControllers: TrafficLightsController[] = [];
 
     sendPacket: (arg1: string | Uint8Array) => Promise<void>;
 }
