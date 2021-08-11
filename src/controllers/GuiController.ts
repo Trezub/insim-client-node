@@ -1,4 +1,4 @@
-import { lightGreen, white, yellow } from '../colors';
+import { lightGreen, red, white, yellow } from '../colors';
 import inSimClient from '../inSimClient';
 import IS_BTN, { ButtonStyle } from '../packets/IS_BTN';
 import Connection from '../Connection';
@@ -59,9 +59,10 @@ export default class GuiController {
                     connectionId,
                     id: this.buttonIds.get('cash'),
                     requestId: 1,
-                    text: `${lightGreen}R$${(
-                        this.connection.cash / 100
-                    ).toFixed(2)}`,
+                    text: `
+                    ${this.connection.cash >= 0 ? lightGreen : red}R$${(
+    this.connection.cash / 100
+).toFixed(2)}`,
                     height: 5,
                     width: 15,
                     top: 7,
@@ -110,9 +111,9 @@ export default class GuiController {
             IS_BTN.fromProps({
                 requestId: 1,
                 id: this.buttonIds.get('cash'),
-                text: `${lightGreen}R$${(this.connection.cash / 100).toFixed(
-                    2,
-                )}`,
+                text: `${this.connection.cash >= 0 ? lightGreen : red}R$${(
+                    this.connection.cash / 100
+                ).toFixed(2)}`,
                 connectionId: this.connection.id,
             }),
         );
@@ -149,9 +150,9 @@ export default class GuiController {
                 id: this.buttonIds.get('job'),
                 text: this.connection.player?.job
                     ? zones.find(
-                          (z) =>
-                              z.id === this.connection.player.job.destination,
-                      ).name
+                        (z) =>
+                            z.id === this.connection.player.job.destination,
+                    ).name
                     : '',
                 connectionId: this.connection.id,
             }),
