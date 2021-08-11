@@ -62,10 +62,12 @@ const routes: {
     [PacketType.ISP_MCI]: (p) => playerController.handleCarInfo(p),
     [PacketType.ISP_STA]: (p: StateProps) => {
         inSimClient.track = p.track;
+        inSimClient.initTrafficLights();
     },
     [PacketType.ISP_UCO]: [
         (p) => speedTrapController.handleUserControl(p),
         (p) => zoneController.handleUserControl(p),
+        (p) => inSimClient.handleTrafficLightsTrapTrigger(p),
     ],
     // [PacketType.ISP_BTC]: (p) =>
     // [PacketType.IS_BTT]: (p) =>
