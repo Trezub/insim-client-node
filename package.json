@@ -7,6 +7,7 @@
     "build": "tsc --build tsconfig.json",
     "dev": "cross-env NODE_ENV=\"development\" ts-node-dev --respawn --transpile-only --rs --inspect -r dotenv/config src/app.ts",
     "start": "cross-env NODE_ENV=\"production\" node dist/app.js",
+    "typeorm-dev": "cross-env NODE_ENV=development ts-node-dev --transpile-only --pretty -r dotenv/config typeorm/cli",
     "lint": "eslint --ext .ts, ./src"
   },
   "description": "Typescript, ESLint, Prettier boilerplate for use in Node 14",
@@ -31,6 +32,7 @@
     "editorconfig": "^0.15.3",
     "pg": "^8.7.1",
     "tslog": "^3.2.0",
-    "typeorm": "^0.2.36"
+    "typeorm": "^0.2.36",
+    "typeorm-naming-strategies": "^2.0.0"
   }
 }

@@ -2,6 +2,6 @@
 // byte			1-byte unsigned integer
 // word			2-byte unsigned integer - uint16
 // short		2-byte signed integer
-// unsigned		4-byte unsigned integer
+// unsigned		4-byte unsigned integer - uint32
 // int			4-byte signed integer - int32
 // float		4-byte float
