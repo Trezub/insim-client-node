@@ -23,7 +23,7 @@ export default {
             position: { x, y, z },
         });
         return {
-            heading,
+            heading: (heading * 180) / 128,
             id,
             position: { x, y, z },
         };
