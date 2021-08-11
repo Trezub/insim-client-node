@@ -7,6 +7,7 @@ import { MulticarInfoProps } from '../packets/IS_MCI';
 import { NewPlayerProps } from '../packets/IS_NPL';
 import { PlayerLeaveProps } from '../packets/IS_PLL';
 import Player from '../Player';
+import spawnLocations from '../spawnLocations';
 import connectionController from './connectionController';
 
 class PlayerController {
@@ -23,24 +24,27 @@ class PlayerController {
         }
 
         if (player.isJoinRequest) {
-            await Promise.all([
-                inSimClient.sendPacket(
-                    IS_JRR.fromProps({
-                        action: JRRAction.JRR_SPAWN,
-                        connectionId: player.connectionId,
-                        // startPosition: {
-                        //     flags: ObjectInfoFlag.SetStartPoint,
-                        //     heading: 77,
-                        //     position: {
-                        //         x: 239,
-                        //         y: -180,
-                        //         z: 0,
-                        //     },
-                        // },
-                    }),
-                ),
-                // sendMessageToConnection('teste', connection, 'error'),
-            ]);
+            const locations = spawnLocations[inSimClient.track];
+            const {
+                h: heading,
+                x,
+                y,
+            } = locations[Math.round(Math.random() * (locations.length - 1))];
+            await inSimClient.sendPacket(
+                IS_JRR.fromProps({
+                    action: JRRAction.JRR_SPAWN,
+                    connectionId: player.connectionId,
+                    startPosition: {
+                        flags: ObjectInfoFlag.SetStartPoint,
+                        heading,
+                        position: {
+                            x,
+                            y,
+                            z: 0,
+                        },
+                    },
+                }),
+            );
             return;
         }
         log.info(

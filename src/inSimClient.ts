@@ -1,6 +1,5 @@
 import net from 'net';
 import { promisify } from 'util';
-import trafficLights from './trafficLights';
 import TrafficLightsController from './controllers/TrafficLightsController';
 
 import log from './log';
@@ -15,6 +14,7 @@ import IS_OCO, {
 } from './packets/IS_OCO';
 import IS_TINY, { TinyPacketSubType } from './packets/IS_TINY';
 import { UserControlObjectsProps } from './packets/IS_UCO';
+import trafficLights from './trafficLights';
 
 export class InSimClient {
     constructor() {
@@ -110,6 +110,9 @@ export class InSimClient {
     }
 
     initTrafficLights() {
+        this.trafficLightControllers.forEach((controller) =>
+            controller.dispose(),
+        );
         const lights = trafficLights[this.track];
         lights?.forEach((ids) => {
             this.trafficLightControllers.push(
