@@ -82,6 +82,15 @@ export default class TrafficLightsController {
         ]);
     }
 
+    dispose() {
+        this.timeouts.forEach(clearTimeout);
+        clearInterval(this.interval);
+    }
+
+    timeouts: NodeJS.Timeout[];
+
+    interval: NodeJS.Timeout;
+
     constructor(greenTime: number, ids: number[]) {
         this.ids = ids;
         inSimClient.sendPacket(
