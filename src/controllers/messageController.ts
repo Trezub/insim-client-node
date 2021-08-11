@@ -2,6 +2,8 @@ import { lightBlue, lightGreen, red, white, yellow } from '../colors';
 import sendMessageToConnection from '../helpers/sendMessageToConnection';
 import inSimClient from '../inSimClient';
 import log from '../log';
+import { ObjectInfoFlag } from '../packets/helpers/ObjectInfo';
+import IS_JRR, { JRRAction } from '../packets/IS_JRR';
 import { SendMessageProps, UserType } from '../packets/IS_MSO';
 import IS_MTC, { MTCSound } from '../packets/IS_MTC';
 import { isStreet } from '../streets';
@@ -20,10 +22,12 @@ class MessageController {
         if (connectionId === 0) {
             return;
         }
+        const connection = connectionController.connections.get(connectionId);
+        const player = playerController.players.get(playerId);
+
         if (userType === UserType.MSO_PREFIX) {
             switch (message.slice(1).split(' ')[0]) {
                 case 'coords': {
-                    const player = playerController.players.get(playerId);
                     await inSimClient.sendPacket(
                         IS_MTC.fromProps({
                             message: `${lightBlue}|${white} X: ${yellow}${player.position.x} ${white}Y: ${yellow}${player.position.y} ${white}Z: ${yellow}${player.position.z} ${white}H: ${yellow}${player.direction}º`,
@@ -35,8 +39,6 @@ class MessageController {
                 }
                 case 'cash': {
                     const [, amount] = message.split(' ');
-                    const connection =
-                        connectionController.connections.get(connectionId);
                     if (!amount) {
                         return sendMessageToConnection(
                             `${red}| ${white}Formato: ${lightGreen}!cash <quantidade>`,
@@ -56,8 +58,6 @@ class MessageController {
                     break;
                 }
                 case 'job': {
-                    const connection =
-                        connectionController.connections.get(connectionId);
                     if (
                         !connection.player ||
                         (!isStreet(connection.player.location) &&
@@ -72,6 +72,34 @@ class MessageController {
                     correiosController.createJob(connection.player);
                     break;
                 }
+                case 'tp':
+                    {
+                        const args = message.slice(1).split(' ').slice(1);
+                        if (args.length !== 2) {
+                            return sendMessageToConnection(
+                                `${red}| ${white}Uso correto: ${lightGreen}!tp <x> <y>`,
+                                connection,
+                                'error',
+                            );
+                        }
+                        const [x, y] = args;
+                        await inSimClient.sendPacket(
+                            IS_JRR.fromProps({
+                                playerId,
+                                action: JRRAction.JRR_RESET_NO_REPAIR,
+                                startPosition: {
+                                    flags: ObjectInfoFlag.SetStartPoint,
+                                    heading: 0,
+                                    position: {
+                                        x: Number(x),
+                                        y: Number(y),
+                                        z: 0,
+                                    },
+                                },
+                            }),
+                        );
+                    }
+                    break;
                 default:
                     break;
             }
