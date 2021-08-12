@@ -46,6 +46,7 @@ const decoders: {
     [PacketType.ISP_OBH]: IS_OBH.fromBuffer,
     [PacketType.ISP_CON]: IS_CON.fromBuffer,
     [PacketType.ISP_STA]: IS_STA.fromBuffer,
+    [PacketType.ISP_PEN]: IS_STA.fromBuffer,
 };
 
 const routes: {
@@ -59,6 +60,7 @@ const routes: {
     [PacketType.ISP_PLP]: (p) => playerController.handlePlayerLeave(p),
     [PacketType.ISP_CSC]: (p) => zoneController.handleCarStateChange(p),
     [PacketType.ISP_MSO]: (p) => messageController.handleNewMessage(p),
+    [PacketType.ISP_PEN]: (p) => inSimClient.handleNewPenalty(p),
     [PacketType.ISP_MCI]: (p) => playerController.handleCarInfo(p),
     [PacketType.ISP_STA]: (p: StateProps) => {
         if (inSimClient.track !== p.track) {
