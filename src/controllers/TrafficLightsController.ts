@@ -4,7 +4,7 @@ import sendMessageToConnection from '../helpers/sendMessageToConnection';
 import inSimClient from '../inSimClient';
 import log from '../log';
 import IS_OCO, { ObjectControlLight } from '../packets/IS_OCO';
-import { UserControlObjectsProps } from '../packets/IS_UCO';
+import { UserControlAction, UserControlObjectsProps } from '../packets/IS_UCO';
 import Player from '../Player';
 import semaphoreTraps from '../semaphoreTraps';
 import delay from '../utils/delay';
@@ -41,6 +41,9 @@ export default class TrafficLightsController {
             return;
         }
         if (this.ids[this.openPhase] === trap.id) {
+            return;
+        }
+        if (action === UserControlAction.UCO_CP_REV) {
             return;
         }
 
