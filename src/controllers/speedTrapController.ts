@@ -75,46 +75,36 @@ class SpeedTrapController {
                         ' ',
                     )}`,
                     player,
-                    'error',
                 ),
                 sendMessageToConnection(
                     `${yellow}| Local: ${white}${player.location.name}`,
                     player,
-                    'error',
                 ),
                 sendMessageToConnection(
                     `${yellow}| Velocidade aferida: ${white}${playerSpeed.toFixed(
                         1,
                     )}KM/h`,
                     player,
-                    'error',
                 ),
                 sendMessageToConnection(
                     `${yellow}| Velocidade considerada: ${white}${consideredSpeed.toFixed(
                         1,
                     )}KM/h (${fineLevelNames[fineLevel]})`,
                     player,
-                    'error',
                 ),
                 sendMessageToConnection(
                     `${yellow}| Velocidade máxima no local: ${white}${speedLimit.toFixed(
                         1,
                     )}KM/h`,
                     player,
-                    'error',
                 ),
                 sendMessageToConnection(
                     `${yellow}| Valor: ${white}R$${(
                         fines.speed[fineLevel] / 100
                     ).toFixed(2)}`,
                     player,
-                    'error',
                 ),
-                sendMessageToConnection(
-                    `${yellow}`.padEnd(50, '-'),
-                    player,
-                    'error',
-                ),
+                sendMessageToConnection(`${yellow}`.padEnd(50, '-'), player),
                 /*
                 IS.SendMTC_MessageToConnection("^3| ^7Camera: ^3TGPR-" + data.ToString("000"), UCID);
                 //inSim.sendMTC_MessageToConnection("^3| ^7Velocidade registrada: ^3" + speed + "km/h", UCID);

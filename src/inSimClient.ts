@@ -101,6 +101,18 @@ export class InSimClient {
                 mainLights: ObjectControlIndex.AXO_START_LIGHTS,
             }),
         );
+
+        let yellowLight = false;
+        setInterval(() => {
+            this.sendPacket(
+                IS_OCO.fromProps({
+                    action: ObjectControlAction.OCO_LIGHTS_SET,
+                    id: 0,
+                    lights: yellowLight ? ObjectControlLight.AMBER : 0,
+                }),
+            );
+            yellowLight = !yellowLight;
+        }, 1000);
     }
 
     handleTrafficLightsTrapTrigger(uco: UserControlObjectsProps) {

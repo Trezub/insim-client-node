@@ -1,3 +1,4 @@
+import shuffle from 'lodash.shuffle';
 import sendMessageToConnection from '../helpers/sendMessageToConnection';
 import inSimClient from '../inSimClient';
 import log from '../log';
@@ -8,6 +9,7 @@ import { NewPlayerProps } from '../packets/IS_NPL';
 import { PlayerLeaveProps } from '../packets/IS_PLL';
 import Player from '../Player';
 import spawnLocations from '../spawnLocations';
+import getDistanceMeters from '../utils/getDistanceMeters';
 import connectionController from './connectionController';
 
 class PlayerController {
@@ -24,22 +26,31 @@ class PlayerController {
         }
 
         if (player.isJoinRequest) {
-            const locations = spawnLocations[inSimClient.track];
-            const {
-                h: heading,
-                x,
-                y,
-            } = locations[Math.round(Math.random() * (locations.length - 1))];
+            const locations = shuffle(spawnLocations[inSimClient.track]);
+            const spawnLocation = locations.find(
+                (l) =>
+                    ![...this.players].some(
+                        ([, p]) => getDistanceMeters(p.position, l) < 5,
+                    ),
+            );
+            if (!spawnLocation) {
+                await inSimClient.sendPacket(
+                    IS_JRR.fromProps({
+                        action: JRRAction.JRR_SPAWN,
+                        connectionId: player.connectionId,
+                    }),
+                );
+            }
             await inSimClient.sendPacket(
                 IS_JRR.fromProps({
                     action: JRRAction.JRR_SPAWN,
                     connectionId: player.connectionId,
                     startPosition: {
                         flags: ObjectInfoFlag.SetStartPoint,
-                        heading,
+                        heading: spawnLocation.h,
                         position: {
-                            x,
-                            y,
+                            x: spawnLocation.x,
+                            y: spawnLocation.y,
                             z: 0,
                         },
                     },
