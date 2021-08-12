@@ -1,17 +1,20 @@
 import net from 'net';
 import { promisify } from 'util';
+import playerController from './controllers/playerController';
 import TrafficLightsController from './controllers/TrafficLightsController';
 
 import log from './log';
 import routePacket from './packetRouter';
 
 import IS_ISI, { InSimInitFlag } from './packets/IS_ISI';
+import IS_MST from './packets/IS_MST';
 import IS_MTC, { MTCSound } from './packets/IS_MTC';
 import IS_OCO, {
     ObjectControlAction,
     ObjectControlLight,
     ObjectControlIndex,
 } from './packets/IS_OCO';
+import { PenaltyProps } from './packets/IS_PEN';
 import IS_TINY, { TinyPacketSubType } from './packets/IS_TINY';
 import { UserControlObjectsProps } from './packets/IS_UCO';
 import trafficLights from './trafficLights';
@@ -59,6 +62,16 @@ export class InSimClient {
             );
             this.init();
         });
+    }
+
+    async handleNewPenalty({ playerId }: PenaltyProps) {
+        const player = playerController.players.get(playerId);
+        if (!player) {
+            return;
+        }
+        await this.sendPacket(
+            IS_MST.fromProps(`/p_clear ${player.connection.username}`),
+        );
     }
 
     async init() {
