@@ -53,7 +53,9 @@ export class InSimClient {
                         InSimInitFlag.ISF_AXM_EDIT |
                         InSimInitFlag.ISF_AXM_LOAD |
                         InSimInitFlag.ISF_REQ_JOIN |
-                        InSimInitFlag.ISF_MCI,
+                        InSimInitFlag.ISF_MCI |
+                        InSimInitFlag.ISF_OBH |
+                        InSimInitFlag.ISF_CON,
                     inSimVersion: 8,
                     interval: 100,
                     prefixChar: '!',
@@ -114,6 +116,18 @@ export class InSimClient {
                 mainLights: ObjectControlIndex.AXO_START_LIGHTS,
             }),
         );
+
+        let yellowLight = false;
+        setInterval(() => {
+            this.sendPacket(
+                IS_OCO.fromProps({
+                    action: ObjectControlAction.OCO_LIGHTS_SET,
+                    id: 0,
+                    lights: yellowLight ? ObjectControlLight.AMBER : 0,
+                }),
+            );
+            yellowLight = !yellowLight;
+        }, 1000);
     }
 
     handleTrafficLightsTrapTrigger(uco: UserControlObjectsProps) {

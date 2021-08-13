@@ -41,6 +41,7 @@
             "error",
             4
         ],
+        "@typescript-eslint/no-loop-func": "off",
        "no-new":"off"
     }
 }

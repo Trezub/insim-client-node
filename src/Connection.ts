@@ -5,6 +5,7 @@ import { NewConnectionProps } from './packets/IS_NCN';
 import IS_PLC from './packets/IS_PLC';
 import Player, { PlayerCar } from './Player';
 import { PlayerCar as PlayerCarEnum } from './enums/PlayerCar';
+import healthController from './controllers/healthController';
 
 export default class Connection {
     constructor({
@@ -79,7 +80,14 @@ export default class Connection {
     }
 
     set health(value: number) {
-        this._health = value;
+        if (value < 0) {
+            this._health = 0;
+        } else {
+            this._health = value;
+        }
+        if (this._health === 0) {
+            healthController.handlePlayerDied(this);
+        }
         this.gui.handleHealthUpdate();
     }
 }

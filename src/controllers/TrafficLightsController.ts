@@ -61,27 +61,20 @@ export default class TrafficLightsController {
                     ' ',
                 )}`,
                 player,
-                'error',
             ),
             sendMessageToConnection(
                 `${yellow}| Local: ${white}${
                     player.location?.name || defaultZones[inSimClient.track]
                 }`,
                 player,
-                'error',
             ),
             sendMessageToConnection(
                 `${yellow}| Valor: ${white}R$${(fines.semaphore / 100).toFixed(
                     2,
                 )}`,
                 player,
-                'error',
             ),
-            sendMessageToConnection(
-                `${yellow}`.padEnd(50, '-'),
-                player,
-                'error',
-            ),
+            sendMessageToConnection(`${yellow}`.padEnd(50, '-'), player),
         ]);
     }
 
@@ -119,7 +112,7 @@ export default class TrafficLightsController {
                     lights: ObjectControlLight.RED,
                 }),
             );
-            if (this.openPhase < ids.length) {
+            if (this.openPhase < ids.length - 1) {
                 this.openPhase += 1;
             } else {
                 this.openPhase = 0;
