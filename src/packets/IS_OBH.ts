@@ -6,10 +6,10 @@ export interface ObjectHitProps {
     car: CarContactProps;
     position: { x: number; y: number; z: number };
     index: number;
-    flags: ObjectHit;
+    flags: ObjectHitFlags;
 }
 
-export enum ObjectHit {
+export enum ObjectHitFlags {
     OBH_LAYOUT = 1, // an added object
     OBH_CAN_MOVE = 2, // a movable object
     OBH_WAS_MOVING = 4, // was moving before this hit

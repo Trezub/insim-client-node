@@ -10,6 +10,7 @@ import { isStreet } from '../streets';
 import getDistanceMeters from '../utils/getDistanceMeters';
 import connectionController from './connectionController';
 import correiosController from './correiosController';
+import healthController from './healthController';
 import playerController from './playerController';
 
 class MessageController {

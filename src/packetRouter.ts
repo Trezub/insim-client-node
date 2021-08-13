@@ -1,4 +1,5 @@
 import connectionController from './controllers/connectionController';
+import healthController from './controllers/healthController';
 import messageController from './controllers/messageController';
 import playerController from './controllers/playerController';
 import speedTrapController from './controllers/speedTrapController';
@@ -47,6 +48,7 @@ const decoders: {
     [PacketType.ISP_CON]: IS_CON.fromBuffer,
     [PacketType.ISP_STA]: IS_STA.fromBuffer,
     [PacketType.ISP_PEN]: IS_STA.fromBuffer,
+    [PacketType.ISP_OBH]: IS_OBH.fromBuffer,
 };
 
 const routes: {
@@ -62,6 +64,7 @@ const routes: {
     [PacketType.ISP_MSO]: (p) => messageController.handleNewMessage(p),
     [PacketType.ISP_PEN]: (p) => inSimClient.handleNewPenalty(p),
     [PacketType.ISP_MCI]: (p) => playerController.handleCarInfo(p),
+    [PacketType.ISP_OBH]: (p) => healthController.handlePlayerCrash(p),
     [PacketType.ISP_STA]: (p: StateProps) => {
         if (inSimClient.track !== p.track) {
             inSimClient.track = p.track;
@@ -73,7 +76,7 @@ const routes: {
         (p) => zoneController.handleUserControl(p),
         (p) => inSimClient.handleTrafficLightsTrapTrigger(p),
     ],
-    // [PacketType.ISP_BTC]: (p) =>
+
     // [PacketType.IS_BTT]: (p) =>
     // [PacketType.ISP_BFN]: (p) =>
     // [PacketType.ISP_OBH]: (p) =>

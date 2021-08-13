@@ -53,7 +53,9 @@ export class InSimClient {
                         InSimInitFlag.ISF_AXM_EDIT |
                         InSimInitFlag.ISF_AXM_LOAD |
                         InSimInitFlag.ISF_REQ_JOIN |
-                        InSimInitFlag.ISF_MCI,
+                        InSimInitFlag.ISF_MCI |
+                        InSimInitFlag.ISF_OBH |
+                        InSimInitFlag.ISF_CON,
                     inSimVersion: 8,
                     interval: 100,
                     prefixChar: '!',
