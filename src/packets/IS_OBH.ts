@@ -26,7 +26,7 @@ export default {
         const [z, , index, flags] = buffer.slice(20);
         return {
             playerId,
-            closingSpeed,
+            closingSpeed: Math.round((closingSpeed / 100) * 3.6 * 100) / 100,
             car,
             position: { x, y, z },
             flags,
