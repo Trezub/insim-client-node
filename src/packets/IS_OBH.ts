@@ -18,11 +18,12 @@ export enum ObjectHit {
 
 export default {
     fromBuffer(buffer: Buffer): ObjectHitProps {
-        const [, , , playerId, closingSpeed] = buffer;
+        const [, , , playerId] = buffer;
+        const closingSpeed = buffer.readUInt16LE(4);
         const car = CarContOBJ.fromBuffer(buffer.slice(8, 16));
         const x = buffer.readInt16LE(16);
         const y = buffer.readInt16LE(18);
-        const [z, , index, flags] = buffer.slice(19);
+        const [z, , index, flags] = buffer.slice(20);
         return {
             playerId,
             closingSpeed,
