@@ -8,6 +8,7 @@ import { NewPlayerProps } from '../packets/IS_NPL';
 import { PlayerLeaveProps } from '../packets/IS_PLL';
 import Player from '../Player';
 import spawnLocations from '../spawnLocations';
+import bankController from './bankController';
 import connectionController from './connectionController';
 
 class PlayerController {
@@ -53,6 +54,8 @@ class PlayerController {
         const newPlayer = new Player(player);
         connection.player = newPlayer;
         this.players.set(player.playerId, newPlayer);
+
+        await bankController.handlePlayerEntrance(newPlayer);
     }
 
     handlePlayerLeave({ playerId }: PlayerLeaveProps) {

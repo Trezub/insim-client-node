@@ -61,8 +61,8 @@ export default class GuiController {
                     requestId: 1,
                     text: `
                     ${this.connection.cash >= 0 ? lightGreen : red}R$${(
-    this.connection.cash / 100
-).toFixed(2)}`,
+                        this.connection.cash / 100
+                    ).toFixed(2)}`,
                     height: 5,
                     width: 15,
                     top: 7,
@@ -144,16 +144,17 @@ export default class GuiController {
     }
 
     async handleJobUpdate() {
+        let jobName: string = '';
+        if (this.connection.player?.job) {
+            jobName = zones.find(
+                (z) => z.id === this.connection.player.job.destination,
+            ).name;
+        }
         await inSimClient.sendPacket(
             IS_BTN.fromProps({
                 requestId: 1,
                 id: this.buttonIds.get('job'),
-                text: this.connection.player?.job
-                    ? zones.find(
-                        (z) =>
-                            z.id === this.connection.player.job.destination,
-                    ).name
-                    : '',
+                text: jobName,
                 connectionId: this.connection.id,
             }),
         );

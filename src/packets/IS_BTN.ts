@@ -9,7 +9,7 @@ export interface ButtonProps {
     top?: number;
     height?: number;
     width?: number;
-    text: string;
+    text?: string;
     requestId: number;
     connectionId: number;
     alwaysVisible?: boolean;
@@ -40,8 +40,9 @@ export default {
         connectionId,
         alwaysVisible,
     }: ButtonProps) {
+        const str = text ?? '';
         return Buffer.from([
-            Math.ceil((Math.min(240, text.length) + 1) / 4) * 4 + 12,
+            Math.ceil((Math.min(240, str.length) + 1) / 4) * 4 + 12,
             PacketType.ISP_BTN,
             requestId,
             connectionId,
@@ -54,8 +55,8 @@ export default {
             width,
             height,
             ...toByteArray(
-                text,
-                Math.ceil((Math.min(240, text.length) + 1) / 4) * 4,
+                text || '',
+                Math.ceil((Math.min(240, str.length) + 1) / 4) * 4,
             ),
         ]);
     },

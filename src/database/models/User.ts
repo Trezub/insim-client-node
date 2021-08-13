@@ -36,4 +36,7 @@ export class User {
 
     @Column({ enum: Language })
     language: number;
+
+    @Column({ default: 0 })
+    backCash: number;
 }

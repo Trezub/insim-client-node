@@ -59,6 +59,8 @@ export default class Connection {
 
     gui: GuiController;
 
+    bankCash: number;
+
     private _health: number;
 
     private _cash: number;
