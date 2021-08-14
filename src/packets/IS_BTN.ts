@@ -13,17 +13,22 @@ export interface ButtonProps {
     requestId: number;
     connectionId: number;
     alwaysVisible?: boolean;
+    typeInDescription?: string;
 }
 
 export enum ButtonStyle {
-    ISB_C1 = 1, // you can choose a standard
-    ISB_C2 = 2, // interface colour using
-    ISB_C4 = 4, // these 3 lowest bits - see below
-    ISB_CLICK = 8, // click this button to send IS_BTC
-    ISB_LIGHT = 16, // light button
-    ISB_DARK = 32, // dark button
-    ISB_LEFT = 64, // align text to left
-    ISB_RIGHT = 128, // align text to right
+    TITLE = 1,
+    UNSELECTED = 2,
+    SELECTED = 3,
+    OK = 4,
+    CANCEL = 5,
+    TEXT = 6,
+    UNAVAILABLE = 7,
+    CLICK = 8, // click this button to send IS_BTC
+    LIGHT = 16, // light button
+    DARK = 32, // dark button
+    LEFT = 64, // align text to left
+    RIGHT = 128, // align text to right
 }
 
 export default {
@@ -39,10 +44,18 @@ export default {
         width,
         connectionId,
         alwaysVisible,
+        typeInDescription,
     }: ButtonProps) {
         const str = text ?? '';
+        const textLength = Math.min(
+            240,
+            str.length +
+                (typeInDescription ? typeInDescription.length + 2 : 0) +
+                1,
+        );
+        const roundedTextLength = Math.ceil(textLength / 4) * 4;
         return Buffer.from([
-            Math.ceil((Math.min(240, str.length) + 1) / 4) * 4 + 12,
+            roundedTextLength + 12, // Fixed size + variable text length (multiple of 4)
             PacketType.ISP_BTN,
             requestId,
             connectionId,
@@ -55,8 +68,8 @@ export default {
             width,
             height,
             ...toByteArray(
-                text || '',
-                Math.ceil((Math.min(240, str.length) + 1) / 4) * 4,
+                typeInDescription ? `\0${typeInDescription}\0${str}` : str,
+                roundedTextLength,
             ),
         ]);
     },
