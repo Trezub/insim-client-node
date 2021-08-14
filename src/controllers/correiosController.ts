@@ -1,7 +1,9 @@
-import { blue, lightBlue, lightGreen, red, white } from '../colors';
+import { blue, lightBlue, lightGreen, red, white, yellow } from '../colors';
 import sendMessageToConnection from '../helpers/sendMessageToConnection';
+import inSimClient from '../inSimClient';
 import jobs from '../jobs';
 import log from '../log';
+import IS_BTN, { ButtonStyle } from '../packets/IS_BTN';
 import Player from '../Player';
 import { isStreet } from '../streets';
 import zones from '../zones';
@@ -54,6 +56,225 @@ class CorreiosController {
         }
         const job = jobs[Math.round(Math.random() * (jobs.length - 1))];
         player.job = job;
+    }
+
+    async handlePlayerEntrance(player: Player) {
+        const connectionId = player.connection.id;
+        await inSimClient.sendPacket(
+            Buffer.from([
+                // Container Dark
+                ...IS_BTN.fromProps({
+                    connectionId,
+                    requestId: 1,
+                    id: 99,
+                    height: 70,
+                    width: 92,
+                    left: 54,
+                    top: 42,
+                    style: ButtonStyle.DARK,
+                }),
+                // Container
+                ...IS_BTN.fromProps({
+                    connectionId,
+                    requestId: 1,
+                    id: 100,
+                    height: 60,
+                    width: 90,
+                    left: 55,
+                    top: 50,
+                    style: ButtonStyle.LIGHT,
+                }),
+                // Title
+                ...IS_BTN.fromProps({
+                    connectionId,
+                    requestId: 1,
+                    id: 101,
+                    height: 15,
+                    width: 100,
+                    left: 50,
+                    top: 25,
+                    style: ButtonStyle.LIGHT,
+                    text: `${yellow} Correios`,
+                }),
+                // Title Container
+                ...IS_BTN.fromProps({
+                    connectionId,
+                    requestId: 1,
+                    id: 102,
+                    height: 8,
+                    width: 66,
+                    left: 67,
+                    top: 42,
+                    text: `${white}Entregas`,
+                }),
+                // First Job
+                ...IS_BTN.fromProps({
+                    connectionId,
+                    requestId: 1,
+                    id: 103,
+                    height: 5,
+                    width: 30,
+                    left: 55,
+                    top: 51,
+                    text: `${white}Pacote Padrão`,
+                }),
+                ...IS_BTN.fromProps({
+                    connectionId,
+                    requestId: 1,
+                    id: 104,
+                    height: 5,
+                    width: 30,
+                    left: 55,
+                    top: 56,
+                    style: ButtonStyle.LEFT,
+                    text: `${white}Destino: ${lightGreen}Valentim Terra`,
+                }),
+                ...IS_BTN.fromProps({
+                    connectionId,
+                    requestId: 1,
+                    id: 105,
+                    height: 5,
+                    width: 30,
+                    left: 55,
+                    top: 61,
+                    style: ButtonStyle.LEFT,
+                    text: `${white}Valor: ${lightGreen}Até 566,98`,
+                }),
+                ...IS_BTN.fromProps({
+                    connectionId,
+                    requestId: 1,
+                    id: 106,
+                    height: 5,
+                    width: 30,
+                    left: 55,
+                    top: 66,
+                    style: ButtonStyle.LEFT,
+                    text: `${white}Distância: ${lightGreen}1566m`,
+                }),
+                ...IS_BTN.fromProps({
+                    connectionId,
+                    requestId: 1,
+                    id: 107,
+                    height: 6,
+                    width: 28,
+                    left: 56,
+                    top: 72,
+                    style: ButtonStyle.CLICK | ButtonStyle.DARK,
+                    text: `${yellow}Aceitar`,
+                }),
+
+                // Second Job
+                ...IS_BTN.fromProps({
+                    connectionId,
+                    requestId: 1,
+                    id: 108,
+                    height: 5,
+                    width: 30,
+                    left: 85,
+                    top: 51,
+                    text: `${white}Pacote Padrão`,
+                }),
+                ...IS_BTN.fromProps({
+                    connectionId,
+                    requestId: 1,
+                    id: 109,
+                    height: 5,
+                    width: 30,
+                    left: 85,
+                    top: 56,
+                    style: ButtonStyle.LEFT,
+                    text: `${white}Destino: ${lightGreen}Valentim Terra`,
+                }),
+                ...IS_BTN.fromProps({
+                    connectionId,
+                    requestId: 1,
+                    id: 110,
+                    height: 5,
+                    width: 30,
+                    left: 85,
+                    top: 61,
+                    style: ButtonStyle.LEFT,
+                    text: `${white}Valor: ${lightGreen}Até 566,98`,
+                }),
+                ...IS_BTN.fromProps({
+                    connectionId,
+                    requestId: 1,
+                    id: 111,
+                    height: 5,
+                    width: 30,
+                    left: 85,
+                    top: 66,
+                    style: ButtonStyle.LEFT,
+                    text: `${white}Distância: ${lightGreen}1566m`,
+                }),
+                ...IS_BTN.fromProps({
+                    connectionId,
+                    requestId: 1,
+                    id: 112,
+                    height: 6,
+                    width: 28,
+                    left: 86,
+                    top: 72,
+                    style: ButtonStyle.CLICK | ButtonStyle.DARK,
+                    text: `${yellow}Aceitar`,
+                }),
+                // Third Job
+                ...IS_BTN.fromProps({
+                    connectionId,
+                    requestId: 1,
+                    id: 113,
+                    height: 5,
+                    width: 30,
+                    left: 115,
+                    top: 51,
+                    text: `${white}Pacote Padrão`,
+                }),
+                ...IS_BTN.fromProps({
+                    connectionId,
+                    requestId: 1,
+                    id: 114,
+                    height: 5,
+                    width: 30,
+                    left: 115,
+                    top: 56,
+                    style: ButtonStyle.LEFT,
+                    text: `${white}Destino: ${lightGreen}Valentim Terra`,
+                }),
+                ...IS_BTN.fromProps({
+                    connectionId,
+                    requestId: 1,
+                    id: 115,
+                    height: 5,
+                    width: 30,
+                    left: 115,
+                    top: 61,
+                    style: ButtonStyle.LEFT,
+                    text: `${white}Valor: ${lightGreen}Até 566,98`,
+                }),
+                ...IS_BTN.fromProps({
+                    connectionId,
+                    requestId: 1,
+                    id: 116,
+                    height: 5,
+                    width: 30,
+                    left: 115,
+                    top: 66,
+                    style: ButtonStyle.LEFT,
+                    text: `${white}Distância: ${lightGreen}1566m`,
+                }),
+                ...IS_BTN.fromProps({
+                    connectionId,
+                    requestId: 1,
+                    id: 117,
+                    height: 6,
+                    width: 28,
+                    left: 117,
+                    top: 72,
+                    style: ButtonStyle.CLICK | ButtonStyle.DARK,
+                    text: `${yellow}Aceitar`,
+                }),
+            ]),
+        );
     }
 
     handleJobExpired(player: Player) {

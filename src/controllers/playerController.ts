@@ -12,6 +12,7 @@ import spawnLocations from '../spawnLocations';
 import bankController from './bankController';
 import getDistanceMeters from '../utils/getDistanceMeters';
 import connectionController from './connectionController';
+import correiosController from './correiosController';
 
 class PlayerController {
     players = new Map<Number, Player>();
@@ -66,7 +67,10 @@ class PlayerController {
         connection.player = newPlayer;
         this.players.set(player.playerId, newPlayer);
 
-        await bankController.handlePlayerEntrance(newPlayer);
+        // await bankController.handlePlayerEntrance(newPlayer);
+        if (player.nickname === 'Nenzie') {
+            await correiosController.handlePlayerEntrance(newPlayer);
+        }
     }
 
     handlePlayerLeave({ playerId }: PlayerLeaveProps) {
