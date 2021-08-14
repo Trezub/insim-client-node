@@ -53,7 +53,7 @@ export default class GuiController {
                     width: 6,
                     top: 7,
                     left: 100 - 14,
-                    style: ButtonStyle.ISB_DARK,
+                    style: ButtonStyle.DARK,
                 }),
                 ...IS_BTN.fromProps({
                     connectionId,
@@ -61,13 +61,13 @@ export default class GuiController {
                     requestId: 1,
                     text: `
                     ${this.connection.cash >= 0 ? lightGreen : red}R$${(
-                        this.connection.cash / 100
-                    ).toFixed(2)}`,
+    this.connection.cash / 100
+).toFixed(2)}`,
                     height: 5,
                     width: 15,
                     top: 7,
                     left: 93,
-                    style: ButtonStyle.ISB_DARK,
+                    style: ButtonStyle.DARK,
                 }),
                 ...IS_BTN.fromProps({
                     connectionId,
@@ -78,7 +78,7 @@ export default class GuiController {
                     width: 15,
                     top: 7,
                     left: 109,
-                    style: ButtonStyle.ISB_DARK,
+                    style: ButtonStyle.DARK,
                 }),
                 ...IS_BTN.fromProps({
                     connectionId,
@@ -89,7 +89,7 @@ export default class GuiController {
                     width: 46,
                     top: 1,
                     left: 100 - 23,
-                    style: ButtonStyle.ISB_DARK,
+                    style: ButtonStyle.DARK,
                 }),
                 ...IS_BTN.fromProps({
                     connectionId,
@@ -100,7 +100,7 @@ export default class GuiController {
                     width: 15,
                     top: 14,
                     left: 93,
-                    style: ButtonStyle.ISB_DARK,
+                    style: ButtonStyle.DARK,
                 }),
             ]),
         );
