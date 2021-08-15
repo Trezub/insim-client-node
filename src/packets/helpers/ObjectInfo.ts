@@ -13,7 +13,7 @@ export interface ObjectInfoProps {
 }
 
 export default {
-    fromBuffer(buffer: Buffer): ObjectInfoProps {
+    fromBuffer(buffer: Buffer, convertHeading = true): ObjectInfoProps {
         const x = buffer.readInt16LE() / 16;
         const y = buffer.readInt16LE(2) / 16;
         const [z, , id, heading] = buffer.slice(4);
@@ -23,7 +23,7 @@ export default {
             position: { x, y, z },
         });
         return {
-            heading: (heading * 180) / 128,
+            heading: convertHeading ? (heading * 180) / 128 : heading,
             id,
             position: { x, y, z },
         };
