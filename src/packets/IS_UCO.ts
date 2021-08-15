@@ -19,7 +19,7 @@ export default {
     fromBuffer(buffer: Buffer) {
         const [, , , playerId, , action] = buffer;
         const car = CarContOBJ.fromBuffer(buffer.slice(12, 20));
-        const object = ObjectInfo.fromBuffer(buffer.slice(20));
+        const object = ObjectInfo.fromBuffer(buffer.slice(20), false);
 
         return {
             playerId,
