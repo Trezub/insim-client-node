@@ -5,6 +5,9 @@ import Connection from '../Connection';
 import zones, { defaultZones, Zone } from '../zones';
 import { isStreet, Street } from '../streets';
 import jobs from '../jobs';
+import IS_BFN, { ButtonFunction } from '../packets/IS_BFN';
+import { ButtonClickProps } from '../packets/IS_BTC';
+import log from '../log';
 
 export type GuiButtonName = 'cash' | 'health' | 'car' | 'zone' | 'job';
 
@@ -158,6 +161,34 @@ export default class GuiController {
                 connectionId: this.connection.id,
             }),
         );
+    }
+
+    async handleCloseClick() {
+        await inSimClient.sendPacket(
+            IS_BFN.fromProps({
+                buttonId: 90,
+                buttonIdMax: 150,
+                connectionId: this.connection.id,
+                subType: ButtonFunction.BFN_DEL_BTN,
+            }),
+        );
+    }
+
+    async handleClick({
+        buttonId,
+        clickFlags,
+        connectionId,
+        requestId,
+    }: ButtonClickProps) {
+        if (connectionId !== this.connection.id) {
+            return log.error(
+                `connectionId (${connectionId}) doesnt match this.connection.id (${this.connection.id})`,
+            );
+        }
+        if (requestId === 200) {
+            return this.handleCloseClick();
+        }
+        log.info(`${this.connection.username} clicked button ${requestId}`);
     }
 
     connection: Connection;

@@ -7,8 +7,8 @@ import zoneController from './controllers/zoneController';
 import { PacketType } from './enums/PacketType';
 import inSimClient from './inSimClient';
 import log from './log';
-import IS_BFN from './packets/IS_BFN';
-import IS_BTC from './packets/IS_BTC';
+import IS_BFN, { ButtonFunctionProps } from './packets/IS_BFN';
+import IS_BTC, { ButtonClickProps } from './packets/IS_BTC';
 import IS_BTT from './packets/IS_BTT';
 
 import IS_CNL from './packets/IS_CNL';
@@ -65,6 +65,10 @@ const routes: {
     [PacketType.ISP_PEN]: (p) => inSimClient.handleNewPenalty(p),
     [PacketType.ISP_MCI]: (p) => playerController.handleCarInfo(p),
     [PacketType.ISP_OBH]: (p) => healthController.handlePlayerCrash(p),
+    [PacketType.ISP_BTC]: (p: ButtonClickProps) =>
+        connectionController.connections
+            .get(p.connectionId)
+            ?.gui?.handleClick(p),
     [PacketType.ISP_STA]: (p: StateProps) => {
         if (inSimClient.track !== p.track) {
             inSimClient.track = p.track;
