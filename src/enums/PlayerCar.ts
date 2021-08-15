@@ -40,5 +40,5 @@ export enum PlayerCar {
     FZR = 0x20000,
     BF1 = 0x40000,
     FBM = 0x80000,
-    ALL = 0xffffffff,
+    ALL = 0xfffff,
 }
