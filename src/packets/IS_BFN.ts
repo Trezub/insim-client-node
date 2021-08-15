@@ -1,9 +1,10 @@
+import { PacketType } from '../enums/PacketType';
+
 export interface ButtonFunctionProps {
-    requestId: number;
     subType: ButtonFunction;
     connectionId: number;
     buttonId: number;
-    clickMax: number;
+    buttonIdMax: number;
 }
 
 export enum ButtonFunction {
@@ -15,14 +16,29 @@ export enum ButtonFunction {
 
 export default {
     fromBuffer(buffer: Buffer): ButtonFunctionProps {
-        const [, , requestId, subType, connectionId, buttonId, clickMax] =
-            buffer;
+        const [, , , subType, connectionId, buttonId, buttonIdMax] = buffer;
         return {
-            requestId,
             subType,
             connectionId,
             buttonId,
-            clickMax,
+            buttonIdMax,
         };
+    },
+    fromProps({
+        buttonId,
+        buttonIdMax,
+        connectionId,
+        subType,
+    }: ButtonFunctionProps) {
+        return Buffer.from([
+            8,
+            PacketType.ISP_BFN,
+            0,
+            subType,
+            connectionId,
+            buttonId,
+            buttonIdMax,
+            0,
+        ]);
     },
 };
