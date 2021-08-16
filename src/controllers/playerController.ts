@@ -12,6 +12,7 @@ import spawnLocations from '../spawnLocations';
 import bankController from './bankController';
 import getDistanceMeters from '../utils/getDistanceMeters';
 import connectionController from './connectionController';
+import correiosController from './correiosController';
 
 class PlayerController {
     players = new Map<Number, Player>();

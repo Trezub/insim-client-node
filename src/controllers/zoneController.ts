@@ -42,23 +42,32 @@ export class ZoneController {
 
     async handleCarStateChange(csc: CarStateChangedProps) {
         const player = playerController.players.get(csc.playerId);
-        if (!player || !csc.stopped || !player.location) {
+        if (!player || !player.location) {
+            return;
+        }
+        if (!csc.stopped) {
+            player.connection.gui.handleCloseClick();
             return;
         }
         if (!isStreet(player.location)) {
             if (player.location.handler) {
                 player.location.handler(player);
             }
-            await sendMessageToConnection(
-                `${lightBlue}| ${white}${player.location.name}: ${lightGreen} ${
-                    player.location.texts[
-                        Math.round(
-                            Math.random() * (player.location.texts.length - 1),
-                        )
-                    ]
-                }`,
-                player,
-            );
+            if  (player.location.texts) {
+                await sendMessageToConnection(
+                    `${lightBlue}| ${white}${
+                        player.location.name
+                    }: ${lightGreen} ${
+                        player.location.texts[
+                            Math.round(
+                                Math.random() *
+                                    (player.location.texts.length - 1),
+                            )
+                        ]
+                    }`,
+                    player,
+                );
+            }
         }
     }
 }

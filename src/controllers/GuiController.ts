@@ -1,4 +1,4 @@
-import { lightGreen, red, white, yellow } from '../colors';
+import { lightBlue, lightGreen, red, white, yellow } from '../colors';
 import inSimClient from '../inSimClient';
 import IS_BTN, { ButtonStyle } from '../packets/IS_BTN';
 import Connection from '../Connection';
@@ -8,6 +8,7 @@ import jobs from '../jobs';
 import IS_BFN, { ButtonFunction } from '../packets/IS_BFN';
 import { ButtonClickProps } from '../packets/IS_BTC';
 import log from '../log';
+import sendMessageToConnection from '../helpers/sendMessageToConnection';
 
 export type GuiButtonName = 'cash' | 'health' | 'car' | 'zone' | 'job';
 
@@ -152,6 +153,12 @@ export default class GuiController {
             jobName = zones.find(
                 (z) => z.id === this.connection.player.job.destination,
             ).name;
+            await sendMessageToConnection(
+                `${lightBlue}| ${white}Você pegou um trabalho para ${lightGreen}${jobName}${white}, entregue em tempo.`,
+                this.connection,
+                'system',
+            );
+            this.handleCloseClick();
         }
         await inSimClient.sendPacket(
             IS_BTN.fromProps({
@@ -187,6 +194,20 @@ export default class GuiController {
         }
         if (requestId === 200) {
             return this.handleCloseClick();
+        }
+        switch (requestId) {
+            case 101:
+            case 102:
+            case 103: {
+                this.connection.player.job =
+                    this.connection.player.availableJobs[requestId - 101];
+                this.connection.player.availableJobs[requestId - 101] = null;
+                this.connection.player.availableJobs =
+                    this.connection.player.createJobs();
+                break;
+            }
+            default:
+                break;
         }
         log.info(`${this.connection.username} clicked button ${requestId}`);
     }

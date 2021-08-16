@@ -25,12 +25,12 @@ class HealthController {
         index,
         flags,
     }: ObjectHitProps) {
-        // if (
-        //     flags === ObjectHitFlags.OBH_CAN_MOVE ||
-        //     flags === ObjectHitFlags.OBH_WAS_MOVING||
-        // ) {
-        //     return;
-        // }
+        //     // if (
+        //     //     flags === ObjectHitFlags.OBH_CAN_MOVE ||
+        //     //     flags === ObjectHitFlags.OBH_WAS_MOVING||
+        //     // ) {
+        //     //     return;
+        //     // }
         log.info(flags, car, closingSpeed, index);
     }
 }
