@@ -140,7 +140,7 @@ export default class GuiController {
                 requestId: 1,
                 id: this.buttonIds.get('zone'),
                 text: `${white}${getLocationText(
-                    this.connection.player.location,
+                    this.connection.player?.location,
                 )}`,
                 connectionId: this.connection.id,
             }),

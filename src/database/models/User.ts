@@ -38,5 +38,5 @@ export class User {
     language: number;
 
     @Column({ default: 0 })
-    backCash: number;
+    bankCash: number;
 }

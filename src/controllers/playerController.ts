@@ -66,11 +66,6 @@ class PlayerController {
         const newPlayer = new Player(player);
         connection.player = newPlayer;
         this.players.set(player.playerId, newPlayer);
-
-        // await bankController.handlePlayerEntrance(newPlayer);
-        // if (player.nickname === 'Nenzie') {
-        //     await correiosController.handlePlayerEntrance(newPlayer);
-        // }
     }
 
     handlePlayerLeave({ playerId }: PlayerLeaveProps) {

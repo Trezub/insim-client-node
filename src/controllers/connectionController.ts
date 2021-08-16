@@ -11,6 +11,7 @@ import { NewConnectionInfoProps } from '../packets/IS_NCI';
 import { NewConnectionProps } from '../packets/IS_NCN';
 import IS_PLC from '../packets/IS_PLC';
 import IS_TINY, { TinyPacketSubType } from '../packets/IS_TINY';
+import bankController from './bankController';
 
 class ConnectionController {
     connections = new Map<number, Connection>();
@@ -112,6 +113,11 @@ class ConnectionController {
         connection.cars = user.cars;
         connection.cash = user.cash;
         connection.health = user.health;
+        connection.bankCash = user.bankCash;
+
+        if (connection.username === 'trezub') {
+            await bankController.handlePlayerEntrance(connection.player);
+        }
     }
 }
 

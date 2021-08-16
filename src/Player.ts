@@ -48,6 +48,7 @@ export default class Player {
         this.skinName = skin;
         this.plate = plate;
         this.intakeRestriction = intakeRestriction;
+        this.connection.gui.handleLocationUpdate();
         this.availableJobs = this.createJobs();
     }
 
