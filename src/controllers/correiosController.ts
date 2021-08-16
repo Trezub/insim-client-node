@@ -1,4 +1,14 @@
-import { blue, lightBlue, lightGreen, red, white, yellow } from '../colors';
+import {
+    black,
+    blue,
+    darkGreen,
+    lightBlue,
+    lightGreen,
+    purple,
+    red,
+    white,
+    yellow,
+} from '../colors';
 import sendMessageToConnection from '../helpers/sendMessageToConnection';
 import inSimClient from '../inSimClient';
 import jobs from '../jobs';
@@ -159,8 +169,9 @@ class CorreiosController {
                     width: 28,
                     left: 56,
                     top: 72,
-                    style: ButtonStyle.CLICK | ButtonStyle.DARK,
-                    text: `${yellow}Aceitar`,
+                    style:
+                        ButtonStyle.CLICK | ButtonStyle.DARK | ButtonStyle.OK,
+                    text: 'Aceitar',
                 }),
 
                 // Second Job
@@ -215,8 +226,9 @@ class CorreiosController {
                     width: 28,
                     left: 86,
                     top: 72,
-                    style: ButtonStyle.CLICK | ButtonStyle.DARK,
-                    text: `${yellow}Aceitar`,
+                    style:
+                        ButtonStyle.CLICK | ButtonStyle.DARK | ButtonStyle.OK,
+                    text: 'Aceitar',
                 }),
                 // Third Job
                 ...IS_BTN.fromProps({
@@ -268,10 +280,80 @@ class CorreiosController {
                     id: 117,
                     height: 6,
                     width: 28,
-                    left: 117,
+                    left: 116,
                     top: 72,
-                    style: ButtonStyle.CLICK | ButtonStyle.DARK,
-                    text: `${yellow}Aceitar`,
+                    style:
+                        ButtonStyle.CLICK | ButtonStyle.DARK | ButtonStyle.OK,
+                    text: 'Aceitar',
+                }),
+                ...IS_BTN.fromProps({
+                    connectionId,
+                    id: 120,
+                    requestId: 1,
+                    height: 5,
+                    width: 90,
+                    left: 55,
+                    top: 80,
+                    style: ButtonStyle.LEFT,
+                    text: `${white}^H¡´^L Lembre-se, você pagará uma multa de ${red}50%${white} sobre o valor da entrega se não`,
+                }),
+                ...IS_BTN.fromProps({
+                    connectionId,
+                    id: 121,
+                    requestId: 1,
+                    height: 5,
+                    width: 90,
+                    left: 55,
+                    top: 85,
+                    style: ButtonStyle.LEFT,
+                    text: `${white}entregá-la a tempo.`,
+                }),
+                ...IS_BTN.fromProps({
+                    connectionId,
+                    id: 122,
+                    requestId: 1,
+                    height: 5,
+                    width: 90,
+                    left: 55,
+                    top: 90,
+                    style: ButtonStyle.LEFT,
+                    text: `${white}^H¡´^L Para saber onde você deve entregar, veja as setas no topo da tela.`,
+                }),
+                ...IS_BTN.fromProps({
+                    connectionId,
+                    id: 123,
+                    requestId: 1,
+                    height: 5,
+                    width: 90,
+                    left: 55,
+                    top: 95,
+                    style: ButtonStyle.LEFT,
+                    text: `${white}^H¡´^L Entregas especiais tem um valor maior, mas também precisam ser`,
+                }),
+                ...IS_BTN.fromProps({
+                    connectionId,
+                    id: 124,
+                    requestId: 1,
+                    height: 5,
+                    width: 90,
+                    left: 55,
+                    top: 100,
+                    style: ButtonStyle.LEFT,
+                    text: `${white}entregues intactas.`,
+                }),
+                ...IS_BTN.fromProps({
+                    connectionId,
+                    id: 125,
+                    requestId: 200,
+                    height: 7,
+                    width: 15,
+                    left: 131,
+                    top: 113,
+                    style:
+                        ButtonStyle.CLICK |
+                        ButtonStyle.DARK |
+                        ButtonStyle.CANCEL,
+                    text: 'Fechar',
                 }),
             ]),
         );
