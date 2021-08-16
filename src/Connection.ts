@@ -6,6 +6,7 @@ import IS_PLC from './packets/IS_PLC';
 import Player, { PlayerCar } from './Player';
 import { PlayerCar as PlayerCarEnum } from './enums/PlayerCar';
 import healthController from './controllers/healthController';
+import reduceToEnum from './utils/reduceToEnum';
 
 export default class Connection {
     constructor({
@@ -33,11 +34,7 @@ export default class Connection {
 
     set cars(value: PlayerCar[]) {
         this._cars = value;
-        const cars = value.reduce<PlayerCarEnum>(
-            (acc, val) =>
-                acc | PlayerCarEnum[val as keyof typeof PlayerCarEnum],
-            0,
-        );
+        const cars = reduceToEnum(PlayerCarEnum, value);
         inSimClient.sendPacket(
             IS_PLC.fromProps({
                 connectionId: this.id,

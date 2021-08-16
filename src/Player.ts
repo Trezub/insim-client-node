@@ -1,6 +1,7 @@
 import Connection from './Connection';
 import connectionController from './controllers/connectionController';
 import correiosController from './controllers/correiosController';
+import { PlayerCar as PlayerCarEnum } from './enums/PlayerCar';
 import inSimClient from './inSimClient';
 import jobs, { Job } from './jobs';
 import IS_BTN from './packets/IS_BTN';
@@ -8,27 +9,7 @@ import { NewPlayerProps } from './packets/IS_NPL';
 import { Street } from './streets';
 import { Zone } from './zones';
 
-export type PlayerCar =
-    | 'UF1'
-    | 'XFG'
-    | 'XRG'
-    | 'LX4'
-    | 'LX6'
-    | 'RB4'
-    | 'FXO'
-    | 'XRT'
-    | 'CAR'
-    | 'FZ5'
-    | 'UFR'
-    | 'XFR'
-    | 'FXR'
-    | 'XRR'
-    | 'FZR'
-    | 'MRT'
-    | 'FBM'
-    | 'FOX'
-    | 'FO8'
-    | 'BF1';
+export type PlayerCar = keyof typeof PlayerCarEnum;
 
 export default class Player {
     constructor({
