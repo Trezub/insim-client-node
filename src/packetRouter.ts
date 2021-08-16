@@ -20,6 +20,7 @@ import IS_NCI from './packets/IS_NCI';
 import IS_NCN from './packets/IS_NCN';
 import IS_NPL from './packets/IS_NPL';
 import IS_OBH from './packets/IS_OBH';
+import IS_PEN from './packets/IS_PEN';
 import IS_PLL from './packets/IS_PLL';
 import IS_PLP from './packets/IS_PLP';
 import IS_STA, { StateProps } from './packets/IS_STA';
@@ -47,7 +48,7 @@ const decoders: {
     [PacketType.ISP_OBH]: IS_OBH.fromBuffer,
     [PacketType.ISP_CON]: IS_CON.fromBuffer,
     [PacketType.ISP_STA]: IS_STA.fromBuffer,
-    [PacketType.ISP_PEN]: IS_STA.fromBuffer,
+    [PacketType.ISP_PEN]: IS_PEN.fromBuffer,
     [PacketType.ISP_OBH]: IS_OBH.fromBuffer,
 };
 

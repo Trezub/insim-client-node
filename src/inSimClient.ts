@@ -14,7 +14,7 @@ import IS_OCO, {
     ObjectControlLight,
     ObjectControlIndex,
 } from './packets/IS_OCO';
-import { PenaltyProps } from './packets/IS_PEN';
+import { Penalty, PenaltyProps } from './packets/IS_PEN';
 import IS_TINY, { TinyPacketSubType } from './packets/IS_TINY';
 import { UserControlObjectsProps } from './packets/IS_UCO';
 import trafficLights from './trafficLights';
@@ -66,14 +66,18 @@ export class InSimClient {
         });
     }
 
-    async handleNewPenalty({ playerId }: PenaltyProps) {
+    async handleNewPenalty({ playerId, newPenalties }: PenaltyProps) {
         const player = playerController.players.get(playerId);
         if (!player) {
             return;
         }
-        await this.sendPacket(
-            IS_MST.fromProps(`/p_clear ${player.connection.username}`),
-        );
+        if (newPenalties !== Penalty.PENALTY_NONE) {
+            setTimeout(() => {
+                this.sendPacket(
+                    IS_MST.fromProps(`/p_clear ${player.connection.username}`),
+                );
+            }, 10000);
+        }
     }
 
     async init() {
