@@ -48,6 +48,7 @@ export default class Player {
         this.skinName = skin;
         this.plate = plate;
         this.intakeRestriction = intakeRestriction;
+        this.availableJobs = this.createJobs();
     }
 
     id: number;
@@ -78,6 +79,8 @@ export default class Player {
 
     jobTimeout: NodeJS.Timeout;
 
+    availableJobs: Job[] = [null, null, null];
+
     private _job: Job;
 
     get job() {
@@ -107,5 +110,11 @@ export default class Player {
         this.previousLocation = this._location;
         this._location = value;
         this.connection.gui.handleLocationUpdate();
+    }
+
+    createJobs() {
+        return this.availableJobs.map(
+            (j) => j || jobs[Math.round(Math.random() * (jobs.length - 1))],
+        );
     }
 }

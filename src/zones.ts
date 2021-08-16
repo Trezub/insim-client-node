@@ -3,7 +3,7 @@ import Player from './Player';
 
 export interface Zone {
     name: string;
-    texts: string[];
+    texts?: string[];
     handler: (p: Player) => any;
     id: number;
 }
@@ -42,11 +42,9 @@ const zones: Zone[] = [
     },
     {
         name: 'Correios',
-        handler: (player: Player) => {},
-        texts: [
-            'Olá, pegue a encomenda na segunda prateleira á esquerda',
-            'Obrigado por fazer essa entrega com excelência, vamos adicionar uma nota positiva ao seu perfil, agora pegue outra e saia',
-        ],
+        handler: (player: Player) => {
+            correiosController.handlePlayerEntrance(player);
+        },
         id: 4,
     },
     {

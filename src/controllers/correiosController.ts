@@ -69,7 +69,42 @@ class CorreiosController {
     }
 
     async handlePlayerEntrance(player: Player) {
+        if (player.job) {
+            const multipleJobErrors = [
+                'Vai com calma ai meu chapa, você só pode fazer um trabalho por vez.',
+                'Seu carrinho não vai aguentar toda essa carga não.',
+                'Termina esse trabalho primeiro aí p****.',
+            ];
+            sendMessageToConnection(
+                `${red}| ${white}${player.location.name} ${lightGreen}${
+                    multipleJobErrors[
+                        Math.round(
+                            Math.random() * (multipleJobErrors.length - 1),
+                        )
+                    ]
+                }`,
+                player,
+                'error',
+            );
+            return;
+        }
+
+        const texts = [
+            'Olá, pegue a encomenda na segunda prateleira à esquerda.',
+            'Obrigado por fazer as nossas entregas com excelência, agora pegue outra e saia.',
+        ];
+
+        await sendMessageToConnection(
+            `${lightBlue}| ${white}${player.location.name}: ${lightGreen} ${
+                texts[Math.round(Math.random() * (texts.length - 1))]
+            }`,
+            player,
+        );
         const connectionId = player.connection.id;
+        const destinations = player.availableJobs.map((j) =>
+            zones.find((z) => z.id === j.destination),
+        );
+
         await inSimClient.sendPacket(
             Buffer.from([
                 // Container Dark
@@ -137,7 +172,7 @@ class CorreiosController {
                     left: 55,
                     top: 56,
                     style: ButtonStyle.LEFT,
-                    text: `${white}Destino: ${lightGreen}Valentim Terra`,
+                    text: `${white}Destino: ${lightGreen}${destinations[0].name}`,
                 }),
                 ...IS_BTN.fromProps({
                     connectionId,
@@ -148,7 +183,9 @@ class CorreiosController {
                     left: 55,
                     top: 61,
                     style: ButtonStyle.LEFT,
-                    text: `${white}Valor: ${lightGreen}Até 566,98`,
+                    text: `${white}Valor: ${lightGreen}Até R$${(
+                        player.availableJobs[0].maxPayout / 100
+                    ).toFixed(2)}`,
                 }),
                 ...IS_BTN.fromProps({
                     connectionId,
@@ -163,7 +200,7 @@ class CorreiosController {
                 }),
                 ...IS_BTN.fromProps({
                     connectionId,
-                    requestId: 1,
+                    requestId: 101,
                     id: 107,
                     height: 6,
                     width: 28,
@@ -194,7 +231,7 @@ class CorreiosController {
                     left: 85,
                     top: 56,
                     style: ButtonStyle.LEFT,
-                    text: `${white}Destino: ${lightGreen}Valentim Terra`,
+                    text: `${white}Destino: ${lightGreen}${destinations[1].name}`,
                 }),
                 ...IS_BTN.fromProps({
                     connectionId,
@@ -205,7 +242,9 @@ class CorreiosController {
                     left: 85,
                     top: 61,
                     style: ButtonStyle.LEFT,
-                    text: `${white}Valor: ${lightGreen}Até 566,98`,
+                    text: `${white}Valor: ${lightGreen}Até R$${(
+                        player.availableJobs[1].maxPayout / 100
+                    ).toFixed(2)}`,
                 }),
                 ...IS_BTN.fromProps({
                     connectionId,
@@ -220,7 +259,7 @@ class CorreiosController {
                 }),
                 ...IS_BTN.fromProps({
                     connectionId,
-                    requestId: 1,
+                    requestId: 102,
                     id: 112,
                     height: 6,
                     width: 28,
@@ -250,7 +289,7 @@ class CorreiosController {
                     left: 115,
                     top: 56,
                     style: ButtonStyle.LEFT,
-                    text: `${white}Destino: ${lightGreen}Valentim Terra`,
+                    text: `${white}Destino: ${lightGreen}${destinations[2].name}`,
                 }),
                 ...IS_BTN.fromProps({
                     connectionId,
@@ -261,7 +300,9 @@ class CorreiosController {
                     left: 115,
                     top: 61,
                     style: ButtonStyle.LEFT,
-                    text: `${white}Valor: ${lightGreen}Até 566,98`,
+                    text: `${white}Valor: ${lightGreen}Até R$${(
+                        player.availableJobs[2].maxPayout / 100
+                    ).toFixed(2)}`,
                 }),
                 ...IS_BTN.fromProps({
                     connectionId,
@@ -276,7 +317,7 @@ class CorreiosController {
                 }),
                 ...IS_BTN.fromProps({
                     connectionId,
-                    requestId: 1,
+                    requestId: 103,
                     id: 117,
                     height: 6,
                     width: 28,

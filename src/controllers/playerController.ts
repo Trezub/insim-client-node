@@ -67,15 +67,10 @@ class PlayerController {
         connection.player = newPlayer;
         this.players.set(player.playerId, newPlayer);
 
-<<<<<<< HEAD
         // await bankController.handlePlayerEntrance(newPlayer);
-        if (player.nickname === 'Nenzie') {
-            await correiosController.handlePlayerEntrance(newPlayer);
-=======
-        if (player.nickname === 'Trezub') {
-            await bankController.handlePlayerEntrance(newPlayer);
->>>>>>> 6ce55aae39f824501d60673465ea4a03e42cafac
-        }
+        // if (player.nickname === 'Nenzie') {
+        //     await correiosController.handlePlayerEntrance(newPlayer);
+        // }
     }
 
     handlePlayerLeave({ playerId }: PlayerLeaveProps) {
