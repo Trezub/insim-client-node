@@ -13,6 +13,8 @@
   "description": "Typescript, ESLint, Prettier boilerplate for use in Node 14",
   "author": "Adriano Trezub Déa",
   "devDependencies": {
+    "@commitlint/cli": "^13.1.0",
+    "@commitlint/config-conventional": "^13.1.0",
     "@types/node": "^16.4.8",
     "@typescript-eslint/eslint-plugin": "^4.2.0",
     "@typescript-eslint/parser": "^4.4.1",
