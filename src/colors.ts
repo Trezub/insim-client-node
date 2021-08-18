@@ -19,5 +19,5 @@ export const reset = '^9';
 ^6	Light blue
 ^7	White
 ^8	Dark green (default)
-^9	Original text colour and codepage.
+^9	Original text colour and codepage
 */
