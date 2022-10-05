@@ -1,42 +1,35 @@
 {
-  "name": "node-eslint-ts-boilerplate",
-  "version": "0.0.1",
-  "main": "dist/app.ts",
-  "license": "MIT",
-  "scripts": {
-    "build": "tsc --build tsconfig.json",
-    "dev": "cross-env NODE_ENV=\"development\" ts-node-dev --respawn --transpile-only --rs --inspect -r dotenv/config src/app.ts",
-    "start": "cross-env NODE_ENV=\"production\" node dist/app.js",
-    "typeorm-dev": "cross-env NODE_ENV=development ts-node-dev --transpile-only --pretty -r dotenv/config typeorm/cli",
-    "lint": "eslint --ext .ts, ./src"
-  },
-  "description": "Typescript, ESLint, Prettier boilerplate for use in Node 14",
-  "author": "Adriano Trezub Déa",
-  "devDependencies": {
-    "@types/node": "^16.4.8",
-    "@typescript-eslint/eslint-plugin": "^4.2.0",
-    "@typescript-eslint/parser": "^4.4.1",
-    "eslint": "^7.11.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-config-airbnb-typescript": "^12.0.0",
-    "eslint-config-prettier": "^7.2.0",
-    "eslint-plugin-import": "^2.22.0",
-    "eslint-plugin-prettier": "^3.1.4",
-    "prettier": "^2.1.2",
-    "prisma": "^4.4.0",
-    "ts-node-dev": "^1.0.0-pre.65",
-    "typescript": "^4.0.3"
-  },
-  "dependencies": {
-    "@prisma/client": "^4.4.0",
-    "@types/lodash.shuffle": "^4.2.6",
-    "cross-env": "^7.0.3",
-    "dotenv": "^8.2.0",
-    "editorconfig": "^0.15.3",
-    "lodash.shuffle": "^4.2.0",
-    "pg": "^8.7.1",
-    "tslog": "^3.2.0",
-    "typeorm": "^0.2.36",
-    "typeorm-naming-strategies": "^2.0.0"
-  }
+    "name": "node-insim-client",
+    "version": "0.0.1",
+    "main": "dist/app.ts",
+    "license": "MIT",
+    "scripts": {
+        "build": "tsc --build tsconfig.json",
+        "dev": "cross-env NODE_ENV=\"development\" ts-node-dev --respawn --transpile-only --rs --inspect -r dotenv/config src/app.ts",
+        "start": "cross-env NODE_ENV=\"production\" node dist/app.js",
+        "lint": "eslint --fix --ext .ts, ./src && pretter --write ."
+    },
+    "description": "LFS InSim client built using Typescript and NodeJS",
+    "author": "Adriano Trezub Déa",
+    "devDependencies": {
+        "@types/lodash.shuffle": "^4.2.0",
+        "@types/node": "16.10.0",
+        "@typescript-eslint/eslint-plugin": "^5.39.0",
+        "@typescript-eslint/parser": "^5.39.0",
+        "eslint-config-airbnb-base": "^15.0.0",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-import": "^2.26.0",
+        "prisma": "^4.4.0",
+        "ts-node-dev": "^2.0.0",
+        "typescript": "^4.8.4"
+    },
+    "dependencies": {
+        "@prisma/client": "^4.4.0",
+        "cross-env": "^7.0.3",
+        "dotenv": "^16.0.3",
+        "eslint": "^8.24.0",
+        "lodash.shuffle": "^4.2.0",
+        "prettier": "^2.7.1",
+        "tslog": "^3.3.4"
+    }
 }
