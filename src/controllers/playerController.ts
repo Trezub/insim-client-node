@@ -1,5 +1,4 @@
 import shuffle from 'lodash.shuffle';
-import sendMessageToConnection from '../helpers/sendMessageToConnection';
 import inSimClient from '../inSimClient';
 import log from '../log';
 import { ObjectInfoFlag } from '../packets/helpers/ObjectInfo';
@@ -9,10 +8,8 @@ import { NewPlayerProps } from '../packets/IS_NPL';
 import { PlayerLeaveProps } from '../packets/IS_PLL';
 import Player from '../Player';
 import spawnLocations from '../spawnLocations';
-import bankController from './bankController';
 import getDistanceMeters from '../utils/getDistanceMeters';
 import connectionController from './connectionController';
-import correiosController from './correiosController';
 
 class PlayerController {
     players = new Map<Number, Player>();
@@ -22,9 +19,10 @@ class PlayerController {
             player.connectionId,
         );
         if (!connection) {
-            return log.error(
+            log.error(
                 `Connection ${player.connectionId} not found for player ${player.nickname} (${player.playerId})`,
             );
+            return;
         }
 
         if (player.isJoinRequest) {

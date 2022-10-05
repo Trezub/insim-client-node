@@ -1,21 +1,6 @@
 import { PacketType } from '../enums/PacketType';
 import toByteArray from '../utils/toByteArray';
 
-export interface ButtonProps {
-    id: number;
-    style?: ButtonStyle;
-    typeIn?: number;
-    left?: number;
-    top?: number;
-    height?: number;
-    width?: number;
-    text?: string;
-    requestId: number;
-    connectionId: number;
-    alwaysVisible?: boolean;
-    typeInDescription?: string;
-}
-
 export enum ButtonStyle {
     TITLE = 1,
     UNSELECTED = 2,
@@ -29,6 +14,21 @@ export enum ButtonStyle {
     DARK = 32, // dark button
     LEFT = 64, // align text to left
     RIGHT = 128, // align text to right
+}
+
+export interface ButtonProps {
+    id: number;
+    style?: ButtonStyle;
+    typeIn?: number;
+    left?: number;
+    top?: number;
+    height?: number;
+    width?: number;
+    text?: string;
+    requestId: number;
+    connectionId: number;
+    alwaysVisible?: boolean;
+    typeInDescription?: string;
 }
 
 export default {

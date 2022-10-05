@@ -50,6 +50,7 @@ export class InSimClient {
                     adminPassword: process.env.INSIM_ADMIN_PASSWORD,
                     appName: process.env.INSIM_APP_NAME,
                     flags:
+                        // eslint-disable-next-line no-bitwise
                         InSimInitFlag.ISF_AXM_EDIT |
                         InSimInitFlag.ISF_AXM_LOAD |
                         InSimInitFlag.ISF_REQ_JOIN |

@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 import { darkGreen, lightGreen, red, white } from '../colors';
 import inSimClient from '../inSimClient';
 import IS_BTN, { ButtonStyle } from '../packets/IS_BTN';

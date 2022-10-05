@@ -11,13 +11,6 @@ export enum ObjectControlIndex {
     OCO_INDEX_MAIN = 240, // special value to override the main start light system
 }
 
-export interface ObjectControlProps {
-    action: ObjectControlAction;
-    mainLights?: ObjectControlIndex;
-    id: number;
-    lights: ObjectControlLight;
-}
-
 export enum ObjectControlAction {
     OCO_ZERO, // reserved
     OCO_1, //
@@ -27,6 +20,12 @@ export enum ObjectControlAction {
     OCO_LIGHTS_SET, // use Data byte to set the bulbs
     OCO_LIGHTS_UNSET, // give up control of the specified lights
     OCO_NUM,
+}
+export interface ObjectControlProps {
+    action: ObjectControlAction;
+    mainLights?: ObjectControlIndex;
+    id: number;
+    lights: ObjectControlLight;
 }
 
 export default {

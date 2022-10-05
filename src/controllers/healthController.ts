@@ -4,7 +4,7 @@ import sendMessageToConnection from '../helpers/sendMessageToConnection';
 import inSimClient from '../inSimClient';
 import log from '../log';
 import IS_MST from '../packets/IS_MST';
-import { ObjectHitFlags, ObjectHitProps } from '../packets/IS_OBH';
+import { ObjectHitProps } from '../packets/IS_OBH';
 
 class HealthController {
     async handlePlayerDied(connection: Connection) {
@@ -21,7 +21,6 @@ class HealthController {
     async handlePlayerCrash({
         car,
         closingSpeed,
-        playerId,
         index,
         flags,
     }: ObjectHitProps) {

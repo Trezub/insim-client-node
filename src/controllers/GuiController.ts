@@ -4,7 +4,6 @@ import IS_BTN, { ButtonStyle } from '../packets/IS_BTN';
 import Connection from '../Connection';
 import zones, { defaultZones, Zone } from '../zones';
 import { isStreet, Street } from '../streets';
-import jobs from '../jobs';
 import IS_BFN, { ButtonFunction } from '../packets/IS_BFN';
 import { ButtonClickProps } from '../packets/IS_BTC';
 import log from '../log';
@@ -14,6 +13,17 @@ export type GuiButtonName = 'cash' | 'health' | 'car' | 'zone' | 'job';
 
 export interface GuiControllerProps {
     connectionId: number;
+}
+
+export interface Component {
+    left?: number | string;
+    top?: number | string;
+    height: number | string;
+    width: number | string;
+    styles?: (keyof typeof ButtonStyle)[];
+    alwaysVisible?: boolean;
+    text?: string;
+    children?: Component[];
 }
 
 function getLocationText(location: Zone | Street): string {
@@ -65,8 +75,8 @@ export default class GuiController {
                     requestId: 1,
                     text: `
                     ${this.connection.cash >= 0 ? lightGreen : red}R$${(
-    this.connection.cash / 100
-).toFixed(2)}`,
+                        this.connection.cash / 100
+                    ).toFixed(2)}`,
                     height: 5,
                     width: 15,
                     top: 7,
@@ -181,19 +191,16 @@ export default class GuiController {
         );
     }
 
-    async handleClick({
-        buttonId,
-        clickFlags,
-        connectionId,
-        requestId,
-    }: ButtonClickProps) {
+    async handleClick({ connectionId, requestId }: ButtonClickProps) {
         if (connectionId !== this.connection.id) {
-            return log.error(
+            log.error(
                 `connectionId (${connectionId}) doesnt match this.connection.id (${this.connection.id})`,
             );
+            return;
         }
         if (requestId === 200) {
-            return this.handleCloseClick();
+            this.handleCloseClick();
+            return;
         }
         switch (requestId) {
             case 101:
@@ -210,6 +217,50 @@ export default class GuiController {
                 break;
         }
         log.info(`${this.connection.username} clicked button ${requestId}`);
+    }
+
+    async render(component: Component, parent?: Component) {
+        const bufferContent: number[] = [];
+        const connectionId = this.connection.id;
+
+        function calculateProp(value: string, baseValue: number) {}
+
+        const sizing: {
+            height: number;
+            width: number;
+            top: number;
+            left: number;
+        } = {
+            top: null,
+            left: null,
+            width: null,
+            height: null,
+        };
+
+        Object.keys(sizing).forEach((k) => {
+            const expression = component[k as keyof Component];
+            if (typeof expression === 'string') {
+                if (!expression.endsWith('%')) {
+                    throw new Error(
+                        `Expected percentage value in property '${k}', got '${expression}'`,
+                    );
+                }
+                const percent = parseInt(expression.slice(0, -1), 10);
+                if (Number.isNaN(percent)) {
+                    throw new Error(
+                        `Invalid percent value in '${k}': '${expression}'`,
+                    );
+                }
+                // sizing[k as keyof typeof sizing] = (parent[k as keyof Component] ?? )
+            }
+        });
+
+        // bufferContent.push(...IS_BTN.fromProps({
+        //     connectionId,
+        //     id: 0,
+        //     requestId: 0,
+        //     height: ;
+        // }));
     }
 
     connection: Connection;

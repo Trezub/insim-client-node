@@ -3,19 +3,14 @@
         "es2021": true,
         "node": true
     },
-    "extends": [
-        "airbnb-base",
-        "prettier"
-    ],
+    "extends": ["airbnb-base", "prettier"],
+    "globals": {
+        "NodeJS": true
+    },
     "settings": {
         "import/resolver": {
             "node": {
-                "extensions": [
-                    ".js",
-                    ".jsx",
-                    ".ts",
-                    ".tsx"
-                ]
+                "extensions": [".js", ".jsx", ".ts", ".tsx"]
             }
         }
     },
@@ -24,9 +19,7 @@
         "ecmaVersion": "latest",
         "sourceType": "module"
     },
-    "plugins": [
-        "@typescript-eslint"
-    ],
+    "plugins": ["@typescript-eslint"],
     "rules": {
         "import/extensions": [
             "error",
@@ -38,7 +31,23 @@
                 "tsx": "never"
             }
         ],
-        "no-unused-vars": "warn",
-        "import/prefer-default-export": "off"
+        "no-unused-vars": "off",
+        "class-methods-use-this": "off",
+        "@typescript-eslint/no-unused-vars": "warn",
+        "no-shadow": "off",
+        "@typescript-eslint/no-shadow": ["error"],
+        "import/prefer-default-export": "off",
+        "no-plusplus": [
+            "error",
+            {
+                "allowForLoopAfterthoughts": true
+            }
+        ],
+        "no-underscore-dangle": [
+            "error",
+            {
+                "allowAfterThis": true
+            }
+        ]
     }
 }

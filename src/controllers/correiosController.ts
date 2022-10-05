@@ -1,18 +1,9 @@
-import {
-    black,
-    blue,
-    darkGreen,
-    lightBlue,
-    lightGreen,
-    purple,
-    red,
-    white,
-    yellow,
-} from '../colors';
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-bitwise */
+import { lightBlue, lightGreen, red, white, yellow } from '../colors';
 import sendMessageToConnection from '../helpers/sendMessageToConnection';
 import inSimClient from '../inSimClient';
 import jobs from '../jobs';
-import log from '../log';
 import IS_BTN, { ButtonStyle } from '../packets/IS_BTN';
 import Player from '../Player';
 import { isStreet } from '../streets';

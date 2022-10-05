@@ -10,7 +10,6 @@ import { isStreet } from '../streets';
 import getDistanceMeters from '../utils/getDistanceMeters';
 import connectionController from './connectionController';
 import correiosController from './correiosController';
-import healthController from './healthController';
 import playerController from './playerController';
 
 class MessageController {
@@ -42,14 +41,15 @@ class MessageController {
                 case 'distance': {
                     const args = message.slice(1).split(' ').slice(1);
                     if (args.length !== 2) {
-                        return sendMessageToConnection(
+                        sendMessageToConnection(
                             `${red}| ${white}Uso correto: ${lightGreen}!tp <x> <y>`,
                             connection,
                             'error',
                         );
+                        return;
                     }
                     const [x, y] = args;
-                    return sendMessageToConnection(
+                    sendMessageToConnection(
                         `${lightBlue}| ${yellow}${getDistanceMeters(
                             player.position,
                             { x: Number(x), y: Number(y) },
@@ -57,24 +57,27 @@ class MessageController {
                         connection,
                         'system',
                     );
+                    return;
                 }
                 case 'cash': {
                     const [, amount] = message.split(' ');
                     if (!amount) {
-                        return sendMessageToConnection(
+                        sendMessageToConnection(
                             `${red}| ${white}Formato: ${lightGreen}!cash <quantidade>`,
                             connection,
                             'error',
                         );
+                        return;
                     }
                     if (connection.isAdmin) {
                         connection.cash = Number(amount) * 100;
                     } else {
-                        return sendMessageToConnection(
+                        sendMessageToConnection(
                             `${red}| ${white}Você não tem permissão para usar este comando!`,
                             connection,
                             'error',
                         );
+                        return;
                     }
                     break;
                 }
@@ -84,11 +87,12 @@ class MessageController {
                         (!isStreet(connection.player.location) &&
                             connection.player.location?.id !== 4)
                     ) {
-                        return sendMessageToConnection(
+                        sendMessageToConnection(
                             `${red}| ${white}Você precisa estar nos Correios para usar este comando!`,
                             connection,
                             'error',
                         );
+                        return;
                     }
                     correiosController.createJob(connection.player);
                     break;
@@ -97,11 +101,12 @@ class MessageController {
                     {
                         const args = message.slice(1).split(' ').slice(1);
                         if (args.length !== 2) {
-                            return sendMessageToConnection(
+                            sendMessageToConnection(
                                 `${red}| ${white}Uso correto: ${lightGreen}!tp <x> <y>`,
                                 connection,
                                 'error',
                             );
+                            return;
                         }
                         const [x, y] = args;
                         await inSimClient.sendPacket(

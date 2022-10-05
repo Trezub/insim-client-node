@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 import { PacketType } from '../enums/PacketType';
 import toByteArray from '../utils/toByteArray';
 

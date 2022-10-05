@@ -1,8 +1,3 @@
-export interface ConnectionLeaveProps {
-    connectionId: number;
-    reason: ConnectionLeaveReason;
-}
-
 export enum ConnectionLeaveReason {
     LEAVR_DISCO, // 0 - none
     LEAVR_TIMEOUT, // 1 - timed out
@@ -15,6 +10,11 @@ export enum ConnectionLeaveReason {
     LEAVR_JOOS, // 8 - join OOS (initial sync failed)
     LEAVR_HACK, // 9 - invalid packet
     LEAVR_NUM,
+}
+
+export interface ConnectionLeaveProps {
+    connectionId: number;
+    reason: ConnectionLeaveReason;
 }
 
 export default {

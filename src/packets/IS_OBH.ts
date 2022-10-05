@@ -1,5 +1,12 @@
 import CarContOBJ, { CarContactProps } from './helpers/CarContOBJ';
 
+export enum ObjectHitFlags {
+    OBH_LAYOUT = 1, // an added object
+    OBH_CAN_MOVE = 2, // a movable object
+    OBH_WAS_MOVING = 4, // was moving before this hit
+    OBH_ON_SPOT = 8, // object in original position
+}
+
 export interface ObjectHitProps {
     playerId: number;
     closingSpeed: number;
@@ -7,13 +14,6 @@ export interface ObjectHitProps {
     position: { x: number; y: number; z: number };
     index: number;
     flags: ObjectHitFlags;
-}
-
-export enum ObjectHitFlags {
-    OBH_LAYOUT = 1, // an added object
-    OBH_CAN_MOVE = 2, // a movable object
-    OBH_WAS_MOVING = 4, // was moving before this hit
-    OBH_ON_SPOT = 8, // object in original position
 }
 
 export default {
@@ -27,6 +27,7 @@ export default {
         return {
             playerId,
             closingSpeed:
+                // eslint-disable-next-line no-bitwise
                 Math.round(((closingSpeed & 0xfff) / 10) * 3.6 * 100) / 100,
             car,
             position: { x, y, z },

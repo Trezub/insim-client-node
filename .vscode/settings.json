@@ -17,6 +17,5 @@
     // Prisma
     "[prisma]": {
         "editor.defaultFormatter": "Prisma.prisma"
-    },
-    "task.allowAutomaticTasks": "on",
+    }
 }

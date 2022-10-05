@@ -3,27 +3,23 @@ import fines from '../fines';
 import sendMessageToConnection from '../helpers/sendMessageToConnection';
 import inSimClient from '../inSimClient';
 import log from '../log';
-import { UserControlAction, UserControlObjectsProps } from '../packets/IS_UCO';
+import { UserControlObjectsProps } from '../packets/IS_UCO';
 import speedTraps from '../speedTraps';
 import { isStreet } from '../streets';
 import playerController from './playerController';
 
 class SpeedTrapController {
-    async handleUserControl({
-        action,
-        object,
-        car,
-        playerId,
-    }: UserControlObjectsProps) {
+    async handleUserControl({ object, playerId }: UserControlObjectsProps) {
         if (object.id !== 252) {
             // 252 checkpoint
             return;
         }
         const player = playerController.players.get(playerId);
         if (!player) {
-            return log.error(
+            log.error(
                 `Received UCO but player isnt in race. PlayerId: ${playerId}.`,
             );
+            return;
         }
         if (!isStreet(player.location)) {
             return;
