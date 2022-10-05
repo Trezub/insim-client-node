@@ -1,7 +1,4 @@
-import { getRepository } from 'typeorm';
 import Connection from '../Connection';
-import { User } from '../database/models/User';
-import { PlayerCar } from '../enums/PlayerCar';
 import inSimClient from '../inSimClient';
 import log from '../log';
 
@@ -9,9 +6,8 @@ import { ConnectionLeaveProps, ConnectionLeaveReason } from '../packets/IS_CNL';
 import { PlayerRenameProps } from '../packets/IS_CPR';
 import { NewConnectionInfoProps } from '../packets/IS_NCI';
 import { NewConnectionProps } from '../packets/IS_NCN';
-import IS_PLC from '../packets/IS_PLC';
 import IS_TINY, { TinyPacketSubType } from '../packets/IS_TINY';
-import bankController from './bankController';
+import prisma from '../prisma';
 
 class ConnectionController {
     connections = new Map<number, Connection>();
@@ -55,15 +51,27 @@ class ConnectionController {
         log.info(
             `Connection left: ${connection.username} (${connection.id}). Reason: ${ConnectionLeaveReason[reason]}`,
         );
-        const userRepository = getRepository(User);
-        await userRepository.save({
-            id: connection.userId,
-            cars: connection.cars,
-            cash: connection.cash,
-            health: connection.health,
-            language: connection.language,
-            lastIPAddress: connection.ipAddress,
-            username: connection.username,
+        await prisma.user.upsert({
+            create: {
+                id: connection.userId,
+                cars: connection.cars,
+                cash: connection.cash,
+                health: connection.health,
+                language: connection.language,
+                lastIPAddress: connection.ipAddress,
+                username: connection.username,
+            },
+            update: {
+                cars: connection.cars,
+                cash: connection.cash,
+                health: connection.health,
+                language: connection.language,
+                lastIPAddress: connection.ipAddress,
+                username: connection.username,
+            },
+            where: {
+                id: connection.userId,
+            },
         });
         this.connections.delete(connectionId);
     }
@@ -84,7 +92,6 @@ class ConnectionController {
         connectionId,
         ipAddress,
         language,
-        requestId,
         userId,
     }: NewConnectionInfoProps) {
         // log.debug({ connectionId, ipAddress, language, requestId, userId });
@@ -92,20 +99,34 @@ class ConnectionController {
         if (!connection) {
             log.error(`Connection ${connectionId} not found.`);
         }
-        const userRepository = getRepository(User);
 
-        let user =
-            (await userRepository.findOne(userId)) ||
-            userRepository.create({
-                id: userId,
-            });
-
-        const { username } = connection;
-        user.lastIPAddress = ipAddress;
-        user.username = username;
-        user.language = language;
-
-        user = await userRepository.save(user);
+        const user = await prisma.user.upsert({
+            create: {
+                id: connection.id,
+                lastIPAddress: ipAddress,
+                username: connection.username,
+                bankCash: connection.bankCash,
+                language,
+            },
+            update: {
+                lastIPAddress: ipAddress,
+                username: connection.username,
+                bankCash: connection.bankCash,
+                cars: connection.cars,
+                cash: connection.cash,
+                health: connection.health,
+                language,
+            },
+            where: {
+                id: connection.id,
+            },
+            select: {
+                cars: true,
+                health: true,
+                bankCash: true,
+                cash: true,
+            },
+        });
 
         connection.ipAddress = ipAddress;
         connection.language = language;
@@ -114,10 +135,6 @@ class ConnectionController {
         connection.cash = user.cash;
         connection.health = user.health;
         connection.bankCash = user.bankCash;
-
-        if (connection.username === 'trezub') {
-            await bankController.handlePlayerEntrance(connection.player);
-        }
     }
 }
 

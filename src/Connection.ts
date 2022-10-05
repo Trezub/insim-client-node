@@ -1,5 +1,5 @@
+import { Language } from '@prisma/client';
 import GuiController from './controllers/GuiController';
-import { Language } from './enums/Languages';
 import inSimClient from './inSimClient';
 import { NewConnectionProps } from './packets/IS_NCN';
 import IS_PLC from './packets/IS_PLC';

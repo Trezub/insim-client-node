@@ -14,13 +14,10 @@
             "node_modules/@types",
             "./src/@types"
         ],
-        "esModuleInterop": true,
         "resolveJsonModule": true,
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
-        "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "strictBindCallApply": true,
-        "strictNullChecks": false
+        "strictNullChecks": false,
+        "esModuleInterop": true
     }
 }
