@@ -10,6 +10,11 @@ import streets, { isStreet } from '../streets';
 export class ZoneController {
     async handleUserControl(uco: UserControlObjectsProps) {
         const player = playerController.players.get(uco.playerId);
+        if (process.env.NODE_ENV === 'development') {
+            if (!player) {
+                return;
+            }
+        }
         if (uco.object.id === 253) {
             // InSim Circle
             const zone = zones.find((z) => z.id === uco.object.heading);

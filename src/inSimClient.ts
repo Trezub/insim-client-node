@@ -1,5 +1,6 @@
 import net from 'net';
 import { promisify } from 'util';
+import { white } from './colors';
 import playerController from './controllers/playerController';
 import TrafficLightsController from './controllers/TrafficLightsController';
 
@@ -86,7 +87,10 @@ export class InSimClient {
             Buffer.from([
                 // Motd
                 ...IS_MTC.fromProps({
-                    message: '^6| ^7Bem vindo(a) ao ^2Cruise ^3Brasil',
+                    message:
+                        process.env.NODE_ENV === 'development'
+                            ? `^6| ^7Bem vindo(a) ao ^2Cruise ^3Brasil ${white}(${process.env.INSIM_APP_NAME})`
+                            : '^6| ^7Bem vindo(a) ao ^2Cruise ^3Brasil',
                     sound: MTCSound.SND_SYSMESSAGE,
                     connectionId: 255,
                 }),

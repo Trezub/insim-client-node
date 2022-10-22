@@ -13,9 +13,15 @@ class ConnectionController {
     connections = new Map<number, Connection>();
 
     async handleNewConnection(connection: NewConnectionProps) {
-        if (connection.connectionId === 0) {
-            // 0 is host
+        if (
+            process.env.NODE_ENV === 'development' &&
+            process.env.DEV_USERNAME &&
+            connection.username !== process.env.DEV_USERNAME
+        ) {
             return;
+        }
+        if (connection.connectionId === 0) {
+            return; // 0 is host
         }
         log.info(
             `${connection.username} connected. (${connection.connectionId})`,
@@ -95,7 +101,10 @@ class ConnectionController {
     }: NewConnectionInfoProps) {
         const connection = this.connections.get(connectionId);
         if (!connection) {
-            log.error(`Connection ${connectionId} not found.`);
+            if (process.env.NODE_ENV !== 'development') {
+                log.error(`Connection ${connectionId} not found.`);
+            }
+            return;
         }
 
         connection.ipAddress = ipAddress;
