@@ -10,6 +10,7 @@ import {
     ProxiedUiComponent,
 } from '../utils/ui';
 import sendMessageToConnection from '../helpers/sendMessageToConnection';
+import { ButtonTypeProps } from '../packets/IS_BTT';
 
 export type GuiButtonName = 'cash' | 'health' | 'car' | 'zone' | 'job';
 
@@ -154,6 +155,11 @@ export default class GuiController {
         handler?.(packet);
     }
 
+    async handleTypeSubmit(packet: ButtonTypeProps) {
+        const handler = this.typeHandlers.get(packet.buttonId);
+        handler?.(packet);
+    }
+
     hud: ProxiedUiComponent;
 
     private _openWindow: ProxiedUiComponent;
@@ -172,4 +178,6 @@ export default class GuiController {
     buttonIds = new Set<number>();
 
     clickHandlers = new Map<number, (packet: ButtonClickProps) => any>();
+
+    typeHandlers = new Map<number, (packet: ButtonTypeProps) => any>();
 }

@@ -5,6 +5,7 @@ import inSimClient from '../inSimClient';
 import IS_BFN, { ButtonFunction } from '../packets/IS_BFN';
 import { ButtonClickProps } from '../packets/IS_BTC';
 import IS_BTN, { ButtonStyle } from '../packets/IS_BTN';
+import { ButtonTypeProps } from '../packets/IS_BTT';
 
 /* eslint-disable max-classes-per-file */
 export interface UiComponentProps {
@@ -24,6 +25,8 @@ export interface UiComponentProps {
     /** If greater than 0, allows to type a specified number of characters */
     typeInMax?: number;
     typeInDescription?: string;
+    initTypeInWithText?: boolean;
+    onType?: (packet: ButtonTypeProps) => any;
 
     onClick?: (packet: ButtonClickProps) => any;
 
@@ -60,8 +63,11 @@ export function createComponent({
         text,
         typeInDescription,
         isVirtual,
-        typeInMax: typeIn,
+        onType,
+        initTypeInWithText,
     } = props;
+
+    let typeInByte = props.typeInMax;
 
     const connection = connectionController.connections.get(connectionId);
 
@@ -76,11 +82,19 @@ export function createComponent({
     // Reserves a id in this connection
     const id = isVirtual ? null : connection.gui.getNextButtonId();
 
-    if (onClick || typeIn) {
+    if (onClick || typeInByte) {
         styleByte |= ButtonStyle.CLICK;
         if (onClick) {
             connection.gui.clickHandlers.set(id, onClick);
         }
+    }
+
+    if (typeInByte && initTypeInWithText) {
+        typeInByte |= 128;
+    }
+
+    if (onType && typeInByte) {
+        connection.gui.typeHandlers.set(id, onType);
     }
 
     if (!isVirtual) {
@@ -95,7 +109,7 @@ export function createComponent({
                 width,
                 left,
                 top,
-                typeIn,
+                typeIn: typeInByte,
                 style: styleByte,
                 alwaysVisible,
             }),
@@ -185,6 +199,10 @@ export function deleteComponent(component: ProxiedUiComponent) {
     }
     if (component.onClick) {
         connection.gui.clickHandlers.delete(component.id);
+    }
+
+    if (component.onType && component.typeInMax) {
+        connection.gui.typeHandlers.delete(component.id);
     }
 
     component.children?.forEach(deleteComponent);

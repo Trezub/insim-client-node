@@ -1,24 +1,10 @@
 /* eslint-disable no-param-reassign */
-/* eslint-disable no-bitwise */
-import {
-    darkGreen,
-    lightBlue,
-    lightGreen,
-    red,
-    white,
-    yellow,
-} from '../colors';
+import { lightBlue, lightGreen, red, white } from '../colors';
 import sendMessageToConnection from '../helpers/sendMessageToConnection';
-import inSimClient from '../inSimClient';
 import jobs from '../jobs';
-import IS_BTN, { ButtonStyle } from '../packets/IS_BTN';
 import Player from '../Player';
 import { isStreet } from '../streets';
-import {
-    createComponent,
-    deleteComponent,
-    UiComponentProps,
-} from '../utils/ui';
+import { createComponent, UiComponentProps } from '../utils/ui';
 import zones from '../zones';
 
 const bottomNotes = [
@@ -137,9 +123,8 @@ class CorreiosController {
                         top: 0,
                         text: `${white}Entregas`,
                     },
-                    ...player.availableJobs
-                        .filter(Boolean)
-                        .map<UiComponentProps>((job, index) => ({
+                    ...player.availableJobs.map<UiComponentProps>(
+                        (job, index) => ({
                             top: 10,
                             left: 2 + index * 31,
                             height: 29,
@@ -197,7 +182,8 @@ class CorreiosController {
                                     },
                                 },
                             ],
-                        })),
+                        }),
+                    ),
                     {
                         height: 25,
                         top: 41,
