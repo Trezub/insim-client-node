@@ -51,7 +51,7 @@ export class ZoneController {
             return;
         }
         if (!csc.stopped) {
-            // player.connection.gui.handleCloseClick();
+            player.connection.gui.openWindow = null;
             return;
         }
         if (!isStreet(player.location)) {

@@ -5,6 +5,7 @@ import inSimClient from '../inSimClient';
 import IS_BFN, { ButtonFunction } from '../packets/IS_BFN';
 import { ButtonClickProps } from '../packets/IS_BTC';
 import IS_BTN, { ButtonStyle } from '../packets/IS_BTN';
+import { ButtonTypeProps } from '../packets/IS_BTT';
 
 /* eslint-disable max-classes-per-file */
 export interface UiComponentProps {
@@ -24,6 +25,8 @@ export interface UiComponentProps {
     /** If greater than 0, allows to type a specified number of characters */
     typeInMax?: number;
     typeInDescription?: string;
+    initTypeInWithText?: boolean;
+    onType?: (packet: ButtonTypeProps) => any;
 
     onClick?: (packet: ButtonClickProps) => any;
 
@@ -59,8 +62,12 @@ export function createComponent({
         onClick,
         text,
         typeInDescription,
-        typeInMax: typeIn,
+        isVirtual,
+        onType,
+        initTypeInWithText,
     } = props;
+
+    let typeInByte = props.typeInMax;
 
     const connection = connectionController.connections.get(connectionId);
 
@@ -73,31 +80,41 @@ export function createComponent({
     }
 
     // Reserves a id in this connection
-    const id = connection.gui.getNextButtonId();
+    const id = isVirtual ? null : connection.gui.getNextButtonId();
 
-    if (onClick || typeIn) {
+    if (onClick || typeInByte) {
         styleByte |= ButtonStyle.CLICK;
         if (onClick) {
             connection.gui.clickHandlers.set(id, onClick);
         }
     }
 
-    inSimClient.sendPacket(
-        IS_BTN.fromProps({
-            id,
-            requestId: 1,
-            connectionId,
-            text,
-            typeInDescription,
-            height,
-            width,
-            left,
-            top,
-            typeIn,
-            style: styleByte,
-            alwaysVisible,
-        }),
-    );
+    if (typeInByte && initTypeInWithText) {
+        typeInByte |= 128;
+    }
+
+    if (onType && typeInByte) {
+        connection.gui.typeHandlers.set(id, onType);
+    }
+
+    if (!isVirtual) {
+        inSimClient.sendPacket(
+            IS_BTN.fromProps({
+                id,
+                requestId: 1,
+                connectionId,
+                text,
+                typeInDescription,
+                height,
+                width,
+                left,
+                top,
+                typeIn: typeInByte,
+                style: styleByte,
+                alwaysVisible,
+            }),
+        );
+    }
 
     const proxiedChildren = children?.map((child) =>
         createComponent({
@@ -123,28 +140,37 @@ export function createComponent({
         {
             set(obj, prop, value) {
                 // @ts-expect-error
+                const oldValue = obj[prop];
+                // @ts-expect-error
                 obj[prop] = value;
 
                 // TODO: Send IS_BFN to delete buttons or create new buttons when the 'children' array changes
 
                 // Updates the button when a attribute changes
                 if (!['getChild', 'children'].includes(prop as string)) {
-                    inSimClient.sendPacket(
-                        IS_BTN.fromProps({
-                            id,
-                            requestId: 1, // Not used
-                            connectionId,
-                            text: obj.text,
-                            height: obj.height,
-                            width: obj.width,
-                            left: obj.left,
-                            top: obj.top,
-                            typeIn: obj.typeInMax,
-                            style: styleByte,
-                            alwaysVisible: obj.alwaysVisible,
-                            typeInDescription,
-                        }),
-                    );
+                    if (prop === 'height' || prop === 'width') {
+                        children.forEach((child) => {
+                            child[prop] += obj[prop] - oldValue;
+                        });
+                    }
+                    if (!isVirtual) {
+                        inSimClient.sendPacket(
+                            IS_BTN.fromProps({
+                                id,
+                                requestId: 1, // Not used
+                                connectionId,
+                                text: obj.text,
+                                height: obj.height,
+                                width: obj.width,
+                                left: obj.left,
+                                top: obj.top,
+                                typeIn: obj.typeInMax,
+                                style: styleByte,
+                                alwaysVisible: obj.alwaysVisible,
+                                typeInDescription,
+                            }),
+                        );
+                    }
                 }
 
                 return true;
@@ -154,35 +180,30 @@ export function createComponent({
 }
 
 export function deleteComponent(component: ProxiedUiComponent) {
+    if (!component) {
+        return;
+    }
     const connection = connectionController.connections.get(
         component.connectionId,
     );
-    connection.gui.buttonIds.delete(component.id);
-    if (component.onClick) {
-        connection.gui.clickHandlers.delete(component.id);
-    }
-
-    inSimClient.sendPacket(
-        IS_BFN.fromProps({
-            buttonId: component.id,
-            buttonIdMax: component.id,
-            connectionId: component.connectionId,
-            subType: ButtonFunction.BFN_DEL_BTN,
-        }),
-    );
-
-    component.children.forEach((child) => {
-        connection.gui.buttonIds.delete(child.id);
-        if (child.onClick) {
-            connection.gui.clickHandlers.delete(child.id);
-        }
+    if (!component.isVirtual) {
+        connection.gui.buttonIds.delete(component.id);
         inSimClient.sendPacket(
             IS_BFN.fromProps({
-                buttonId: child.id,
-                buttonIdMax: child.id,
+                buttonId: component.id,
+                buttonIdMax: component.id,
                 connectionId: component.connectionId,
                 subType: ButtonFunction.BFN_DEL_BTN,
             }),
         );
-    });
+    }
+    if (component.onClick) {
+        connection.gui.clickHandlers.delete(component.id);
+    }
+
+    if (component.onType && component.typeInMax) {
+        connection.gui.typeHandlers.delete(component.id);
+    }
+
+    component.children?.forEach(deleteComponent);
 }

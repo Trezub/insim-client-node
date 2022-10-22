@@ -17,11 +17,11 @@ export default {
         const x = buffer.readInt16LE() / 16;
         const y = buffer.readInt16LE(2) / 16;
         const [z, , id, heading] = buffer.slice(4);
-        log.info({
-            heading,
-            id,
-            position: { x, y, z },
-        });
+        // log.info({
+        //     heading,
+        //     id,
+        //     position: { x, y, z },
+        // });
         return {
             heading: convertHeading ? (heading * 180) / 128 : heading,
             id,

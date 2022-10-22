@@ -9,7 +9,7 @@ import inSimClient from './inSimClient';
 import log from './log';
 import IS_BFN from './packets/IS_BFN';
 import IS_BTC, { ButtonClickProps } from './packets/IS_BTC';
-import IS_BTT from './packets/IS_BTT';
+import IS_BTT, { ButtonTypeProps } from './packets/IS_BTT';
 
 import IS_CNL from './packets/IS_CNL';
 import IS_CON from './packets/IS_CON';
@@ -82,7 +82,10 @@ const routes: {
         (p) => inSimClient.handleTrafficLightsTrapTrigger(p),
     ],
 
-    // [PacketType.IS_BTT]: (p) =>
+    [PacketType.ISP_BTT]: (p: ButtonTypeProps) =>
+        connectionController.connections
+            .get(p.connectionId)
+            ?.gui.handleTypeSubmit(p),
     // [PacketType.ISP_BFN]: (p) =>
     // [PacketType.ISP_OBH]: (p) =>
     // [PacketType.ISP_CON]: (p) =>

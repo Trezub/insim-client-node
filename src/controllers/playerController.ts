@@ -13,7 +13,9 @@ import Player from '../Player';
 import spawnLocations from '../spawnLocations';
 import getCar from '../utils/getCar';
 import getDistanceMeters from '../utils/getDistanceMeters';
+import zones from '../zones';
 import connectionController from './connectionController';
+import correiosController from './correiosController';
 
 class PlayerController {
     players = new Map<Number, Player>();
@@ -120,6 +122,9 @@ class PlayerController {
         });
         connection.player = newPlayer;
         this.players.set(player.playerId, newPlayer);
+        // newPlayer.location = zones.find((z) => z.id === 4);
+
+        // correiosController.handlePlayerEntrance(newPlayer);
     }
 
     handlePlayerLeave({ playerId }: PlayerLeaveProps) {

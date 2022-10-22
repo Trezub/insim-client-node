@@ -1,11 +1,16 @@
 import { lightBlue, lightGreen, red, white, yellow } from '../colors';
 import inSimClient from '../inSimClient';
 import Connection from '../Connection';
-import { defaultZones, Zone } from '../zones';
+import zones, { defaultZones, Zone } from '../zones';
 import { isStreet, Street } from '../streets';
 import { ButtonClickProps } from '../packets/IS_BTC';
-import { createComponent, ProxiedUiComponent } from '../utils/ui';
+import {
+    createComponent,
+    deleteComponent,
+    ProxiedUiComponent,
+} from '../utils/ui';
 import sendMessageToConnection from '../helpers/sendMessageToConnection';
+import { ButtonTypeProps } from '../packets/IS_BTT';
 
 export type GuiButtonName = 'cash' | 'health' | 'car' | 'zone' | 'job';
 
@@ -63,7 +68,7 @@ export default class GuiController {
                         height: 5,
                         width: 10,
 
-                        alwaysVisible: false,
+                        alwaysVisible: true,
                         style: 'dark',
                         text: '',
                     },
@@ -102,138 +107,47 @@ export default class GuiController {
                             this.connection.player?.location,
                         )}`,
                     },
+                    {
+                        name: 'job',
+                        left: 0,
+                        top: 10,
+                        height: 5,
+                        width: 40,
+
+                        alwaysVisible: true,
+                        style: 'dark',
+                        text: '',
+                    },
                 ],
             },
         });
-
-        // this.buttonIds
-        //     .set('car', this.buttonIds.size)
-        //     .set('cash', this.buttonIds.size)
-        //     .set('zone', this.buttonIds.size)
-        //     .set('health', this.buttonIds.size)
-        //     .set('job', this.buttonIds.size);
-        // await inSimClient.sendPacket(
-        //     Buffer.from([
-        //         ...IS_BTN.fromProps({
-        //             connectionId,
-        //             id: this.buttonIds.get('car'),
-        //             requestId: 1,
-        //             text: '',
-        //             height: 5,
-        //             width: 6,
-        //             top: 7,
-        //             left: 100 - 14,
-        //             style: ButtonStyle.DARK,
-        //         }),
-        //         ...IS_BTN.fromProps({
-        //             connectionId,
-        //             id: this.buttonIds.get('cash'),
-        //             requestId: 1,
-        //             text: `
-        //             ${this.connection.cash >= 0 ? lightGreen : red}R$${(
-        //                 this.connection.cash / 100
-        //             ).toFixed(2)}`,
-        //             height: 5,
-        //             width: 15,
-        //             top: 7,
-        //             left: 93,
-        //             style: ButtonStyle.DARK,
-        //         }),
-        //         ...IS_BTN.fromProps({
-        //             connectionId,
-        //             id: this.buttonIds.get('health'),
-        //             requestId: 1,
-        //             text: `${white}Saúde: ${lightGreen}${this.connection.health}%`,
-        //             height: 5,
-        //             width: 15,
-        //             top: 7,
-        //             left: 109,
-        //             style: ButtonStyle.DARK,
-        //         }),
-        //         ...IS_BTN.fromProps({
-        //             connectionId,
-        //             id: this.buttonIds.get('zone'),
-        //             requestId: 1,
-        //             text: `${white}${defaultZones[inSimClient.track]}`,
-        //             height: 5,
-        //             width: 46,
-        //             top: 1,
-        //             left: 100 - 23,
-        //             style: ButtonStyle.DARK,
-        //         }),
-        //         ...IS_BTN.fromProps({
-        //             connectionId,
-        //             id: this.buttonIds.get('job'),
-        //             requestId: 1,
-        //             text: '',
-        //             height: 5,
-        //             width: 15,
-        //             top: 14,
-        //             left: 93,
-        //             style: ButtonStyle.DARK,
-        //         }),
-        //     ]),
-        // );
-    }
-
-    async handleCashUpdate() {
-        // await inSimClient.sendPacket(
-        //     IS_BTN.fromProps({
-        //         requestId: 1,
-        //         id: this.buttonIds.get('cash'),
-        //         text: `${this.connection.cash >= 0 ? lightGreen : red}R$${(
-        //             this.connection.cash / 100
-        //         ).toFixed(2)}`,
-        //         connectionId: this.connection.id,
-        //     }),
-        // );
-    }
-
-    async handleHealthUpdate() {
-        // await inSimClient.sendPacket(
-        //     IS_BTN.fromProps({
-        //         requestId: 1,
-        //         id: this.buttonIds.get('health'),
-        //         text: `${white}Saúde: ${lightGreen}${this.connection.health}%`,
-        //         connectionId: this.connection.id,
-        //     }),
-        // );
     }
 
     async handleLocationUpdate() {
-        // await inSimClient.sendPacket(
-        //     IS_BTN.fromProps({
-        //         requestId: 1,
-        //         id: this.buttonIds.get('zone'),
-        //         text: `${white}${getLocationText(
-        //             this.connection.player?.location,
-        //         )}`,
-        //         connectionId: this.connection.id,
-        //     }),
-        // );
+        this.hud.getChild('location').text = `${white}${getLocationText(
+            this.connection.player?.location,
+        )}`;
     }
 
     async handleJobUpdate() {
-        // let jobName: string = '';
-        // if (this.connection.player?.job) {
-        //     jobName = zones.find(
-        //         (z) => z.id === this.connection.player.job.destination,
-        //     ).name;
-        //     await sendMessageToConnection(
-        //         `${lightBlue}| ${white}Você pegou um trabalho para ${lightGreen}${jobName}${white}, entregue em tempo.`,
-        //         this.connection,
-        //         'system',
-        //     );
-        //     this.handleCloseClick();
-        // }
-        // await inSimClient.sendPacket(
-        //     IS_BTN.fromProps({
-        //         requestId: 1,
-        //         id: this.buttonIds.get('job'),
-        //         text: jobName,
-        //         connectionId: this.connection.id,
-        //     }),
-        // );
+        let jobName: string = '';
+        if (this.connection.player?.job) {
+            jobName = zones.find(
+                (z) => z.id === this.connection.player.job.destination,
+            ).name;
+            await sendMessageToConnection(
+                `${lightBlue}| ${white}Você pegou um trabalho para ${lightGreen}${jobName}${white}. entregue em tempo.`,
+                this.connection,
+                'system',
+            );
+            this.hud.getChild('job').text = `Entrega ativa: ${white}${
+                zones.find(
+                    (z) => z.id === this.connection.player.job.destination,
+                ).name
+            }`;
+            return;
+        }
+        this.hud.getChild('job').text = '';
     }
 
     async handleClick(packet: ButtonClickProps) {
@@ -241,11 +155,29 @@ export default class GuiController {
         handler?.(packet);
     }
 
+    async handleTypeSubmit(packet: ButtonTypeProps) {
+        const handler = this.typeHandlers.get(packet.buttonId);
+        handler?.(packet);
+    }
+
     hud: ProxiedUiComponent;
+
+    private _openWindow: ProxiedUiComponent;
+
+    get openWindow() {
+        return this._openWindow;
+    }
+
+    set openWindow(value) {
+        deleteComponent(this._openWindow);
+        this._openWindow = value;
+    }
 
     connection: Connection;
 
     buttonIds = new Set<number>();
 
     clickHandlers = new Map<number, (packet: ButtonClickProps) => any>();
+
+    typeHandlers = new Map<number, (packet: ButtonTypeProps) => any>();
 }

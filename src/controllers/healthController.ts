@@ -30,7 +30,7 @@ class HealthController {
         //     // ) {
         //     //     return;
         //     // }
-        log.info(flags, car, closingSpeed, index);
+        // log.info(flags, car, closingSpeed, index);
     }
 }
 export default new HealthController();
