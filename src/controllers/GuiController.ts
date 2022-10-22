@@ -5,6 +5,7 @@ import { defaultZones, Zone } from '../zones';
 import { isStreet, Street } from '../streets';
 import { ButtonClickProps } from '../packets/IS_BTC';
 import { createComponent, ProxiedUiComponent } from '../utils/ui';
+import sendMessageToConnection from '../helpers/sendMessageToConnection';
 
 export type GuiButtonName = 'cash' | 'health' | 'car' | 'zone' | 'job';
 
@@ -62,7 +63,7 @@ export default class GuiController {
                         height: 5,
                         width: 10,
 
-                        alwaysVisible: true,
+                        alwaysVisible: false,
                         style: 'dark',
                         text: '',
                     },

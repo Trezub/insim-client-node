@@ -24,9 +24,11 @@ class PlayerController {
         );
 
         if (!connection) {
-            log.error(
-                `Connection ${player.connectionId} not found for player ${player.nickname} (${player.playerId})`,
-            );
+            if (process.env.NODE_ENV !== 'development') {
+                log.error(
+                    `Connection ${player.connectionId} not found for player ${player.nickname} (${player.playerId})`,
+                );
+            }
             return;
         }
 

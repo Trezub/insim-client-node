@@ -58,7 +58,7 @@ export function createComponent({
         alwaysVisible,
         onClick,
         text,
-        typeInDescription: typeinDescription,
+        typeInDescription,
         typeInMax: typeIn,
     } = props;
 
@@ -88,7 +88,7 @@ export function createComponent({
             requestId: 1,
             connectionId,
             text,
-            typeInDescription: typeinDescription,
+            typeInDescription,
             height,
             width,
             left,
@@ -142,6 +142,7 @@ export function createComponent({
                             typeIn: obj.typeInMax,
                             style: styleByte,
                             alwaysVisible: obj.alwaysVisible,
+                            typeInDescription,
                         }),
                     );
                 }
