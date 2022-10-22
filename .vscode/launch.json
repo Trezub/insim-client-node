@@ -12,7 +12,7 @@
                 "<node_internals>/**"
             ],
             "restart": true,
-            "type": "pwa-node"
+            "type": "node"
         }
     ]
 }

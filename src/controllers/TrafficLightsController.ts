@@ -5,7 +5,6 @@ import inSimClient from '../inSimClient';
 import log from '../log';
 import IS_OCO, { ObjectControlLight } from '../packets/IS_OCO';
 import { UserControlAction, UserControlObjectsProps } from '../packets/IS_UCO';
-import Player from '../Player';
 import semaphoreTraps from '../semaphoreTraps';
 import delay from '../utils/delay';
 import { defaultZones } from '../zones';
@@ -19,7 +18,6 @@ export default class TrafficLightsController {
     async handleTrapTrigger({
         action,
         object,
-        car,
         playerId,
     }: UserControlObjectsProps) {
         if (object.id !== 252) {
@@ -27,9 +25,10 @@ export default class TrafficLightsController {
         }
         const player = playerController.players.get(playerId);
         if (!player) {
-            return log.error(
+            log.error(
                 `Received UCO but player isnt in race. PlayerId: ${playerId}.`,
             );
+            return;
         }
         const trap = semaphoreTraps[inSimClient.track].find(
             (s) => s.x === object.position.x && s.y === object.position.y,

@@ -1,47 +1,53 @@
 {
     "env": {
+        "es2021": true,
         "node": true
     },
-    "extends": [
-        "airbnb-typescript/base",
-        "plugin:prettier/recommended"
-    ],
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "ecmaVersion": 12,
-        "sourceType": "module",
-        "project": "./tsconfig.json"
-    },
-    "plugins": [
-        "@typescript-eslint",
-        "prettier"
-    ],
+    "extends": ["airbnb-base", "prettier"],
     "globals": {
         "NodeJS": true
     },
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "extensions": [".js", ".jsx", ".ts", ".tsx"]
+            }
+        }
+    },
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "plugins": ["@typescript-eslint"],
     "rules": {
-        "prettier/prettier": "warn",
-        "no-console": "off",
-        "indent": "off",
-        "no-underscore-dangle":"off",
-        "no-param-reassign": "off",
-        "consistent-return": "off",
-        "no-unused-vars": "off",
-        "@typescript-eslint/no-unused-expressions": "warn",
-        "@typescript-eslint/no-unused-vars": "off",
-        "@typescript-eslint/comma-dangle": "off",
-        "no-bitwise": "off",
-        "no-plusplus": "off",
-        "import/prefer-default-export": "off",
-        "no-continue": "off",
-        "class-methods-use-this": "off",
-        "import/no-cycle": "off",
-        "import/extensions": "off",
-        "@typescript-eslint/indent": [
+        "import/extensions": [
             "error",
-            4
+            "ignorePackages",
+            {
+                "js": "never",
+                "jsx": "never",
+                "ts": "never",
+                "tsx": "never"
+            }
         ],
-        "@typescript-eslint/no-loop-func": "off",
-       "no-new":"off"
+        "no-unused-vars": "off",
+        "class-methods-use-this": "off",
+        "@typescript-eslint/no-unused-vars": "warn",
+        "no-shadow": "off",
+        "@typescript-eslint/no-shadow": ["error"],
+        "import/prefer-default-export": "off",
+        "no-plusplus": [
+            "error",
+            {
+                "allowForLoopAfterthoughts": true
+            }
+        ],
+        "no-underscore-dangle": [
+            "error",
+            {
+                "allowAfterThis": true
+            }
+        ]
     }
 }

@@ -1,0 +1,75 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+enum Language {
+    ENGLISH
+    DEUTSCH
+    PORTUGUESE
+    FRENCH
+    SUOMI
+    NORSK
+    NEDERLANDS
+    CATALAN
+    TURKISH
+    CASTELLANO
+    ITALIANO
+    DANSK
+    CZECH
+    RUSSIAN
+    ESTONIAN
+    SERBIAN
+    GREEK
+    POLSKI
+    CROATIAN
+    HUNGARIAN
+    BRAZILIAN
+    SWEDISH
+    SLOVAK
+    GALEGO
+    SLOVENSKI
+    BELARUSSIAN
+    LATVIAN
+    LITHUANIAN
+    TRADITIONAL_CHINESE
+    SIMPLIFIED_CHINESE
+    JAPANESE
+    KOREAN
+    BULGARIAN
+    LATINO
+    UKRAINIAN
+    INDONESIAN
+    ROMANIAN
+}
+
+model Car {
+    id      Int     @id @default(autoincrement())
+    skinId  String?
+    name    String  @unique
+    picture String?
+    allowed Boolean @default(false)
+    users   User[]
+}
+
+model User {
+    id        Int      @id
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    cash          Int      @default(0)
+    bankCash      Int      @default(0)
+    health        Int      @default(100)
+    username      String   @unique
+    lastIPAddress String
+    language      Language @default(ENGLISH)
+    canUseAnyCar  Boolean  @default(false)
+    cars          Car[]
+}

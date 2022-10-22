@@ -1,7 +1,4 @@
-import { getRepository } from 'typeorm';
 import Connection from '../Connection';
-import { User } from '../database/models/User';
-import { PlayerCar } from '../enums/PlayerCar';
 import inSimClient from '../inSimClient';
 import log from '../log';
 
@@ -9,9 +6,8 @@ import { ConnectionLeaveProps, ConnectionLeaveReason } from '../packets/IS_CNL';
 import { PlayerRenameProps } from '../packets/IS_CPR';
 import { NewConnectionInfoProps } from '../packets/IS_NCI';
 import { NewConnectionProps } from '../packets/IS_NCN';
-import IS_PLC from '../packets/IS_PLC';
 import IS_TINY, { TinyPacketSubType } from '../packets/IS_TINY';
-import bankController from './bankController';
+import prisma from '../prisma';
 
 class ConnectionController {
     connections = new Map<number, Connection>();
@@ -24,10 +20,9 @@ class ConnectionController {
         log.info(
             `${connection.username} connected. (${connection.connectionId})`,
         );
-        this.connections.set(
-            connection.connectionId,
-            new Connection(connection),
-        );
+        const newConnection = new Connection(connection);
+        this.connections.set(connection.connectionId, newConnection);
+        newConnection.gui.createHud();
         if (connection.requestId !== 255) {
             await inSimClient.sendPacket(
                 IS_TINY.fromProps({
@@ -36,12 +31,6 @@ class ConnectionController {
                 }),
             );
         }
-        // await inSimClient.sendPacket(
-        //     IS_PLC.fromProps({
-        //         connectionId: connection.connectionId,
-        //         cars: PlayerCar.RAC | PlayerCar.FZ5,
-        //     }),
-        // );
     }
 
     async handleConnectionLeave({
@@ -55,15 +44,33 @@ class ConnectionController {
         log.info(
             `Connection left: ${connection.username} (${connection.id}). Reason: ${ConnectionLeaveReason[reason]}`,
         );
-        const userRepository = getRepository(User);
-        await userRepository.save({
-            id: connection.userId,
-            cars: connection.cars,
-            cash: connection.cash,
-            health: connection.health,
-            language: connection.language,
-            lastIPAddress: connection.ipAddress,
-            username: connection.username,
+        await prisma.user.upsert({
+            create: {
+                id: connection.userId,
+                cars: {
+                    connect: connection.cars.map((car) => ({ id: car.id })),
+                },
+                cash: connection.cash,
+                health: connection.health,
+                language: connection.language,
+                lastIPAddress: connection.ipAddress,
+                username: connection.username,
+                bankCash: connection.bankCash,
+            },
+            update: {
+                cars: {
+                    set: connection.cars.map((car) => ({ id: car.id })),
+                },
+                cash: connection.cash,
+                health: connection.health,
+                bankCash: connection.bankCash,
+                language: connection.language,
+                lastIPAddress: connection.ipAddress,
+                username: connection.username,
+            },
+            where: {
+                id: connection.userId,
+            },
         });
         this.connections.delete(connectionId);
     }
@@ -84,40 +91,52 @@ class ConnectionController {
         connectionId,
         ipAddress,
         language,
-        requestId,
         userId,
     }: NewConnectionInfoProps) {
-        // log.debug({ connectionId, ipAddress, language, requestId, userId });
         const connection = this.connections.get(connectionId);
         if (!connection) {
             log.error(`Connection ${connectionId} not found.`);
         }
-        const userRepository = getRepository(User);
-
-        let user =
-            (await userRepository.findOne(userId)) ||
-            userRepository.create({
-                id: userId,
-            });
-
-        const { username } = connection;
-        user.lastIPAddress = ipAddress;
-        user.username = username;
-        user.language = language;
-
-        user = await userRepository.save(user);
 
         connection.ipAddress = ipAddress;
         connection.language = language;
         connection.userId = userId;
-        connection.cars = user.cars;
-        connection.cash = user.cash;
-        connection.health = user.health;
-        connection.bankCash = user.bankCash;
 
-        if (connection.username === 'trezub') {
-            await bankController.handlePlayerEntrance(connection.player);
-        }
+        const user = await prisma.user.upsert({
+            create: {
+                id: userId,
+                lastIPAddress: ipAddress,
+                username: connection.username,
+                language,
+                cars: {
+                    connect: {
+                        name: 'UF1',
+                    },
+                },
+            },
+            update: {
+                lastIPAddress: ipAddress,
+                username: connection.username,
+                language,
+            },
+            where: {
+                id: userId,
+            },
+            select: {
+                cars: true,
+                health: true,
+                bankCash: true,
+                cash: true,
+                canUseAnyCar: true,
+            },
+        });
+
+        connection.cash = user.cash;
+        connection.cars = user.cars;
+        connection.bankCash = user.bankCash;
+        connection.health = user.health;
+        connection.canUseAnyCar = user.canUseAnyCar;
+        connection.connectionInfoPromise.resolve();
     }
 }
 

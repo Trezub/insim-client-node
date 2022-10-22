@@ -1,5 +1,24 @@
 {
-    "files.associations": {
-        "*.txt": "cpp"
+    // Prettier
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": null,
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    // ESLint
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "eslint.alwaysShowStatus": true,
+    "eslint.packageManager": "yarn",
+    // Prisma
+    "[prisma]": {
+        "editor.defaultFormatter": "Prisma.prisma"
+    },
+    "[dockercompose]": {
+        "editor.defaultFormatter": "ms-azuretools.vscode-docker"
     }
 }

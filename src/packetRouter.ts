@@ -7,14 +7,14 @@ import zoneController from './controllers/zoneController';
 import { PacketType } from './enums/PacketType';
 import inSimClient from './inSimClient';
 import log from './log';
-import IS_BFN, { ButtonFunctionProps } from './packets/IS_BFN';
+import IS_BFN from './packets/IS_BFN';
 import IS_BTC, { ButtonClickProps } from './packets/IS_BTC';
 import IS_BTT from './packets/IS_BTT';
 
 import IS_CNL from './packets/IS_CNL';
 import IS_CON from './packets/IS_CON';
 import IS_CSC from './packets/IS_CSC';
-import IS_MCI, { MulticarInfoProps } from './packets/IS_MCI';
+import IS_MCI from './packets/IS_MCI';
 import IS_MSO from './packets/IS_MSO';
 import IS_NCI from './packets/IS_NCI';
 import IS_NCN from './packets/IS_NCN';
@@ -100,7 +100,7 @@ export default async function routePacket(buffer: Buffer) {
 
     const decoder = decoders[buffer[1]];
     if (!decoder) {
-        log.warn(`Decoder not found for packet '${PacketType[buffer[1]]}'`);
+        // log.warn(`Decoder not found for packet '${PacketType[buffer[1]]}'`);
         return;
     }
 

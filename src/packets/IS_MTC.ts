@@ -25,7 +25,7 @@ export default {
         playerId,
     }: MessageToConnectionProps) {
         return Buffer.from([
-            Math.ceil((message.length + 1) / 4) * 4 + 8,
+            (Math.ceil((message.length + 1) / 4) * 4 + 8) / 4,
             PacketType.ISP_MTC,
             0,
             sound,

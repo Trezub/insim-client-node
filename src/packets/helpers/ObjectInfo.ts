@@ -7,7 +7,7 @@ export enum ObjectInfoFlag {
 
 export interface ObjectInfoProps {
     heading?: number;
-    position?: { x: number; y: number; z: number };
+    position: { x: number; y: number; z: number };
     id?: number;
     flags?: ObjectInfoFlag;
 }
@@ -30,13 +30,12 @@ export default {
     },
     fromProps({ heading, position, flags }: ObjectInfoProps) {
         const buffer = Buffer.alloc(8, 0, 'binary');
-        buffer.writeInt16LE(position?.x * 16);
-        buffer.writeInt16LE(position?.y * 16, 2);
-        buffer.writeUInt8(position?.z, 4);
+        buffer.writeInt16LE(position.x * 16);
+        buffer.writeInt16LE(position.y * 16, 2);
+        buffer.writeUInt8(position.z, 4);
         buffer.writeUInt8(flags, 5);
         buffer.writeUInt8(0, 6);
         buffer.writeUInt8(Math.min((heading * 128) / 180, 255), 7);
-        log.info(this.fromBuffer(buffer));
         return buffer;
     },
 };

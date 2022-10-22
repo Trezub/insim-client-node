@@ -26,8 +26,9 @@ export default {
         playerId,
         startPosition,
     }: JoinRequestProps) {
-        return Buffer.from([
-            16,
+        const buffer = Buffer.alloc(16);
+        buffer.set([
+            16 / 4,
             PacketType.ISP_JRR,
             0,
             playerId,
@@ -35,7 +36,8 @@ export default {
             action,
             0,
             0,
-            ...ObjectInfo.fromProps(startPosition || {}),
+            ...(startPosition ? ObjectInfo.fromProps(startPosition) : []),
         ]);
+        return buffer;
     },
 };

@@ -9,7 +9,7 @@ export interface PlayerCarsProps {
 export default {
     fromProps({ connectionId, cars }: PlayerCarsProps) {
         const buffer = Buffer.alloc(12, 0, 'binary');
-        buffer.writeUInt8(12, 0);
+        buffer.writeUInt8(12 / 4, 0);
         buffer.writeUInt8(PacketType.ISP_PLC, 1);
         buffer.writeUInt8(connectionId, 4);
         buffer.writeUInt32LE(cars, 8);

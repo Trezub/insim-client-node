@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 import { PacketType } from '../enums/PacketType';
 import toByteArray from '../utils/toByteArray';
 
@@ -39,7 +40,7 @@ export default {
         interval,
     }: InSimInitProps) {
         return Buffer.from([
-            44, // Size
+            44 / 4, // Size
             PacketType.ISP_ISI,
             0,
             0,

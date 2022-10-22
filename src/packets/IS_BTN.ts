@@ -1,20 +1,6 @@
 import { PacketType } from '../enums/PacketType';
+import log from '../log';
 import toByteArray from '../utils/toByteArray';
-
-export interface ButtonProps {
-    id: number;
-    style?: ButtonStyle;
-    typeIn?: number;
-    left?: number;
-    top?: number;
-    height?: number;
-    width?: number;
-    text?: string;
-    requestId: number;
-    connectionId: number;
-    alwaysVisible?: boolean;
-    typeInDescription?: string;
-}
 
 export enum ButtonStyle {
     TITLE = 1,
@@ -31,11 +17,26 @@ export enum ButtonStyle {
     RIGHT = 128, // align text to right
 }
 
+export interface ButtonProps {
+    id: number;
+    style?: ButtonStyle;
+    typeIn?: number;
+    left?: number;
+    top?: number;
+    height?: number;
+    width?: number;
+    text?: string;
+    requestId: number;
+    connectionId: number;
+    alwaysVisible?: boolean;
+    typeInDescription?: string;
+}
+
 export default {
     fromProps({
         id,
         requestId,
-        text,
+        text: buttonText,
         height,
         left,
         top,
@@ -46,16 +47,20 @@ export default {
         alwaysVisible,
         typeInDescription,
     }: ButtonProps) {
-        const str = text ?? '';
+        const str = buttonText ?? '';
         const textLength = Math.min(
             240,
             str.length +
                 (typeInDescription ? typeInDescription.length + 2 : 0) +
                 1,
         );
+        const text = typeInDescription ? `\0${typeInDescription}\0${str}` : str;
+        if (text.length > 240) {
+            log.warn(`Button text bigger than 240 characters: ${text}`);
+        }
         const roundedTextLength = Math.ceil(textLength / 4) * 4;
         return Buffer.from([
-            roundedTextLength + 12, // Fixed size + variable text length (multiple of 4)
+            (roundedTextLength + 12) / 4, // Fixed size + variable text length (multiple of 4)
             PacketType.ISP_BTN,
             requestId,
             connectionId,
@@ -67,10 +72,7 @@ export default {
             top,
             width,
             height,
-            ...toByteArray(
-                typeInDescription ? `\0${typeInDescription}\0${str}` : str,
-                roundedTextLength,
-            ),
+            ...toByteArray(text, roundedTextLength),
         ]);
     },
 };

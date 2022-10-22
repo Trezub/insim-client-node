@@ -11,13 +11,6 @@ export enum ObjectControlIndex {
     OCO_INDEX_MAIN = 240, // special value to override the main start light system
 }
 
-export interface ObjectControlProps {
-    action: ObjectControlAction;
-    mainLights?: ObjectControlIndex;
-    id: number;
-    lights: ObjectControlLight;
-}
-
 export enum ObjectControlAction {
     OCO_ZERO, // reserved
     OCO_1, //
@@ -28,11 +21,17 @@ export enum ObjectControlAction {
     OCO_LIGHTS_UNSET, // give up control of the specified lights
     OCO_NUM,
 }
+export interface ObjectControlProps {
+    action: ObjectControlAction;
+    mainLights?: ObjectControlIndex;
+    id: number;
+    lights: ObjectControlLight;
+}
 
 export default {
     fromProps({ action, mainLights, id, lights }: ObjectControlProps) {
         return Buffer.from([
-            8, // Size
+            8 / 4, // Size
             PacketType.ISP_OCO, // Type
             0, // ReqId
             0, // Zero

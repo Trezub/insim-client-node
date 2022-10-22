@@ -1,34 +1,12 @@
+import { Car } from '@prisma/client';
+import { white } from './colors';
 import Connection from './Connection';
 import connectionController from './controllers/connectionController';
 import correiosController from './controllers/correiosController';
-import inSimClient from './inSimClient';
 import jobs, { Job } from './jobs';
-import IS_BTN from './packets/IS_BTN';
 import { NewPlayerProps } from './packets/IS_NPL';
 import { Street } from './streets';
 import { Zone } from './zones';
-
-export type PlayerCar =
-    | 'UF1'
-    | 'XFG'
-    | 'XRG'
-    | 'LX4'
-    | 'LX6'
-    | 'RB4'
-    | 'FXO'
-    | 'XRT'
-    | 'CAR'
-    | 'FZ5'
-    | 'UFR'
-    | 'XFR'
-    | 'FXR'
-    | 'XRR'
-    | 'FZR'
-    | 'MRT'
-    | 'FBM'
-    | 'FOX'
-    | 'FO8'
-    | 'BF1';
 
 export default class Player {
     constructor({
@@ -39,10 +17,11 @@ export default class Player {
         playerId,
         skin,
         intakeRestriction,
-    }: NewPlayerProps) {
-        // @ts-expect-error
-        this.car = car;
+    }: Omit<NewPlayerProps, 'car'> & {
+        car: Car;
+    }) {
         this.connection = connectionController.connections.get(connectionId);
+        this.car = car;
         this.massKg = mass;
         this.id = playerId;
         this.skinName = skin;
@@ -56,7 +35,18 @@ export default class Player {
 
     connection: Connection;
 
-    car: PlayerCar;
+    private _car?: Car;
+
+    get car() {
+        return this._car;
+    }
+
+    set car(value: Car | null) {
+        this._car = value;
+        this.connection.gui.hud.getChild('car').text = `${white}${
+            this.car?.name ?? ''
+        }`;
+    }
 
     plate: string;
 

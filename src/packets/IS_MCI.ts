@@ -1,8 +1,4 @@
-export interface MulticarInfoProps {
-    requestId: number;
-    cars: CompCar[];
-}
-
+/* eslint-disable no-bitwise */
 export interface CompCar {
     node: number;
     playerId: number;
@@ -16,6 +12,10 @@ export interface CompCar {
     direction: number;
     angularVelocity: number;
     speedKmh: number;
+}
+export interface MulticarInfoProps {
+    requestId: number;
+    cars: CompCar[];
 }
 
 export default {

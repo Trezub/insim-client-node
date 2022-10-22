@@ -1,4 +1,4 @@
-import { Language } from '../enums/Languages';
+import { Language } from '@prisma/client';
 
 export interface NewConnectionInfoProps {
     requestId: number;
@@ -10,15 +10,16 @@ export interface NewConnectionInfoProps {
 
 export default {
     fromBuffer(buffer: Buffer): NewConnectionInfoProps {
-        const [, , requestId, connectionId, language] = buffer;
+        const [, , requestId, connectionId, languageIndex] = buffer;
         const userId = buffer.readUInt32LE(8);
         const ipAddress = buffer.slice(12, 16).join('.');
+        const languages = Object.keys(Language) as Language[];
 
         return {
             requestId,
             connectionId,
             ipAddress,
-            language,
+            language: languages[languageIndex],
             userId,
         };
     },

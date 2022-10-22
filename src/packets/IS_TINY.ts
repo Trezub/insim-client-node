@@ -1,10 +1,5 @@
 import { PacketType } from '../enums/PacketType';
 
-export interface InSimTinyProps {
-    subType: TinyPacketSubType;
-    requestId: number;
-}
-
 export enum TinyPacketSubType { // the fourth byte of an IS_TINY packet is one of these
     TINY_NONE, //  0 - keep alive		: see "maintaining the connection"
     TINY_VER, //  1 - info request	: get version
@@ -34,10 +29,14 @@ export enum TinyPacketSubType { // the fourth byte of an IS_TINY packet is one o
     TINY_AXM, // 25 - info request	: send IS_AXM packets for the entire layout
     TINY_SLC, // 26 - info request	: send IS_SLC packets for all connections
 }
+export interface InSimTinyProps {
+    subType: TinyPacketSubType;
+    requestId: number;
+}
 
 export default {
     fromProps({ subType, requestId }: InSimTinyProps) {
-        return Buffer.from([4, PacketType.ISP_TINY, requestId, subType]);
+        return Buffer.from([4 / 4, PacketType.ISP_TINY, requestId, subType]);
     },
 
     fromBuffer(buffer: Buffer): InSimTinyProps {

@@ -46,14 +46,14 @@ export class ZoneController {
             return;
         }
         if (!csc.stopped) {
-            player.connection.gui.handleCloseClick();
+            // player.connection.gui.handleCloseClick();
             return;
         }
         if (!isStreet(player.location)) {
             if (player.location.handler) {
                 player.location.handler(player);
             }
-            if  (player.location.texts) {
+            if (player.location.texts) {
                 await sendMessageToConnection(
                     `${lightBlue}| ${white}${
                         player.location.name
