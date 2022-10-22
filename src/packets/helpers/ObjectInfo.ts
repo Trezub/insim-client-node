@@ -36,7 +36,6 @@ export default {
         buffer.writeUInt8(flags, 5);
         buffer.writeUInt8(0, 6);
         buffer.writeUInt8(Math.min((heading * 128) / 180, 255), 7);
-        log.info(this.fromBuffer(buffer));
         return buffer;
     },
 };

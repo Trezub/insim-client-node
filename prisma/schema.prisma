@@ -50,28 +50,13 @@ enum Language {
     ROMANIAN
 }
 
-enum Car {
-    UF1
-    XFG
-    XRG
-    XRT
-    RB4
-    FXO
-    LX4
-    LX6
-    MRT
-    RAC
-    FZ5
-    FOX
-    XFR
-    UFR
-    FO8
-    FXR
-    XRR
-    FZR
-    BF1
-    FBM
-    ALL
+model Car {
+    id      Int     @id @default(autoincrement())
+    skinId  String?
+    name    String  @unique
+    picture String?
+    allowed Boolean @default(false)
+    users   User[]
 }
 
 model User {
@@ -85,5 +70,6 @@ model User {
     username      String   @unique
     lastIPAddress String
     language      Language @default(ENGLISH)
-    cars          Car[]    @default([UF1])
+    canUseAnyCar  Boolean  @default(false)
+    cars          Car[]
 }

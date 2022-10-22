@@ -3,18 +3,21 @@ import inSimClient from '../inSimClient';
 import IS_MTC, { MTCSound } from '../packets/IS_MTC';
 import Player from '../Player';
 
-type MessageSound = 'system' | 'none' | 'error';
+const sounds = {
+    none: MTCSound.SND_SILENT,
+    system: MTCSound.SND_SYSMESSAGE,
+    error: MTCSound.SND_ERROR,
+    default: MTCSound.SND_MESSAGE,
+    warning: MTCSound.SND_INVALIDKEY,
+};
+
+type MessageSound = keyof typeof sounds;
 
 export default async function sendMessageToConnection(
     message: string,
     target: Connection | Player,
     sound: MessageSound = 'none',
 ) {
-    const sounds = {
-        none: MTCSound.SND_SILENT,
-        system: MTCSound.SND_SYSMESSAGE,
-        error: MTCSound.SND_ERROR,
-    };
     await inSimClient.sendPacket(
         IS_MTC.fromProps({
             message,

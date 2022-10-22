@@ -100,7 +100,7 @@ export default async function routePacket(buffer: Buffer) {
 
     const decoder = decoders[buffer[1]];
     if (!decoder) {
-        log.warn(`Decoder not found for packet '${PacketType[buffer[1]]}'`);
+        // log.warn(`Decoder not found for packet '${PacketType[buffer[1]]}'`);
         return;
     }
 

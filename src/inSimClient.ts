@@ -36,7 +36,7 @@ export class InSimClient {
         this.client.on('data', (originalBuffer) => {
             let buffer = originalBuffer;
             while (buffer.length > 0) {
-                const size = buffer.readUInt8();
+                const size = buffer.readUInt8() * 4; // Insim v9: Now the packet size byte is divided by 4
                 routePacket(buffer.copyWithin(0, 0, size));
                 buffer = buffer.slice(size);
             }
@@ -57,7 +57,7 @@ export class InSimClient {
                         InSimInitFlag.ISF_MCI |
                         InSimInitFlag.ISF_OBH |
                         InSimInitFlag.ISF_CON,
-                    inSimVersion: 8,
+                    inSimVersion: 9,
                     interval: 100,
                     prefixChar: '!',
                     udpPort: 0,

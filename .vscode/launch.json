@@ -8,9 +8,11 @@
             "name": "Attach",
             "port": 9229,
             "request": "attach",
-            "skipFiles": ["<node_internals>/**"],
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
             "restart": true,
-            "type": "pwa-node"
+            "type": "node"
         }
     ]
 }

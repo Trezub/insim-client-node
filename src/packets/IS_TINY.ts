@@ -36,7 +36,7 @@ export interface InSimTinyProps {
 
 export default {
     fromProps({ subType, requestId }: InSimTinyProps) {
-        return Buffer.from([4, PacketType.ISP_TINY, requestId, subType]);
+        return Buffer.from([4 / 4, PacketType.ISP_TINY, requestId, subType]);
     },
 
     fromBuffer(buffer: Buffer): InSimTinyProps {

@@ -14,5 +14,4 @@ services:
         build: .
         depends_on:
             - postgres
-            - lfs-server
         restart: unless-stopped

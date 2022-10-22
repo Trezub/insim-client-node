@@ -31,7 +31,7 @@ export default {
         subType,
     }: ButtonFunctionProps) {
         return Buffer.from([
-            8,
+            8 / 4,
             PacketType.ISP_BFN,
             0,
             subType,

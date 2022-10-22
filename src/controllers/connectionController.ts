@@ -20,10 +20,9 @@ class ConnectionController {
         log.info(
             `${connection.username} connected. (${connection.connectionId})`,
         );
-        this.connections.set(
-            connection.connectionId,
-            new Connection(connection),
-        );
+        const newConnection = new Connection(connection);
+        this.connections.set(connection.connectionId, newConnection);
+        newConnection.gui.createHud();
         if (connection.requestId !== 255) {
             await inSimClient.sendPacket(
                 IS_TINY.fromProps({
@@ -32,12 +31,6 @@ class ConnectionController {
                 }),
             );
         }
-        // await inSimClient.sendPacket(
-        //     IS_PLC.fromProps({
-        //         connectionId: connection.connectionId,
-        //         cars: PlayerCar.RAC | PlayerCar.FZ5,
-        //     }),
-        // );
     }
 
     async handleConnectionLeave({
@@ -54,17 +47,23 @@ class ConnectionController {
         await prisma.user.upsert({
             create: {
                 id: connection.userId,
-                cars: connection.cars,
+                cars: {
+                    connect: connection.cars.map((car) => ({ id: car.id })),
+                },
                 cash: connection.cash,
                 health: connection.health,
                 language: connection.language,
                 lastIPAddress: connection.ipAddress,
                 username: connection.username,
+                bankCash: connection.bankCash,
             },
             update: {
-                cars: connection.cars,
+                cars: {
+                    set: connection.cars.map((car) => ({ id: car.id })),
+                },
                 cash: connection.cash,
                 health: connection.health,
+                bankCash: connection.bankCash,
                 language: connection.language,
                 lastIPAddress: connection.ipAddress,
                 username: connection.username,
@@ -94,47 +93,50 @@ class ConnectionController {
         language,
         userId,
     }: NewConnectionInfoProps) {
-        // log.debug({ connectionId, ipAddress, language, requestId, userId });
         const connection = this.connections.get(connectionId);
         if (!connection) {
             log.error(`Connection ${connectionId} not found.`);
         }
 
+        connection.ipAddress = ipAddress;
+        connection.language = language;
+        connection.userId = userId;
+
         const user = await prisma.user.upsert({
             create: {
-                id: connection.id,
+                id: userId,
                 lastIPAddress: ipAddress,
                 username: connection.username,
-                bankCash: connection.bankCash,
                 language,
+                cars: {
+                    connect: {
+                        name: 'UF1',
+                    },
+                },
             },
             update: {
                 lastIPAddress: ipAddress,
                 username: connection.username,
-                bankCash: connection.bankCash,
-                cars: connection.cars,
-                cash: connection.cash,
-                health: connection.health,
                 language,
             },
             where: {
-                id: connection.id,
+                id: userId,
             },
             select: {
                 cars: true,
                 health: true,
                 bankCash: true,
                 cash: true,
+                canUseAnyCar: true,
             },
         });
 
-        connection.ipAddress = ipAddress;
-        connection.language = language;
-        connection.userId = userId;
-        connection.cars = user.cars;
         connection.cash = user.cash;
-        connection.health = user.health;
+        connection.cars = user.cars;
         connection.bankCash = user.bankCash;
+        connection.health = user.health;
+        connection.canUseAnyCar = user.canUseAnyCar;
+        connection.connectionInfoPromise.resolve();
     }
 }
 

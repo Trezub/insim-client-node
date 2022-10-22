@@ -40,7 +40,7 @@ export default {
         interval,
     }: InSimInitProps) {
         return Buffer.from([
-            44, // Size
+            44 / 4, // Size
             PacketType.ISP_ISI,
             0,
             0,

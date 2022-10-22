@@ -33,7 +33,7 @@ export default {
     },
     fromProps({ message }: SendMessageProps) {
         return Buffer.from([
-            68,
+            68 / 4,
             PacketType.ISP_MST,
             0,
             0,

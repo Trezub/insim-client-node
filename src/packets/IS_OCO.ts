@@ -31,7 +31,7 @@ export interface ObjectControlProps {
 export default {
     fromProps({ action, mainLights, id, lights }: ObjectControlProps) {
         return Buffer.from([
-            8, // Size
+            8 / 4, // Size
             PacketType.ISP_OCO, // Type
             0, // ReqId
             0, // Zero
