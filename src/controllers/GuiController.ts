@@ -59,7 +59,7 @@ export default class GuiController {
                 centerSelf: ['horizontal'],
                 flow: 'bottom',
                 height: 15,
-                width: 40,
+                width: 65,
 
                 children: [
                     // Top row
@@ -67,19 +67,10 @@ export default class GuiController {
                         isVirtual: true,
                         flow: 'right',
                         height: 5,
-                        width: 20,
+                        width: 65,
                         children: [
                             {
                                 name: 'cash',
-                                height: 5,
-                                width: 10,
-
-                                alwaysVisible: true,
-                                style: 'dark',
-                                text: '',
-                            },
-                            {
-                                name: 'car',
                                 height: 5,
                                 width: 20,
 
@@ -88,9 +79,18 @@ export default class GuiController {
                                 text: '',
                             },
                             {
+                                name: 'car',
+                                height: 5,
+                                width: 25,
+
+                                alwaysVisible: true,
+                                style: 'dark',
+                                text: '',
+                            },
+                            {
                                 name: 'health',
                                 height: 5,
-                                width: 10,
+                                width: 20,
 
                                 alwaysVisible: true,
                                 style: 'dark',
@@ -102,7 +102,7 @@ export default class GuiController {
                     {
                         name: 'location',
                         height: 5,
-                        width: 40,
+                        width: 65,
 
                         alwaysVisible: true,
                         style: 'dark',
@@ -113,7 +113,7 @@ export default class GuiController {
                     {
                         name: 'job',
                         height: 5,
-                        width: 40,
+                        width: 65,
 
                         alwaysVisible: true,
                         style: 'dark',
