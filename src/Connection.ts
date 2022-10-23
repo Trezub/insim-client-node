@@ -109,7 +109,7 @@ export default class Connection {
             healthController.handlePlayerDied(this);
         }
         this.gui.hud.getChild('health').text = `Saúde: ${
-            this.cash >= 10 ? lightGreen : red
+            this.health >= 10 ? lightGreen : red
         }${this.health}%`;
     }
 }

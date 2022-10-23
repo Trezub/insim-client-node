@@ -1,4 +1,4 @@
-import { lightBlue, lightGreen, red, white, yellow } from '../colors';
+import { lightBlue, lightGreen, white, yellow } from '../colors';
 import inSimClient from '../inSimClient';
 import Connection from '../Connection';
 import zones, { defaultZones, Zone } from '../zones';
@@ -56,48 +56,51 @@ export default class GuiController {
             connectionId,
             props: {
                 isVirtual: true,
-                top: 1,
-                left: 80,
-                height: 10,
-                width: 20,
-                children: [
-                    {
-                        name: 'cash',
-                        left: 0,
-                        top: 0,
-                        height: 5,
-                        width: 10,
+                centerSelf: ['horizontal'],
+                flow: 'bottom',
+                height: 15,
+                width: 40,
 
-                        alwaysVisible: true,
-                        style: 'dark',
-                        text: '',
-                    },
+                children: [
+                    // Top row
                     {
-                        name: 'car',
-                        left: 10,
-                        top: 0,
+                        isVirtual: true,
+                        flow: 'right',
                         height: 5,
                         width: 20,
+                        children: [
+                            {
+                                name: 'cash',
+                                height: 5,
+                                width: 10,
 
-                        alwaysVisible: true,
-                        style: 'dark',
-                        text: '',
-                    },
-                    {
-                        name: 'health',
-                        left: 30,
-                        top: 0,
-                        height: 5,
-                        width: 10,
+                                alwaysVisible: true,
+                                style: 'dark',
+                                text: '',
+                            },
+                            {
+                                name: 'car',
+                                height: 5,
+                                width: 20,
 
-                        alwaysVisible: true,
-                        style: 'dark',
-                        text: '',
+                                alwaysVisible: true,
+                                style: 'dark',
+                                text: '',
+                            },
+                            {
+                                name: 'health',
+                                height: 5,
+                                width: 10,
+
+                                alwaysVisible: true,
+                                style: 'dark',
+                                text: '',
+                            },
+                        ],
                     },
+
                     {
                         name: 'location',
-                        left: 0,
-                        top: 5,
                         height: 5,
                         width: 40,
 
@@ -109,8 +112,6 @@ export default class GuiController {
                     },
                     {
                         name: 'job',
-                        left: 0,
-                        top: 10,
                         height: 5,
                         width: 40,
 
