@@ -1,3 +1,4 @@
+import bankController from './controllers/bankController';
 import correiosController from './controllers/correiosController';
 import Player from './Player';
 
@@ -67,7 +68,9 @@ const zones: Zone[] = [
     },
     {
         name: 'Banco',
-        handler: () => {},
+        handler: (p) => {
+            bankController.handlePlayerEntrance(p);
+        },
         texts: [
             'Seja bem vindo, sou o seu gerente e ajudarei com o que precisar',
             'Cuidado ao sacar uma alta quantia de dinheiro, podem te assaltar assim que sair daqui',
