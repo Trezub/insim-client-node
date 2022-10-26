@@ -10,6 +10,7 @@ import reduceToEnum from './utils/reduceToEnum';
 import createAutoFailingPromise from './utils/autoFailingPromise';
 import { lightGreen, red } from './colors';
 import type { StreetEditor } from './StreetEditor';
+import { NavigationController } from './controllers/NavigationController';
 
 export default class Connection {
     constructor({
@@ -23,6 +24,7 @@ export default class Connection {
         this.nickname = nickname;
         this.username = username;
         this.gui = new GuiController(this);
+        this.navigation = new NavigationController(this);
 
         this.connectionInfoPromise = createAutoFailingPromise(
             10000,
@@ -46,6 +48,8 @@ export default class Connection {
     username: string;
 
     private _cars: Car[];
+
+    navigation: NavigationController;
 
     get cars() {
         return this._cars;

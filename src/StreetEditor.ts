@@ -1,11 +1,13 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-param-reassign */
 import { readFileSync } from 'fs';
-import { readFile, writeFile } from 'fs/promises';
+import { writeFile } from 'fs/promises';
 import { black, lightGreen, red, reset, white, yellow } from './colors';
 import Connection from './Connection';
 import sendMessageToConnection from './helpers/sendMessageToConnection';
+import inSimClient from './inSimClient';
 import { ObjectInfoProps } from './packets/helpers/ObjectInfo';
+import IS_AXM from './packets/IS_AXM';
 import getDistanceMeters from './utils/getDistanceMeters';
 import {
     createComponent,
@@ -14,7 +16,7 @@ import {
     UiComponentProps,
 } from './utils/ui';
 
-type Point = {
+export type Point = {
     id: string;
     x: number;
     y: number;
@@ -35,9 +37,6 @@ let streets = JSON.parse(
 export class StreetEditor {
     constructor(connection: Connection) {
         this.connection = connection;
-
-        this.drawUI();
-        this.updateScreenPoints();
     }
 
     drawUI() {
@@ -70,7 +69,7 @@ export class StreetEditor {
                         onType: (createStreetButton, { text }) => {
                             this.findingPoint = false;
                             this.editing = true;
-                            this.updateScreenPoints();
+                            this.updateSideMenu();
                             const findClosestButton =
                                 this.ui.getChild('findClosest');
                             findClosestButton.text = `${black}Conectar ruas`;
@@ -239,12 +238,11 @@ export class StreetEditor {
 
     private _points: Point[] = [];
 
-    updateScreenPoints() {
+    updateSideMenu() {
         deleteComponent(this.pointComponent);
         const pointsAlreadyConnected =
             this.findingPoint &&
-            (this.points[0]?.connections?.includes(this.points[1]?.id) ||
-                this.points[1]?.connections?.includes(this.points[0]?.id));
+            this.points[0]?.connections?.includes(this.points[1]?.id);
 
         this.pointComponent = createComponent({
             connectionId: this.connection.id,
@@ -274,7 +272,7 @@ export class StreetEditor {
                                           height: 5,
                                           width: 33,
                                           style: 'light',
-                                          text: `${white}${name}`,
+                                          text: `${black}${name} (${id})`,
                                           align: 'left',
                                           onClick: () => {
                                               this.editing = true;
@@ -316,7 +314,7 @@ export class StreetEditor {
                           )
                         : []),
                     ...this.points.map<UiComponentProps>(
-                        ({ x, y, z, streetName }, index) => ({
+                        ({ x, y, z, streetName, id }, index) => ({
                             height: 5,
                             width: 0,
                             isVirtual: true,
@@ -328,8 +326,17 @@ export class StreetEditor {
                                     style: 'light',
                                     text: this.findingPoint
                                         ? `${white}${streetName}`
-                                        : `${white}X: ${lightGreen}${x}${white} Y: ${lightGreen}${y} ${white}Z: ${lightGreen}${z}`,
+                                        : `${white}X: ${lightGreen}${x}${white} Y: ${lightGreen}${y} ${white}Z: ${lightGreen}${z} ${white}(${id})`,
                                     align: 'left',
+                                    onClick: () => {
+                                        this.selectedPoint = {
+                                            id,
+                                            x,
+                                            y,
+                                            z,
+                                            connections: [],
+                                        };
+                                    },
                                 },
                                 !this.findingPoint
                                     ? {
@@ -362,9 +369,6 @@ export class StreetEditor {
                                         this.points[0].connections.push(
                                             this.points[1].id,
                                         );
-                                        this.points[1].connections.push(
-                                            this.points[0].id,
-                                        );
                                         writeFile(
                                             'data/streets.json',
                                             JSON.stringify(streets, null, 4),
@@ -383,12 +387,18 @@ export class StreetEditor {
     }
 
     setVisible(visible: boolean) {
-        if (!visible) {
-            deleteComponent(this.ui);
-            this.points = [];
+        if (this.visible === visible) {
             return;
         }
-        this.updateScreenPoints();
+        if (!visible) {
+            this._points = [];
+            deleteComponent(this.pointComponent);
+            deleteComponent(this.ui);
+            this.selectedPoint = null;
+            return;
+        }
+        this.visible = visible;
+        this.updateSideMenu();
         this.drawUI();
     }
 
@@ -398,7 +408,7 @@ export class StreetEditor {
 
     set points(value) {
         this._points = value;
-        this.updateScreenPoints();
+        this.updateSideMenu();
     }
 
     private pointComponent: ProxiedUiComponent;
@@ -408,6 +418,61 @@ export class StreetEditor {
     private editing = false;
 
     private connection: Connection;
+
+    private visible = false;
+
+    private _selectedPoint: Point;
+
+    get selectedPoint() {
+        return this._selectedPoint;
+    }
+
+    set selectedPoint(value) {
+        if (this._selectedPoint) {
+            inSimClient.sendPacket(
+                IS_AXM.fromProps({
+                    action: 'delObjects',
+                    flags: {
+                        avoidCheck: false,
+                        fileEnd: false,
+                        moveModify: false,
+                        selectionReal: false,
+                    },
+                    objects: [
+                        {
+                            position: this._selectedPoint,
+                            id: 55, // Tyre stack 4 big
+                        },
+                    ],
+                    requestId: 0,
+                    connectionId: this.connection.id,
+                }),
+            );
+        }
+        if (value) {
+            inSimClient.sendPacket(
+                IS_AXM.fromProps({
+                    action: 'addObjects',
+                    flags: {
+                        avoidCheck: false,
+                        fileEnd: false,
+                        moveModify: false,
+                        selectionReal: false,
+                    },
+                    objects: [
+                        {
+                            position: value,
+                            flags: 5,
+                            id: 55, // Tyre stack 4 big
+                        },
+                    ],
+                    requestId: 0,
+                    connectionId: this.connection.id,
+                }),
+            );
+        }
+        this._selectedPoint = value;
+    }
 
     ui: ProxiedUiComponent;
 }

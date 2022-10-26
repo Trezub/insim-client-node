@@ -1,5 +1,3 @@
-import log from '../../log';
-
 export enum ObjectInfoFlag {
     DefaultStartPoint,
     SetStartPoint = 0x80,
@@ -23,13 +21,13 @@ export default {
             position: { x, y, z },
         };
     },
-    fromProps({ heading, position, flags }: ObjectInfoProps) {
+    fromProps({ heading, position, flags, id }: ObjectInfoProps) {
         const buffer = Buffer.alloc(8, 0, 'binary');
         buffer.writeInt16LE(position.x * 16);
         buffer.writeInt16LE(position.y * 16, 2);
         buffer.writeUInt8(position.z, 4);
         buffer.writeUInt8(flags, 5);
-        buffer.writeUInt8(0, 6);
+        buffer.writeUInt8(id, 6);
         buffer.writeUInt8(Math.min((heading * 128) / 180, 255), 7);
         return buffer;
     },

@@ -8,7 +8,10 @@
                 "y": -215.25,
                 "z": 12,
                 "id": "519c21b33",
-                "connections": []
+                "connections": [
+                    "f190c9350",
+                    "c85a09810"
+                ]
             },
             {
                 "x": 42.5625,
@@ -31,7 +34,11 @@
                 "y": 208.75,
                 "z": 19,
                 "id": "da4dc824f",
-                "connections": []
+                "connections": [
+                    "a5e21645d",
+                    "461e6f957",
+                    "3ae9447eb"
+                ]
             }
         ]
     },
@@ -45,7 +52,8 @@
                 "z": 32,
                 "id": "3ae9447eb",
                 "connections": [
-                    "3995fdde"
+                    "3995fdde",
+                    "da4dc824f"
                 ]
             },
             {
@@ -53,7 +61,382 @@
                 "y": 105.625,
                 "z": 19,
                 "id": "13c118aded",
+                "connections": [
+                    "fd79cc9ce"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "423cbcab6",
+        "name": "Rodovia Cabo Preto",
+        "points": [
+            {
+                "x": -147.75,
+                "y": -128.25,
+                "z": 33,
+                "id": "fd79cc9ce",
+                "connections": [
+                    "13c118aded"
+                ]
+            },
+            {
+                "x": 13.5625,
+                "y": -278.375,
+                "z": 33,
+                "id": "13ad87ae6c",
+                "connections": [
+                    "14313783e8"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "3a31c7d42",
+        "name": "Rampa Rodovia descida",
+        "points": [
+            {
+                "x": 171.375,
+                "y": -406.8125,
+                "z": 31,
+                "id": "a31357b48",
                 "connections": []
+            },
+            {
+                "x": 239.3125,
+                "y": -459.0625,
+                "z": 4,
+                "id": "14313783e8",
+                "connections": []
+            },
+            {
+                "x": 335.125,
+                "y": -523.0625,
+                "z": 0,
+                "id": "ff577410b",
+                "connections": []
+            },
+            {
+                "x": 405.125,
+                "y": -517.875,
+                "z": 0,
+                "id": "3fd124c75",
+                "connections": [
+                    "39ada02c7",
+                    "15553d548b"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "3630592f6",
+        "name": "Rampa rodovia subida",
+        "points": [
+            {
+                "x": 281.1875,
+                "y": -407.0625,
+                "z": 9,
+                "id": "39ada02c7",
+                "connections": []
+            },
+            {
+                "x": 105.625,
+                "y": -330.8125,
+                "z": 34,
+                "id": "f511c82b6",
+                "connections": [
+                    "13ad87ae6c"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "1250f3830c",
+        "name": "Acesso Pits/Av AS",
+        "points": [
+            {
+                "x": 362.5,
+                "y": -396.4375,
+                "z": 0,
+                "id": "15553d548b",
+                "connections": [
+                    "39ada02c7",
+                    "3fd124c75"
+                ]
+            },
+            {
+                "x": 311.5625,
+                "y": -302.6875,
+                "z": 5,
+                "id": "62761273b",
+                "connections": []
+            },
+            {
+                "x": 260.25,
+                "y": -241,
+                "z": 7,
+                "id": "f190c9350",
+                "connections": [
+                    "c85a09810"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "cde2cefbc",
+        "name": "Autopista Ricardo Guimaraes",
+        "points": [
+            {
+                "x": 256.0625,
+                "y": -50.3125,
+                "z": 6,
+                "id": "c85a09810",
+                "connections": [
+                    "519c21b33",
+                    "f190c9350"
+                ]
+            },
+            {
+                "x": 252.625,
+                "y": 83.4375,
+                "z": 5,
+                "id": "11b1411285",
+                "connections": []
+            },
+            {
+                "x": 228,
+                "y": 208,
+                "z": 1,
+                "id": "159214a730",
+                "connections": []
+            },
+            {
+                "x": 196.25,
+                "y": 316.875,
+                "z": 0,
+                "id": "1673b91014",
+                "connections": []
+            },
+            {
+                "x": 162.375,
+                "y": 397.9375,
+                "z": 0,
+                "id": "c11576a6f",
+                "connections": []
+            },
+            {
+                "x": 63.4375,
+                "y": 522.625,
+                "z": 0,
+                "id": "37a756a21",
+                "connections": []
+            },
+            {
+                "x": -116.25,
+                "y": 576.125,
+                "z": 0,
+                "id": "618afb9ce",
+                "connections": [
+                    "ada69eb4e"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "daec8cca",
+        "name": "Rua Roberto Viana",
+        "points": [
+            {
+                "x": -174.25,
+                "y": 525.9375,
+                "z": 0,
+                "id": "ada69eb4e",
+                "connections": [
+                    "618afb9ce"
+                ]
+            },
+            {
+                "x": -158.75,
+                "y": 449.375,
+                "z": 0,
+                "id": "143127e720",
+                "connections": []
+            },
+            {
+                "x": -156.9375,
+                "y": 396,
+                "z": 0,
+                "id": "16f9a51982",
+                "connections": [
+                    "a5e21645d",
+                    "8f5e6b7c3"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "1596dc752f",
+        "name": "Tv. Bernardo Souza",
+        "points": [
+            {
+                "x": -136.3125,
+                "y": 318.5,
+                "z": 0,
+                "id": "a5e21645d",
+                "connections": [
+                    "461e6f957",
+                    "16f9a51982",
+                    "8f5e6b7c3"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "135c2c5074",
+        "name": "Ferrovia",
+        "points": [
+            {
+                "x": -205.5625,
+                "y": 353.375,
+                "z": 0,
+                "id": "8f5e6b7c3",
+                "connections": [
+                    "16f9a51982",
+                    "a5e21645d"
+                ]
+            },
+            {
+                "x": -303.375,
+                "y": 353.25,
+                "z": 6,
+                "id": "59303972d",
+                "connections": [
+                    "10897ad5a9"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "e3313d827",
+        "name": "Rua Jamir Miranda",
+        "points": [
+            {
+                "x": -368.0625,
+                "y": 399.5625,
+                "z": 7,
+                "id": "10897ad5a9",
+                "connections": [
+                    "59303972d"
+                ]
+            },
+            {
+                "x": -387.0625,
+                "y": 463.1875,
+                "z": 7,
+                "id": "14e842246d",
+                "connections": [
+                    "ee935d3ee"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "6ca37a519",
+        "name": "Rua Francisco Jorge",
+        "points": [
+            {
+                "x": -436.875,
+                "y": 506.4375,
+                "z": 7,
+                "id": "ee935d3ee",
+                "connections": [
+                    "14e842246d",
+                    "f85731d86"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "c182cc566",
+        "name": "Rua Livio Brando",
+        "points": [
+            {
+                "x": -519.25,
+                "y": 463.5,
+                "z": 11,
+                "id": "f85731d86",
+                "connections": [
+                    "ee935d3ee"
+                ]
+            },
+            {
+                "x": -563.1875,
+                "y": 458.5,
+                "z": 21,
+                "id": "88b9ef4d3",
+                "connections": []
+            },
+            {
+                "x": -594.125,
+                "y": 441.6875,
+                "z": 29,
+                "id": "294d4e974",
+                "connections": [
+                    "8d7f8f30b"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "475517896",
+        "name": "Av. Thomaz Coelho",
+        "points": [
+            {
+                "x": -630.5,
+                "y": 370.5,
+                "z": 38,
+                "id": "8d7f8f30b",
+                "connections": [
+                    "294d4e974"
+                ]
+            },
+            {
+                "x": -620.125,
+                "y": 299.5,
+                "z": 40,
+                "id": "136857d0a9",
+                "connections": []
+            },
+            {
+                "x": -562.75,
+                "y": 252.1875,
+                "z": 48,
+                "id": "13de820431",
+                "connections": []
+            },
+            {
+                "x": -442.0625,
+                "y": 202,
+                "z": 58,
+                "id": "e157be596",
+                "connections": []
+            },
+            {
+                "x": -299.875,
+                "y": 213.875,
+                "z": 34,
+                "id": "edc957d92",
+                "connections": []
+            },
+            {
+                "x": -201.625,
+                "y": 238.125,
+                "z": 12,
+                "id": "461e6f957",
+                "connections": [
+                    "da4dc824f",
+                    "a5e21645d"
+                ]
             }
         ]
     }

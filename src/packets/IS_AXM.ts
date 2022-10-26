@@ -1,3 +1,4 @@
+import { PacketType } from '../enums/PacketType';
 import { ArrayElementType } from '../utils/ArrayElementType';
 import ObjectInfo, { ObjectInfoProps } from './helpers/ObjectInfo';
 
@@ -56,5 +57,31 @@ export default {
             flags,
             objects,
         };
+    },
+    fromProps({
+        action,
+        flags,
+        objects,
+        connectionId,
+    }: AutoCrossObjectsProps): Buffer {
+        let flagsByte = 0;
+        pmoFlags.forEach((flag, i) => {
+            // eslint-disable-next-line no-bitwise
+            flagsByte |= flags[flag] ? 2 ** i : 0;
+        });
+        const buffer = Buffer.from([
+            (8 + 8 * objects.length) / 4,
+            PacketType.ISP_AXM,
+            0,
+            objects.length,
+            connectionId,
+            pmoActions.findIndex((a) => a === action),
+            flagsByte,
+            0,
+            ...Buffer.concat(
+                objects.map((object) => ObjectInfo.fromProps(object)),
+            ),
+        ]);
+        return buffer;
     },
 };
