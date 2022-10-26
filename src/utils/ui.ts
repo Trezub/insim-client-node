@@ -3,6 +3,7 @@
 /* eslint-disable no-bitwise */
 import connectionController from '../controllers/connectionController';
 import inSimClient from '../inSimClient';
+import log from '../log';
 import IS_BFN, { ButtonFunction } from '../packets/IS_BFN';
 import { ButtonClickProps } from '../packets/IS_BTC';
 import IS_BTN, { ButtonStyle } from '../packets/IS_BTN';
@@ -34,7 +35,6 @@ export interface UiComponentProps {
     typeInDescription?: string;
     initTypeInWithText?: boolean;
     onType?: (this: ProxiedUiComponent, packet: ButtonTypeProps) => any;
-
     onClick?: (this: ProxiedUiComponent, packet: ButtonClickProps) => any;
 
     children?: UiComponentProps[];
@@ -78,6 +78,43 @@ function getChildRecursive(
     return null;
 }
 
+function getTypeInByte({
+    typeInMax,
+    initTypeInWithText,
+}: {
+    typeInMax?: number;
+    initTypeInWithText?: boolean;
+}) {
+    let typeInByte = typeInMax;
+    // Init typein modal with the button's text
+    if (typeInByte && initTypeInWithText) {
+        typeInByte |= 128;
+    }
+    return typeInByte || 0;
+}
+
+function getStyleByte({
+    style,
+    align,
+    onClick,
+    typeInByte,
+}: Pick<UiComponentProps, 'style' | 'align' | 'onClick'> & {
+    typeInByte: number;
+}) {
+    let styleByte = 0;
+    // Set button as clickable if a onClick handler is passed or its a typeIn
+    if (style) {
+        styleByte = style === 'dark' ? ButtonStyle.DARK : ButtonStyle.LIGHT;
+    }
+    if (align) {
+        styleByte |= align === 'left' ? ButtonStyle.LEFT : ButtonStyle.RIGHT;
+    }
+    if (onClick || typeInByte) {
+        styleByte |= ButtonStyle.CLICK;
+    }
+    return styleByte;
+}
+
 export function createComponent({
     props,
     connectionId,
@@ -102,35 +139,22 @@ export function createComponent({
         initTypeInWithText,
         flow,
         stickTo,
+        typeInMax,
         centerSelf: selfCenter,
     } = props;
 
     let left = props.left ?? 0;
     let top = props.top ?? 0;
 
-    let typeInByte = props.typeInMax;
-
     const connection = connectionController.connections.get(connectionId);
-
-    let styleByte = 0;
-    if (style) {
-        styleByte = style === 'dark' ? ButtonStyle.DARK : ButtonStyle.LIGHT;
-    }
-    if (align) {
-        styleByte |= align === 'left' ? ButtonStyle.LEFT : ButtonStyle.RIGHT;
-    }
 
     // Reserves a id in this connection
     const id = isVirtual ? null : connection.gui.getNextButtonId();
 
-    if (onClick || typeInByte) {
-        styleByte |= ButtonStyle.CLICK;
-    }
+    const typeInByte = getTypeInByte({ initTypeInWithText, typeInMax });
+    const styleByte = getStyleByte({ onClick, typeInByte, align, style });
 
-    if (typeInByte && initTypeInWithText) {
-        typeInByte |= 128;
-    }
-
+    // Top level component
     if (topLevel !== false) {
         if (stickTo?.includes('bottom')) {
             top = 200 - height + top;
@@ -146,7 +170,9 @@ export function createComponent({
         }
     }
 
+    // Doesn't send a button packet if its a virtual component
     if (!isVirtual) {
+        // TODO: Send a single packet with
         inSimClient.sendPacket(
             IS_BTN.fromProps({
                 id,
@@ -185,29 +211,26 @@ export function createComponent({
                     if (index === 0) {
                         child.top += height;
                     }
-                    child.left = previousChild?.left ?? child.left;
+                    // child.left = previousChild?.left ?? child.left;
                 }
                 if (flow === 'left') {
-                    child.left +=
-                        (previousChild?.left ?? 0) - child.width + child.left;
+                    child.left += (previousChild?.left ?? 0) - child.width;
                     if (index === 0) {
                         child.left += width;
                     }
-                    child.top = previousChild?.top ?? child.top;
+                    // child.top = previousChild?.top ?? child.top;
                 }
                 if (flow === 'right') {
                     child.left +=
                         (previousChild?.left ?? 0) +
-                        (previousChild?.width ?? 0) +
-                        child.left;
-                    child.top = previousChild?.top ?? child.top;
+                        (previousChild?.width ?? 0);
+                    // child.top = previousChild?.top ?? child.top;
                 }
                 if (flow === 'bottom') {
                     child.top +=
                         (previousChild?.top ?? 0) +
-                        (previousChild?.height ?? 0) +
-                        child.top;
-                    child.left = previousChild?.left ?? child.left;
+                        (previousChild?.height ?? 0);
+                    // child.left = previousChild?.left ?? child.left;
                 }
             }
         }
@@ -262,21 +285,56 @@ export function createComponent({
                         });
                     }
                     if (!isVirtual) {
+                        if (prop === 'onType') {
+                            if (!value) {
+                                connection.gui.typeHandlers.delete(obj.id);
+                            } else {
+                                connection.gui.typeHandlers.set(obj.id, value);
+                            }
+                        }
+                        if (prop === 'onClick') {
+                            if (!value) {
+                                connection.gui.clickHandlers.delete(obj.id);
+                            } else {
+                                connection.gui.clickHandlers.set(obj.id, value);
+                            }
+                        }
+
+                        const newTypeInByte = getTypeInByte({
+                            initTypeInWithText: obj.initTypeInWithText,
+                            typeInMax: obj.typeInMax,
+                        });
+
                         inSimClient.sendPacket(
-                            IS_BTN.fromProps({
-                                id,
-                                requestId: 1, // Not used
-                                connectionId,
-                                text: obj.text,
-                                height: obj.height,
-                                width: obj.width,
-                                left: obj.left,
-                                top: obj.top,
-                                typeIn: obj.typeInMax,
-                                style: styleByte,
-                                alwaysVisible: obj.alwaysVisible,
-                                typeInDescription,
-                            }),
+                            Buffer.from([
+                                ...(prop !== 'text'
+                                    ? IS_BFN.fromProps({
+                                          connectionId,
+                                          buttonId: obj.id,
+                                          buttonIdMax: obj.id,
+                                          subType: ButtonFunction.BFN_DEL_BTN,
+                                      })
+                                    : []),
+                                ...IS_BTN.fromProps({
+                                    id,
+                                    requestId: 1, // Not used
+                                    connectionId,
+                                    text: obj.text,
+                                    height: obj.height,
+                                    width: obj.width,
+                                    left: obj.left,
+                                    top: obj.top,
+                                    typeIn: newTypeInByte,
+                                    style: getStyleByte({
+                                        typeInByte: newTypeInByte,
+                                        align: obj.align,
+                                        onClick: obj.onClick,
+                                        style: obj.style,
+                                    }),
+                                    alwaysVisible: obj.alwaysVisible,
+                                    typeInDescription: obj.typeInDescription,
+                                }),
+                            ]),
                         );
                     }
                 }
