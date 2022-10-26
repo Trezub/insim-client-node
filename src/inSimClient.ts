@@ -21,6 +21,8 @@ import { UserControlObjectsProps } from './packets/IS_UCO';
 import trafficLights from './trafficLights';
 
 export class InSimClient {
+    incompletePacket: Buffer;
+
     constructor() {
         this.client = new net.Socket();
         this.sendPacket = promisify(this.client.write.bind(this.client));
@@ -37,8 +39,23 @@ export class InSimClient {
         this.client.on('data', (originalBuffer) => {
             let buffer = originalBuffer;
             while (buffer.length > 0) {
-                const size = buffer.readUInt8() * 4; // Insim v9: Now the packet size byte is divided by 4
-                routePacket(buffer.copyWithin(0, 0, size));
+                // Is the rest of a LFS packet that was slices between two network packets
+                if (this.incompletePacket) {
+                    buffer = Buffer.concat([this.incompletePacket, buffer]);
+                    this.incompletePacket = null;
+                }
+
+                const size = buffer[0] * 4; // Insim v9: Now the packet size byte is divided by 4
+
+                // LFS packet is not complete. Stores it and waits for the next network packet
+                if (buffer.length < size) {
+                    if (this.incompletePacket) {
+                        throw new Error('Two incomplete packets arrived.');
+                    }
+                    this.incompletePacket = buffer;
+                    return;
+                }
+                routePacket(buffer.slice(0, size));
                 buffer = buffer.slice(size);
             }
         });
@@ -113,6 +130,11 @@ export class InSimClient {
                 ...IS_TINY.fromProps({
                     requestId: 255,
                     subType: TinyPacketSubType.TINY_NPL,
+                }),
+                // Request AXM Packets.
+                ...IS_TINY.fromProps({
+                    requestId: 255,
+                    subType: TinyPacketSubType.TINY_AXM,
                 }),
             ]),
         );

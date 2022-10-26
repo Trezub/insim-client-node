@@ -1,9 +1,12 @@
 import shuffle from 'lodash.shuffle';
 import { lightBlue, red } from '../colors';
+import { PacketType } from '../enums/PacketType';
 import sendMessageToConnection from '../helpers/sendMessageToConnection';
 import inSimClient from '../inSimClient';
 import log from '../log';
+import { routes } from '../packetRouter';
 import { ObjectInfoFlag } from '../packets/helpers/ObjectInfo';
+import { CarStateChangedProps } from '../packets/IS_CSC';
 import IS_JRR, { JRRAction } from '../packets/IS_JRR';
 import { MulticarInfoProps } from '../packets/IS_MCI';
 import IS_MST from '../packets/IS_MST';
@@ -16,6 +19,7 @@ import getDistanceMeters from '../utils/getDistanceMeters';
 import zones from '../zones';
 import bankController from './bankController';
 import connectionController from './connectionController';
+import correiosController from './correiosController';
 
 class PlayerController {
     players = new Map<Number, Player>();
@@ -123,9 +127,19 @@ class PlayerController {
         connection.player = newPlayer;
         this.players.set(player.playerId, newPlayer);
 
-        // newPlayer.location = zones.find((z) => z.id === 7);
-        // bankController.handlePlayerEntrance(newPlayer);
-        // correiosController.handlePlayerEntrance(newPlayer);
+        if (process.env.NODE_ENV === 'development' && process.env.FORCE_ZONE) {
+            newPlayer.zone = zones.find(
+                (z) => z.id === Number(process.env.FORCE_ZONE),
+            );
+            (routes[PacketType.ISP_CSC] as (p: CarStateChangedProps) => any)({
+                direction: 0,
+                heading: 0,
+                playerId: newPlayer.id,
+                position: { x: 0, y: 0, z: 0 },
+                speedKmh: 0,
+                stopped: true,
+            });
+        }
     }
 
     handlePlayerLeave({ playerId }: PlayerLeaveProps) {

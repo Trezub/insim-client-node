@@ -89,17 +89,25 @@ export default class Player {
         }
     }
 
-    private _location: Zone | Street;
+    private _zone: Zone;
 
-    previousLocation: Zone | Street;
+    private _street: Street;
 
-    get location() {
-        return this._location;
+    get zone() {
+        return this._zone;
     }
 
-    set location(value: Zone | Street) {
-        this.previousLocation = this._location;
-        this._location = value;
+    set zone(value: Zone) {
+        this._zone = value;
+        this.connection.gui.handleLocationUpdate();
+    }
+
+    get street() {
+        return this._street;
+    }
+
+    set street(value: Street) {
+        this._street = value;
         this.connection.gui.handleLocationUpdate();
     }
 

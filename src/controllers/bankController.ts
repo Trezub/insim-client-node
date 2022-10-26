@@ -4,6 +4,7 @@ import { lightGreen, red, white } from '../colors';
 import Connection from '../Connection';
 import sendMessageToConnection from '../helpers/sendMessageToConnection';
 import Player from '../Player';
+import prisma from '../prisma';
 import { createComponent, ProxiedUiComponent } from '../utils/ui';
 import connectionController from './connectionController';
 
@@ -36,6 +37,18 @@ function handleTransaction(
         connection.bankCash += value;
         connection.cash -= value;
     }
+
+    prisma.bankTransaction.create({
+        data: {
+            type,
+            user: {
+                connect: {
+                    id: connection.userId,
+                },
+            },
+            value: type === 'deposit' ? value : value * -1,
+        },
+    });
 
     clickedButton.parent.parent.getChild('bankCash').text = `${white}Saldo: ${
         connection.bankCash < 0 ? red : lightGreen

@@ -9,6 +9,7 @@ import healthController from './controllers/healthController';
 import reduceToEnum from './utils/reduceToEnum';
 import createAutoFailingPromise from './utils/autoFailingPromise';
 import { lightGreen, red } from './colors';
+import type { StreetEditor } from './StreetEditor';
 
 export default class Connection {
     constructor({
@@ -27,9 +28,20 @@ export default class Connection {
             10000,
             `Connection info did not arrive in time for connection ${this.id} (${this.username})`,
         );
+
+        if (
+            process.env.NODE_ENV === 'development' &&
+            process.env.ENABLE_STREET_EDITOR
+        ) {
+            import('./StreetEditor').then(({ StreetEditor }) => {
+                this.streetEditor = new StreetEditor(this);
+            });
+        }
     }
 
     id: number;
+
+    streetEditor: StreetEditor;
 
     username: string;
 

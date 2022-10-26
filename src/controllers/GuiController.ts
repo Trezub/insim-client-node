@@ -1,8 +1,7 @@
 import { lightBlue, lightGreen, white, yellow } from '../colors';
 import inSimClient from '../inSimClient';
 import Connection from '../Connection';
-import zones, { defaultZones, Zone } from '../zones';
-import { isStreet, Street } from '../streets';
+import zones, { defaultZones } from '../zones';
 import { ButtonClickProps } from '../packets/IS_BTC';
 import {
     createComponent,
@@ -16,20 +15,6 @@ export type GuiButtonName = 'cash' | 'health' | 'car' | 'zone' | 'job';
 
 export interface GuiControllerProps {
     connectionId: number;
-}
-
-function getLocationText(location: Zone | Street): string {
-    if (location != null) {
-        if (isStreet(location)) {
-            return `${location.name}${
-                location.speedLimit
-                    ? ` ${yellow}(${location.speedLimit}KM/H)`
-                    : ''
-            }`;
-        }
-        return `${location.name}`;
-    }
-    return defaultZones[inSimClient.track];
 }
 
 export default class GuiController {
@@ -106,9 +91,7 @@ export default class GuiController {
 
                         alwaysVisible: true,
                         style: 'dark',
-                        text: `${white}${getLocationText(
-                            this.connection.player?.location,
-                        )}`,
+                        text: `${white}${defaultZones[inSimClient.track]}`,
                     },
                     {
                         name: 'job',
@@ -125,9 +108,11 @@ export default class GuiController {
     }
 
     async handleLocationUpdate() {
-        this.hud.getChild('location').text = `${white}${getLocationText(
-            this.connection.player?.location,
-        )}`;
+        const locationName =
+            this.connection.player?.zone?.name ||
+            this.connection.player?.street?.name ||
+            defaultZones[inSimClient.track];
+        this.hud.getChild('location').text = `${white}${locationName}`;
     }
 
     async handleJobUpdate() {

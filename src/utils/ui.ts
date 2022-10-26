@@ -34,8 +34,16 @@ export interface UiComponentProps {
     typeInMax?: number;
     typeInDescription?: string;
     initTypeInWithText?: boolean;
-    onType?: (this: ProxiedUiComponent, packet: ButtonTypeProps) => any;
-    onClick?: (this: ProxiedUiComponent, packet: ButtonClickProps) => any;
+    onType?: (
+        this: ProxiedUiComponent,
+        component: ProxiedUiComponent,
+        packet: ButtonTypeProps,
+    ) => any;
+    onClick?: (
+        this: ProxiedUiComponent,
+        component: ProxiedUiComponent,
+        packet: ButtonClickProps,
+    ) => any;
 
     children?: UiComponentProps[];
 
@@ -191,7 +199,7 @@ export function createComponent({
         );
     }
 
-    const proxiedChildren = children?.map((child, index) => {
+    const proxiedChildren = children?.filter(Boolean).map((child, index) => {
         child.left = child.left ?? 0;
         child.top = child.top ?? 0;
 
@@ -347,11 +355,11 @@ export function createComponent({
         child.parent = proxy;
     });
     if (onType && typeInByte) {
-        connection.gui.typeHandlers.set(id, onType.bind(proxy));
+        connection.gui.typeHandlers.set(id, onType.bind(proxy, proxy));
     }
 
     if (onClick) {
-        connection.gui.clickHandlers.set(id, onClick.bind(proxy));
+        connection.gui.clickHandlers.set(id, onClick.bind(proxy, proxy));
     }
 
     return proxy;

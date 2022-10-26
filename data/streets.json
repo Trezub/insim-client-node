@@ -1,0 +1,60 @@
+[
+    {
+        "id": "16500b1a9d",
+        "name": "Av. Ayrton Senna",
+        "points": [
+            {
+                "x": 174.75,
+                "y": -215.25,
+                "z": 12,
+                "id": "519c21b33",
+                "connections": []
+            },
+            {
+                "x": 42.5625,
+                "y": -112.25,
+                "z": 38,
+                "id": "12cdb27a94",
+                "connections": []
+            },
+            {
+                "x": -109.9375,
+                "y": 72.75,
+                "z": 48,
+                "id": "3995fdde",
+                "connections": [
+                    "3ae9447eb"
+                ]
+            },
+            {
+                "x": -161.875,
+                "y": 208.75,
+                "z": 19,
+                "id": "da4dc824f",
+                "connections": []
+            }
+        ]
+    },
+    {
+        "id": "57d54c7fd",
+        "name": "Acesso teste",
+        "points": [
+            {
+                "x": -200.0625,
+                "y": 158.125,
+                "z": 32,
+                "id": "3ae9447eb",
+                "connections": [
+                    "3995fdde"
+                ]
+            },
+            {
+                "x": -267.875,
+                "y": 105.625,
+                "z": 19,
+                "id": "13c118aded",
+                "connections": []
+            }
+        ]
+    }
+]

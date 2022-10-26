@@ -1,3 +1,4 @@
+import autocrossController from './controllers/autocrossController';
 import connectionController from './controllers/connectionController';
 import healthController from './controllers/healthController';
 import messageController from './controllers/messageController';
@@ -7,9 +8,11 @@ import zoneController from './controllers/zoneController';
 import { PacketType } from './enums/PacketType';
 import inSimClient from './inSimClient';
 import log from './log';
+import IS_AXM from './packets/IS_AXM';
 import IS_BFN from './packets/IS_BFN';
 import IS_BTC, { ButtonClickProps } from './packets/IS_BTC';
 import IS_BTT, { ButtonTypeProps } from './packets/IS_BTT';
+import IS_CIM from './packets/IS_CIM';
 
 import IS_CNL from './packets/IS_CNL';
 import IS_CON from './packets/IS_CON';
@@ -50,9 +53,11 @@ const decoders: {
     [PacketType.ISP_STA]: IS_STA.fromBuffer,
     [PacketType.ISP_PEN]: IS_PEN.fromBuffer,
     [PacketType.ISP_OBH]: IS_OBH.fromBuffer,
+    [PacketType.ISP_AXM]: IS_AXM.fromBuffer,
+    [PacketType.ISP_CIM]: IS_CIM.fromBuffer,
 };
 
-const routes: {
+export const routes: {
     [key: number]: HandlerFunction | HandlerFunction[];
 } = {
     [PacketType.ISP_NCN]: (p) => connectionController.handleNewConnection(p),
@@ -66,6 +71,8 @@ const routes: {
     [PacketType.ISP_PEN]: (p) => inSimClient.handleNewPenalty(p),
     [PacketType.ISP_MCI]: (p) => playerController.handleCarInfo(p),
     [PacketType.ISP_OBH]: (p) => healthController.handlePlayerCrash(p),
+    [PacketType.ISP_AXM]: (p) => autocrossController.handleAxm(p),
+    [PacketType.ISP_CIM]: (p) => connectionController.handleCIM(p),
     [PacketType.ISP_BTC]: (p: ButtonClickProps) =>
         connectionController.connections
             .get(p.connectionId)
@@ -103,13 +110,13 @@ export default async function routePacket(buffer: Buffer) {
 
     const decoder = decoders[buffer[1]];
     if (!decoder) {
-        // log.warn(`Decoder not found for packet '${PacketType[buffer[1]]}'`);
+        log.warn(`Decoder not found for packet '${PacketType[buffer[1]]}'`);
         return;
     }
 
     const handler = routes[buffer[1]];
     if (!handler) {
-        log.error(`Handler not found for packer '${PacketType[buffer[1]]}'`);
+        log.error(`Handler not found for packet '${PacketType[buffer[1]]}'`);
         return;
     }
     const packet = decoder(buffer);

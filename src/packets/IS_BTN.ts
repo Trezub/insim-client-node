@@ -33,20 +33,21 @@ export interface ButtonProps {
 }
 
 export default {
-    fromProps({
-        id,
-        requestId,
-        text: buttonText,
-        height,
-        left,
-        top,
-        style,
-        typeIn,
-        width,
-        connectionId,
-        alwaysVisible,
-        typeInDescription,
-    }: ButtonProps) {
+    fromProps(props: ButtonProps) {
+        const {
+            id,
+            requestId,
+            text: buttonText,
+            height,
+            left,
+            top,
+            style,
+            typeIn,
+            width,
+            connectionId,
+            alwaysVisible,
+            typeInDescription,
+        } = props;
         const str = buttonText ?? '';
         const textLength = Math.min(
             240,

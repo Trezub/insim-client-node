@@ -15,6 +15,7 @@
     "devDependencies": {
         "@types/lodash.shuffle": "^4.2.0",
         "@types/node": "16.10.0",
+        "@types/node-dijkstra": "^2.5.3",
         "@typescript-eslint/eslint-plugin": "^5.39.0",
         "@typescript-eslint/parser": "^5.39.0",
         "eslint-config-airbnb-base": "^15.0.0",
@@ -32,6 +33,7 @@
         "dotenv": "^16.0.3",
         "eslint": "^8.24.0",
         "lodash.shuffle": "^4.2.0",
+        "node-dijkstra": "^2.5.0",
         "prettier": "^2.7.1",
         "tslog": "^3.3.4"
     },

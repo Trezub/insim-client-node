@@ -8,11 +8,9 @@ import { createComponent, UiComponentProps } from '../utils/ui';
 import zones from '../zones';
 
 const bottomNotes = [
-    `${white}^H¡´^L Lembre-se, você pagará uma multa de ${red}50%${white} sobre o valor da entrega se não`,
-    `${white}entregá-la a tempo.`,
+    `${white}^H¡´^L Lembre-se, você pagará uma multa de ${red}50%${white} sobre o valor da entrega se não entregá-la a tempo.`,
     `${white}^H¡´^L Para saber onde você deve entregar, veja as setas no topo da tela.`,
-    `${white}^H¡´^L Entregas especiais tem um valor maior, mas também precisam ser`,
-    `${white}entregues intactas.`,
+    `${white}^H¡´^L Entregas especiais tem um valor maior, mas também precisam ser entregues intactas.`,
 ];
 
 class CorreiosController {
@@ -37,7 +35,7 @@ class CorreiosController {
         ];
         if (player.speedKmh > 3) {
             sendMessageToConnection(
-                `${red}| ${white}${player.location.name} ${lightGreen}${
+                `${red}| ${white}${player.zone.name} ${lightGreen}${
                     movingCarErrors[
                         Math.round(Math.random() * (movingCarErrors.length - 1))
                     ]
@@ -49,7 +47,7 @@ class CorreiosController {
         }
         if (player.job) {
             sendMessageToConnection(
-                `${red}| ${white}${player.location.name} ${lightGreen}${
+                `${red}| ${white}${player.zone.name} ${lightGreen}${
                     multipleJobErrors[
                         Math.round(
                             Math.random() * (multipleJobErrors.length - 1),
@@ -73,7 +71,7 @@ class CorreiosController {
                 'Termina esse trabalho primeiro aí p****.',
             ];
             sendMessageToConnection(
-                `${red}| ${white}${player.location.name} ${lightGreen}${
+                `${red}| ${white}${player.zone.name} ${lightGreen}${
                     multipleJobErrors[
                         Math.round(
                             Math.random() * (multipleJobErrors.length - 1),
@@ -92,7 +90,7 @@ class CorreiosController {
         ];
 
         await sendMessageToConnection(
-            `${lightBlue}| ${white}${player.location.name}: ${lightGreen} ${
+            `${lightBlue}| ${white}${player.zone.name}: ${lightGreen} ${
                 texts[Math.round(Math.random() * (texts.length - 1))]
             }`,
             player,
@@ -102,112 +100,145 @@ class CorreiosController {
         player.connection.gui.openWindow = createComponent({
             connectionId,
             props: {
-                height: 70,
-                width: 96,
-                left: 54,
-                top: 42,
+                height: 63,
+                width: 102,
+                centerSelf: ['horizontal', 'vertical'],
+                left: 0,
+                top: -20,
                 style: 'dark',
                 name: 'correios',
+                flow: 'bottom',
                 children: [
                     {
-                        top: 8,
-                        left: 1,
-                        width: 94,
-                        height: 60,
-                        style: 'light',
-                    },
-                    {
                         height: 8,
-                        width: 96,
+                        width: 100,
                         left: 0,
                         top: 0,
                         text: `${white}Entregas`,
                     },
-                    ...player.availableJobs.map<UiComponentProps>(
-                        (job, index) => ({
-                            top: 10,
-                            left: 2 + index * 31,
-                            height: 29,
-                            width: 30,
-                            style: 'dark',
-                            children: [
-                                {
-                                    top: 0,
-                                    left: 0,
-                                    width: 30,
-                                    height: 5,
-                                    text: `${white}Pacote Padrão`,
-                                    style: 'dark',
-                                },
-                                {
-                                    top: 6,
-                                    left: 1,
-                                    align: 'left',
-                                    text: `${white}Destino: ${lightGreen}${
-                                        zones.find(
-                                            (z) => z.id === job.destination,
-                                        ).name
-                                    }`,
-                                    height: 5,
-                                    width: 30,
-                                },
-                                {
-                                    top: 11,
-                                    left: 1,
-                                    align: 'left',
-                                    text: `${white}Valor: ${lightGreen}Até R$${(
-                                        job.maxPayout / 100
-                                    ).toFixed(2)}`,
-                                    height: 5,
-                                    width: 30,
-                                },
-                                {
-                                    top: 16,
-                                    left: 1,
-                                    align: 'left',
-                                    text: `${white}Distância: ${lightGreen}----`,
-                                    height: 5,
-                                    width: 30,
-                                },
-                                {
-                                    top: 22,
-                                    left: 0,
-                                    text: `${white}Aceitar`,
-                                    height: 7,
-                                    width: 30,
-                                    style: 'dark',
-                                    onClick: () => {
-                                        player.job = job;
-                                        player.connection.gui.openWindow = null;
-                                    },
-                                },
-                            ],
-                        }),
-                    ),
                     {
-                        height: 25,
-                        top: 41,
-                        width: 92,
-                        left: 2,
-                        style: 'dark',
-                        children: bottomNotes.map<UiComponentProps>(
-                            (text, index) => ({
-                                top: index * 5,
+                        top: 0,
+                        left: 0,
+                        centerSelf: ['horizontal'],
+                        width: 100,
+                        height: 53,
+                        style: 'light',
+                        flow: 'bottom',
+                        children: [
+                            {
+                                isVirtual: true,
+                                height: 29,
+                                width: 98,
+                                top: 2,
+                                centerSelf: ['horizontal'],
+                                flow: 'right',
+                                children: [
+                                    ...player.availableJobs.map<UiComponentProps>(
+                                        (job, index) => ({
+                                            top: 0,
+                                            left: index > 0 ? 1 : 0,
+                                            height: 29,
+                                            width: 32,
+                                            style: 'dark',
+                                            flow: 'bottom',
+                                            children: [
+                                                {
+                                                    top: 0,
+                                                    left: 0,
+                                                    width: 32,
+                                                    height: 5,
+                                                    text: `${white}Pacote Padrão`,
+                                                    style: 'dark',
+                                                },
+                                                {
+                                                    top: 1,
+                                                    left: 1,
+                                                    align: 'left',
+                                                    text: `${white}Destino: ${lightGreen}${
+                                                        zones.find(
+                                                            (z) =>
+                                                                z.id ===
+                                                                job.destination,
+                                                        ).name
+                                                    }`,
+                                                    height: 5,
+                                                    width: 30,
+                                                },
+                                                {
+                                                    top: 0,
+                                                    left: 1,
+                                                    align: 'left',
+                                                    text: `${white}Valor: ${lightGreen}Até R$${(
+                                                        job.maxPayout / 100
+                                                    ).toFixed(2)}`,
+                                                    height: 5,
+                                                    width: 30,
+                                                },
+                                                {
+                                                    top: 0,
+                                                    left: 1,
+                                                    align: 'left',
+                                                    text: `${white}Distância: ${lightGreen}----`,
+                                                    height: 5,
+                                                    width: 30,
+                                                },
+                                                {
+                                                    top: 0,
+                                                    left: 0,
+                                                    text: `${white}Aceitar`,
+                                                    height: 7,
+                                                    width: 32,
+                                                    stickTo: ['bottom', 'left'],
+                                                    style: 'dark',
+                                                    onClick: () => {
+                                                        player.job = job;
+                                                        player.connection.gui.openWindow =
+                                                            null;
+                                                    },
+                                                },
+                                            ],
+                                        }),
+                                    ),
+                                ],
+                            },
+                            {
+                                height: 19,
+                                top: 1,
+                                width: 98,
                                 left: 0,
-                                height: 5,
-                                width: 92,
-                                align: 'left',
-                                text,
-                            }),
-                        ),
+                                style: 'dark',
+                                centerSelf: ['horizontal'],
+                                children: [
+                                    {
+                                        isVirtual: true,
+                                        height: 15,
+                                        width: 98,
+                                        centerSelf: ['vertical', 'horizontal'],
+                                        flow: 'bottom',
+                                        children:
+                                            bottomNotes.map<UiComponentProps>(
+                                                (text) => ({
+                                                    top: 0,
+                                                    left: 0,
+                                                    height: 5,
+                                                    width: 98,
+                                                    align: 'left',
+                                                    text,
+                                                }),
+                                            ),
+                                    },
+                                ],
+                            },
+                        ],
                     },
                     {
-                        top: 71,
-                        left: 96 - 20,
+                        top: 11,
+                        left: 0,
                         width: 20,
                         height: 10,
-                        text: `${white}Fechar`,
+                        stickTo: ['bottom', 'right'],
                         style: 'dark',
+                        text: `${white}Fechar`,
                         onClick: () => {
                             player.connection.gui.openWindow = null;
                         },
@@ -235,8 +266,8 @@ class CorreiosController {
     }
 
     finishJob(player: Player) {
-        if (!isStreet(player.location)) {
-            if (player.job?.destination !== player.location.id) {
+        if (!isStreet(player.zone)) {
+            if (player.job?.destination !== player.zone.id) {
                 return;
             }
         } else {

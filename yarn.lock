@@ -146,6 +146,11 @@
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.186.tgz#862e5514dd7bd66ada6c70ee5fce844b06c8ee97"
   integrity sha512-eHcVlLXP0c2FlMPm56ITode2AgLMSa6aJ05JTTbYbI+7EMkCEE5qk2E41d5g2lCVTqRe0GnnRFurmlCsDODrPw==
 
+"@types/node-dijkstra@^2.5.3":
+  version "2.5.3"
+  resolved "https://registry.yarnpkg.com/@types/node-dijkstra/-/node-dijkstra-2.5.3.tgz#fd89dfa667443bf702de0783576be9c95634ac05"
+  integrity sha512-1D4rS5dK8373h/Ub8Wq2CuTKRT0VhA5KV8hPnhFIYuXvYUzXxjFGkrchd3QqqOVn28Mt6hNIDy22vpT9Ddx+kg==
+
 "@types/node@16.10.0":
   version "16.10.0"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-16.10.0.tgz#1cbca7c67ba9ff80675ada496f54a919e8c4c145"
@@ -1329,6 +1334,11 @@ natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==
+
+node-dijkstra@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/node-dijkstra/-/node-dijkstra-2.5.0.tgz#0feb76c5a05f35b56e786de6df4d3364af28d4e8"
+  integrity sha512-2REYb1lo8yDRAY1gsdhjwQdGVSh47VI5Z5wS8sCqydO/P1OVAKOwLuV1fDxNLvbrtMspW7k2UZ2JKIKP06hl+A==
 
 normalize-path@^3.0.0, normalize-path@~3.0.0:
   version "3.0.0"

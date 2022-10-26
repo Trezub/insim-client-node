@@ -64,12 +64,33 @@ model User {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    cash          Int      @default(0)
-    bankCash      Int      @default(0)
-    health        Int      @default(100)
-    username      String   @unique
-    lastIPAddress String
-    language      Language @default(ENGLISH)
-    canUseAnyCar  Boolean  @default(false)
-    cars          Car[]
+    cash                     Int               @default(0)
+    bankCash                 Int               @default(0)
+    health                   Int               @default(100)
+    username                 String            @unique
+    lastIPAddress            String
+    language                 Language          @default(ENGLISH)
+    canUseAnyCar             Boolean           @default(false)
+    cars                     Car[]
+    bankTransactions         BankTransaction[] @relation(name: "BankTransaction_user_User")
+    wireTransferTransactions BankTransaction[] @relation(name: "BankTransaction_wireTransferUser_User")
+}
+
+enum BankTransactionType {
+    fine
+    withdraw
+    deposit
+    wireTransfer
+}
+
+model BankTransaction {
+    id                 Int                 @id @default(autoincrement())
+    value              Int
+    user               User                @relation(fields: [userId], references: [id], name: "BankTransaction_user_User")
+    userId             Int
+    type               BankTransactionType
+    wireTransferUserId Int?
+    wireTransferUser   User?               @relation(fields: [wireTransferUserId], references: [id], name: "BankTransaction_wireTransferUser_User")
+
+    createdAt DateTime @default(now())
 }

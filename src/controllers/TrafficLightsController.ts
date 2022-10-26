@@ -63,7 +63,7 @@ export default class TrafficLightsController {
             ),
             sendMessageToConnection(
                 `${yellow}| Local: ${white}${
-                    player.location?.name || defaultZones[inSimClient.track]
+                    player.zone?.name || defaultZones[inSimClient.track]
                 }`,
                 player,
             ),

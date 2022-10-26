@@ -1,6 +1,10 @@
 import Connection from '../Connection';
 import inSimClient from '../inSimClient';
 import log from '../log';
+import {
+    CIMFreeViewSubmodes,
+    ConnectionInterfaceProps,
+} from '../packets/IS_CIM';
 
 import { ConnectionLeaveProps, ConnectionLeaveReason } from '../packets/IS_CNL';
 import { PlayerRenameProps } from '../packets/IS_CPR';
@@ -37,6 +41,16 @@ class ConnectionController {
                 }),
             );
         }
+    }
+
+    handleCIM({ connectionId, mode, subMode }: ConnectionInterfaceProps) {
+        const connection = this.connections.get(connectionId);
+        if (!connection) {
+            return;
+        }
+        connection.streetEditor?.setVisible(
+            mode === 'freeView' && subMode === CIMFreeViewSubmodes.FVM_EDIT,
+        );
     }
 
     async handleConnectionLeave({

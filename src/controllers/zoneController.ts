@@ -5,7 +5,8 @@ import { UserControlAction, UserControlObjectsProps } from '../packets/IS_UCO';
 import { CarStateChangedProps } from '../packets/IS_CSC';
 import { lightBlue, lightGreen, white } from '../colors';
 import sendMessageToConnection from '../helpers/sendMessageToConnection';
-import streets, { isStreet } from '../streets';
+import streetCheckpoints from '../streets';
+import log from '../log';
 
 export class ZoneController {
     async handleUserControl(uco: UserControlObjectsProps) {
@@ -22,51 +23,50 @@ export class ZoneController {
                 return;
             }
             if (uco.action === UserControlAction.UCO_CIRCLE_ENTER) {
-                player.location = zone;
+                player.zone = zone;
             } else if (uco.action === UserControlAction.UCO_CIRCLE_LEAVE) {
-                player.location = player.previousLocation;
+                player.zone = null;
             }
         } else if (uco.object.id === 252) {
+            const { x, y } = uco.object.position;
             // InSim Checkpoint
-            const streetCheckpoint = streets[inSimClient.track].find(
+            const streetCheckpoint = streetCheckpoints[inSimClient.track].find(
                 (s) =>
-                    s.x === uco.object.position.x &&
-                    s.y === uco.object.position.y &&
-                    s.z === uco.object.position.z,
+                    s.x ===
+                        (Math.round(Math.abs(x) * 100) / 100) *
+                            (Math.sign(x) > 0 ? 1 : -1) &&
+                    s.y ===
+                        (Math.round(Math.abs(y) * 100) / 100) *
+                            (Math.sign(y) > 0 ? 1 : -1),
             );
             if (!streetCheckpoint) {
                 return;
             }
             if (uco.action === UserControlAction.UCO_CP_FWD) {
-                player.location = streetCheckpoint.forward;
+                player.street = streetCheckpoint.forward;
             } else if (uco.action === UserControlAction.UCO_CP_REV) {
-                player.location = streetCheckpoint.backwards;
+                player.street = streetCheckpoint.backwards;
             }
         }
     }
 
     async handleCarStateChange(csc: CarStateChangedProps) {
         const player = playerController.players.get(csc.playerId);
-        if (!player || !player.location) {
+        if (!player || !player.zone) {
             return;
         }
         if (!csc.stopped) {
             player.connection.gui.openWindow = null;
             return;
         }
-        if (!isStreet(player.location)) {
-            if (player.location.handler) {
-                player.location.handler(player);
-            }
-            if (player.location.texts) {
+        if (player.zone) {
+            player.zone.handler?.(player);
+            if (player.zone.texts) {
                 await sendMessageToConnection(
-                    `${lightBlue}| ${white}${
-                        player.location.name
-                    }: ${lightGreen} ${
-                        player.location.texts[
+                    `${lightBlue}| ${white}${player.zone.name}: ${lightGreen} ${
+                        player.zone.texts[
                             Math.round(
-                                Math.random() *
-                                    (player.location.texts.length - 1),
+                                Math.random() * (player.zone.texts.length - 1),
                             )
                         ]
                     }`,

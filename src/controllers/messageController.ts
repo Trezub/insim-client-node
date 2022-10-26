@@ -6,7 +6,7 @@ import { ObjectInfoFlag } from '../packets/helpers/ObjectInfo';
 import IS_JRR, { JRRAction } from '../packets/IS_JRR';
 import { SendMessageProps, UserType } from '../packets/IS_MSO';
 import IS_MTC, { MTCSound } from '../packets/IS_MTC';
-import { isStreet } from '../streets';
+import IS_TINY, { TinyPacketSubType } from '../packets/IS_TINY';
 import getDistanceMeters from '../utils/getDistanceMeters';
 import connectionController from './connectionController';
 import correiosController from './correiosController';
@@ -81,22 +81,22 @@ class MessageController {
                     }
                     break;
                 }
-                case 'job': {
-                    if (
-                        !connection.player ||
-                        (!isStreet(connection.player.location) &&
-                            connection.player.location?.id !== 4)
-                    ) {
-                        sendMessageToConnection(
-                            `${red}| ${white}Você precisa estar nos Correios para usar este comando!`,
-                            connection,
-                            'error',
-                        );
-                        return;
-                    }
-                    correiosController.createJob(connection.player);
-                    break;
-                }
+                // case 'job': {
+                //     if (
+                //         !connection.player ||
+                //         (!isStreet(connection.player.zone) &&
+                //             connection.player.zone?.id !== 4)
+                //     ) {
+                //         sendMessageToConnection(
+                //             `${red}| ${white}Você precisa estar nos Correios para usar este comando!`,
+                //             connection,
+                //             'error',
+                //         );
+                //         return;
+                //     }
+                //     correiosController.createJob(connection.player);
+                //     break;
+                // }
                 case 'tp':
                     {
                         const args = message.slice(1).split(' ').slice(1);

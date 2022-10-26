@@ -5,7 +5,6 @@ import inSimClient from '../inSimClient';
 import log from '../log';
 import { UserControlObjectsProps } from '../packets/IS_UCO';
 import speedTraps from '../speedTraps';
-import { isStreet } from '../streets';
 import playerController from './playerController';
 
 class SpeedTrapController {
@@ -21,10 +20,7 @@ class SpeedTrapController {
             );
             return;
         }
-        if (!isStreet(player.location)) {
-            return;
-        }
-        if (!player.location.speedLimit) {
+        if (!player.street?.speedLimit) {
             return;
         }
         if (
@@ -35,7 +31,7 @@ class SpeedTrapController {
             return;
         }
 
-        const { speedLimit } = player.location;
+        const { speedLimit } = player.street;
         const playerSpeed = player.speedKmh;
         const consideredSpeed =
             speedLimit > 100
@@ -73,7 +69,7 @@ class SpeedTrapController {
                     player,
                 ),
                 sendMessageToConnection(
-                    `${yellow}| Local: ${white}${player.location.name}`,
+                    `${yellow}| Local: ${white}${player.zone.name}`,
                     player,
                 ),
                 sendMessageToConnection(
